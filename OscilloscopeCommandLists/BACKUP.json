@@ -1,0 +1,8 @@
+{
+  "ChannelDisplayCommand": ":CHANnel{0}:DISPlay {1}",
+  "ChannelScaleCommand": ":CHANnel{0}:SCALe {1}",
+  "ChannelCouplingModes": [
+    "AC",
+    "DC"
+  ]
+}

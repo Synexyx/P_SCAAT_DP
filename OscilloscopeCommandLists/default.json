@@ -1,0 +1,23 @@
+{
+  "OscilloscopeSeriesID": null,
+  "NumberOfAnalogChannels": 0,
+  "TrueFalseOptions": [],
+  "ChannelDisplayCommand": null,
+  "ChannelLabelCommand": null,
+  "ChannelScaleCommand": null,
+  "ChannelPositionCommand": null,
+  "ChannelOffsetCommand": null,
+  "ChannelCouplingCommand": null,
+  "ChannelCouplingModes": [],
+  "TimebasePositionCommand": null,
+  "TimebaseScaleCommand": null,
+  "TriggerEdgeSourceCommand": null,
+  "TriggerEdgeSourceOptions": [],
+  "TriggerEdgeSlopeCommand": null,
+  "TriggerEdgeSlopeOptions": [],
+  "WaveformDataCommand": null,
+  "WaveformSourceCommand": null,
+  "WaveformFormatCommand": null,
+  "WaveformFormatOptions": [],
+  "WaveformStreamingCommand": null
+}

@@ -1,0 +1,6 @@
+:CHANnel1:DISPlay ON
+:CHANnel2:DISPlay ON
+:CHANnel3:DISPlay ON
+:CHANnel4:DISPlay ON
+:TRIGger:EDGE:SLOPe POSitive
+:TRIGger:EDGE:SOURce CHANnel1

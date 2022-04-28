@@ -1,0 +1,48 @@
+{
+  "OscilloscopeSeriesID": null,
+  "NumberOfAnalogChannels": 4,
+  "TrueFalseOptions": [
+    "ON",
+    "OFF",
+    "0",
+    "1"
+  ],
+  "ChannelDisplayCommand": ":CHANnel{0}:DISPlay {1}",
+  "ChannelLabelCommand": ":CHANnel{0}:LABel {1}",
+  "ChannelScaleCommand": ":CHANnel{0}:SCALe {1}",
+  "ChannelPositionCommand": null,
+  "ChannelOffsetCommand": ":CHANnel{0}:OFFSet {1}",
+  "ChannelCouplingCommand": ":TEST{0}:TEST {1}",
+  "ChannelCouplingModes": [
+    "AC",
+    "DC"
+  ],
+  "TimebasePositionCommand": ":TIMebase:Position {0}",
+  "TimebaseScaleCommand": ":TIMebase:SCALe {0}",
+  "TriggerEdgeSourceCommand": ":TRIGger:EDGE:SOURce {0}",
+  "TriggerEdgeSourceOptions": [
+    "CHANnel1",
+    "CHANnel2",
+    "CHANnel3",
+    "CHANnel4",
+    "DIGital{0}",
+    "AUX",
+    "LINE"
+  ],
+  "TriggerEdgeSlopeCommand": ":TRIGger:EDGE:SLOPe {0}",
+  "TriggerEdgeSlopeOptions": [
+    "POSitive",
+    "NEGative",
+    "EITHer"
+  ],
+  "WaveformDataCommand": ":WAVeform:DATA?",
+  "WaveformSourceCommand": ":WAVeform:SOURce {0}",
+  "WaveformFormatCommand": ":WAVeform:FORMat {0}",
+  "WaveformFormatOptions": [
+    "ASCii",
+    "BINary",
+    "BYTE",
+    "WORD"
+  ],
+  "WaveformStreamingCommand": ":WAVeform:STReaming {0}"
+}
