@@ -10,7 +10,7 @@ namespace P_SCAAT.Models
     internal class SerialPortRS232 : ISessionDevice
     {
         public string PortName { get; set; }
-        public int BaudRate  { get; set; }
+        public int BaudRate { get; set; }
         public Parity Parity { get; set; }
         public int DataBits { get; set; }
         public StopBits StopBits { get; set; }
@@ -39,7 +39,14 @@ namespace P_SCAAT.Models
             SerialPort.RtsEnable = true;
             SerialPort.WriteTimeout = 1000;
             SerialPort.ReadTimeout = 1000;
-            SerialPort.Open();
+            try
+            {
+                SerialPort.Open();
+            }
+            catch
+            {
+
+            }
         }
 
         public void CloseSession()

@@ -45,10 +45,11 @@ namespace P_SCAAT.ViewModels.Commands
         {
             //Debug.WriteLine("OPEN 1 " + Thread.CurrentThread.ManagedThreadId);
             string fileContent;
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            openFileDialog.InitialDirectory = Path.GetFullPath("..\\..\\..\\OscilloscopeConfigFiles");
-            openFileDialog.Filter = "Text (*.txt)|*.txt|All files (*.*)|*.*";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = Path.GetFullPath("..\\..\\OscilloscopeConfigFiles"),
+                Filter = "Text (*.txt)|*.txt|All files (*.*)|*.*"
+            };
             if ((bool)openFileDialog.ShowDialog())
             {
                 await Task.Run(async () =>
@@ -61,7 +62,8 @@ namespace P_SCAAT.ViewModels.Commands
                         //Thread.Sleep(5000);
                         fileContent = await streamReader.ReadToEndAsync();
                     }
-                    List<string> loadedConfigString = Regex.Split(fileContent, @"\r|\n|\r\n").Where(line => line != string.Empty).ToList();
+                    //List<string> loadedConfigString = Regex.Split(fileContent, @"\r|\n|\r\n").Where(line => line != string.Empty).ToList();
+                    List<string> loadedConfigString = Regex.Split(fileContent, Environment.NewLine).Where(line => line != string.Empty).ToList();
                     _oscilloscopeConfigViewModel.TempOscilloscopeConfigString.AddRange(loadedConfigString);
                 });
                 List<string> resultList = _oscilloscopeConfigViewModel.TempOscilloscopeConfigString.Distinct().ToList();

@@ -10,9 +10,8 @@
   "ChannelDisplayCommand": ":CHANnel{0}:DISPlay {1}",
   "ChannelLabelCommand": ":CHANnel{0}:LABel {1}",
   "ChannelScaleCommand": ":CHANnel{0}:SCALe {1}",
-  "ChannelPositionCommand": null,
   "ChannelOffsetCommand": ":CHANnel{0}:OFFSet {1}",
-  "ChannelCouplingCommand": ":TEST{0}:TEST {1}",
+  "ChannelCouplingCommand": ":CHANnel{0}:INPut {1}",
   "ChannelCouplingModes": [
     "AC",
     "DC"

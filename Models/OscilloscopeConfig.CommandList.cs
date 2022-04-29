@@ -22,7 +22,7 @@ namespace P_SCAAT.Models
             public string ChannelDisplayCommand { get; set; }
             public string ChannelLabelCommand { get; set; }
             public string ChannelScaleCommand { get; set; }
-            public string ChannelPositionCommand { get; set; }
+            //public string ChannelPositionCommand { get; set; }
             public string ChannelOffsetCommand { get; set; }
             public string ChannelCouplingCommand { get; set; }
             private List<string> _channelCouplingModes;
@@ -46,7 +46,13 @@ namespace P_SCAAT.Models
             public string WaveformStreamingCommand { get; set; }
             #endregion
 
-            public static (string, string) UniversalCommandString(string command, string parameter1, string parameter2 = "")
+            public static (string, string) UniversalCommandString(string command, string parameter1)
+            {
+                return string.IsNullOrEmpty(command)
+                    ? (string.Empty, string.Empty)
+                    : ForgeCommandToString(command, parameter1);
+            }
+            public static (string, string) UniversalCommandString(string command, string parameter1, string parameter2)
             {
                 return string.IsNullOrEmpty(command)
                     ? (string.Empty, string.Empty)
@@ -79,7 +85,7 @@ namespace P_SCAAT.Models
             }
             public string ChannelDisplayAskCommandString(int channelNumber)
             {
-                //ToDo check if space between command and ? is ok
+                //ToDo check if space between command and ? is ok -- NENÍ
                 return string.IsNullOrEmpty(ChannelDisplayCommand)
                     ? string.Empty
                     : ForgeCommandToString(ChannelDisplayCommand, channelNumber.ToString(CultureInfo.InvariantCulture), "?").Item2;

@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using P_SCAAT.Models;
 using P_SCAAT.ViewModels.Commands;
@@ -22,6 +23,9 @@ namespace P_SCAAT.ViewModels
         private string _selectedAvailableOscilloscopes;
         private Oscilloscope _oscilloscope;
         private bool _changingSession;
+
+        private string _errorMessage = string.Empty;
+
         private string _manualMessageWrite = "*IDN?";
         private string _manualMessageRead = "Response";
 
@@ -77,6 +81,17 @@ namespace P_SCAAT.ViewModels
         }
         //public bool IsSessionOpen => Oscilloscope.IsSessionOpen;
 
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
+                //_ = MessageBox.Show(ErrorMessage);
+            }
+        }
+
         public string ManualMessageWrite
         {
             get => _manualMessageWrite;
@@ -120,7 +135,15 @@ namespace P_SCAAT.ViewModels
         }
         public void RefreshOscilloscopeList()
         {
-            AvailableOscilloscopes = Oscilloscope.GetOscilloscopeList();
+            try
+            {
+                AvailableOscilloscopes = Oscilloscope.GetOscilloscopeList();
+            }
+            catch (Exception e)
+            {
+                ErrorMessage += e.Message + Environment.NewLine;
+                AvailableOscilloscopes = new List<string> { "EMPTY" };
+            }
             SelectedAvailableOscilloscopes = !string.IsNullOrEmpty(Oscilloscope.SessionName)
                 ? Oscilloscope.SessionName
                 : AvailableOscilloscopes.First();

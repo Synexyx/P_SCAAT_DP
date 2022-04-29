@@ -76,7 +76,7 @@ namespace P_SCAAT.ViewModels
         //        OnPropertyChanged(nameof(SerialPort));
         //    }
         //}
-        
+
         //public override bool IsSessionOpen => SerialPort.IsOpen;
 
 
@@ -87,7 +87,7 @@ namespace P_SCAAT.ViewModels
             SerialPortRS232 = new SerialPortRS232();
 
             AvailablePorts = new ObservableCollection<string>();
-            
+
             RefreshPortList();
 
             CreateCommands();
@@ -101,9 +101,17 @@ namespace P_SCAAT.ViewModels
             {
                 AvailablePorts.Add(portName);
             }
-            SelectedAvailablePorts = !string.IsNullOrEmpty(SerialPortRS232.PortName)
-                ? SerialPortRS232.PortName
-                : AvailablePorts.First();
+            if (AvailablePorts.Any())
+            {
+                SelectedAvailablePorts = !string.IsNullOrEmpty(SerialPortRS232.PortName)
+                    ? SerialPortRS232.PortName
+                    : AvailablePorts.First();
+            }
+            else
+            {
+                AvailablePorts.Add("EMPTY");
+                SelectedAvailablePorts = AvailablePorts.First();
+            }
         }
 
         public ICommand RefreshPortListCommand { get; set; }

@@ -74,11 +74,10 @@ namespace P_SCAAT.Models
 
             string filePathName = "../../OscilloscopeCommandLists/default.json";
             JsonSerializerOptions options = new JsonSerializerOptions() { WriteIndented = true };
-
             using (FileStream createStream = File.Create(filePathName))
             {
                 await JsonSerializer.SerializeAsync(createStream, commandList, options);
-                createStream.Dispose();
+                //createStream.Dispose(); //Using automatically calls Dispose
             }
         }
 

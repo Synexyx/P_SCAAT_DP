@@ -43,8 +43,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label Content="Oscilloscope" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" 
+            <Label Content="Oscilloscope" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                    HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontWeight="Bold"/>
+
             <ComboBox x:Name="cboxOscilloscopeSelection"
                       ItemsSource="{Binding AvailableOscilloscopes, Mode=OneWay}"
                       SelectedItem="{Binding SelectedAvailableOscilloscopes, Mode=TwoWay}"

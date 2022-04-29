@@ -17,8 +17,8 @@
         <converters:OscilloscopeValuesConverter x:Key="oscilloscopeValuesConverter"/>
         <converters:RadioBTNBoolToStringConverter x:Key="radioBTNBoolToStringConverter"/>
         <converters:InverseBooleanConverter x:Key="inverseBooleanConverter"/>
-        
-        
+
+
         <converters:ExistsConverter x:Key="existsConverter"/>
 
         <converters:EdgeSlopeOptionsToStringConverter x:Key="edgeSlopeOptionsToStringConverter"/>
@@ -34,11 +34,12 @@
         <Style TargetType="DataGrid" x:Key="BoldHeaderGrid">
             <Setter Property="ColumnHeaderStyle" Value="{DynamicResource BoldHeader}"/>
         </Style>
-        
+
         <Style TargetType="DataGridColumnHeader" x:Key="BoldHeader">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
+
         <!--<Style x:Key="PaddedColumnHeader" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Padding" Value="5,0,5,0"/>
             <EventSetter Event="FrameworkElement.SizeChanged" Handler="GridViewColumnHeader_SizeChanged"/>
@@ -63,6 +64,8 @@
                       x:Name="dataGrid"
                       ItemsSource="{Binding TempChannels}"
                       CanUserResizeRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserAddRows="False"
                       CanUserResizeColumns="True"
                       RowHeight="25"
                       ColumnWidth="Auto"
@@ -73,12 +76,12 @@
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="#" FontWeight="Black" IsReadOnly="True" Binding="{Binding ChannelNumber, Mode=OneTime}" CanUserSort="False"/>
-                    <DataGridCheckBoxColumn Header="Display" Binding="{Binding ChannelDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserSort="False"                                           />
-                    <DataGridTextColumn Header="Label" Binding="{Binding ChannelLabel, Mode=TwoWay}" CanUserSort="False"/>
+                    <DataGridCheckBoxColumn Header="Display" Binding="{Binding ChannelDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserSort="False"/>
+                    <DataGridTextColumn Header="Label (16 max)" Binding="{Binding ChannelLabel, Mode=TwoWay}" CanUserSort="False"/>
                     <DataGridTextColumn Header="Scale" Binding="{Binding ChannelScale, Mode=TwoWay,
                                         Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}" CanUserSort="False"/>
-                    <DataGridTextColumn Header="Position" Binding="{Binding ChannelPosition, Mode=TwoWay,
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}" CanUserSort="False"/>
+                    <!--<DataGridTextColumn Header="Position" Binding="{Binding ChannelPosition, Mode=TwoWay,
+                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}" CanUserSort="False"/>-->
                     <DataGridTextColumn Header="Offset" Binding="{Binding ChannelOffset, Mode=TwoWay,
                                         Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}" CanUserSort="False"/>
                     <DataGridTemplateColumn Header="Coupling" CanUserSort="False">

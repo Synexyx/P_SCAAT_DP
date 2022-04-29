@@ -59,14 +59,21 @@ namespace P_SCAAT.Models
         public static List<string> GetOscilloscopeList()
         {
             List<string> rsList = new List<string>();
-            using (ResourceManager rmSession = new ResourceManager())
+            try
             {
-                IEnumerable<string> resources = rmSession.Find("(ASRL|USB)?*");
-                foreach (string rsName in resources)
+                using (ResourceManager rmSession = new ResourceManager())
                 {
-                    rsList.Add(rsName);
+                    IEnumerable<string> resources = rmSession.Find("(ASRL|USB)?*");
+                    foreach (string rsName in resources)
+                    {
+                        rsList.Add(rsName);
+                    }
+                    return rsList;
                 }
-                return rsList;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
         }
 
@@ -136,7 +143,7 @@ namespace P_SCAAT.Models
 
         internal void ApplyAllSettingsToDevice()
         {
-            foreach(string setting in OscilloscopeConfigString)
+            foreach (string setting in OscilloscopeConfigString)
             {
                 SendData(setting);
             }

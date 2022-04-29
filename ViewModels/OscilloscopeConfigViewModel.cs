@@ -60,7 +60,8 @@ namespace P_SCAAT.ViewModels
             {
                 _timebaseScale = value;
                 OnPropertyChanged(nameof(TimebaseScale));
-                (string, string) commandParts = Oscilloscope.Commands.TimebaseScaleCommandString(TimebaseScale);
+                //(string, string) commandParts = Oscilloscope.Commands.TimebaseScaleCommandString(TimebaseScale);
+                (string, string) commandParts = CommandList.UniversalCommandString(Oscilloscope.Commands.TimebaseScaleCommand, TimebaseScale.ToString("0.###E00", CultureInfo.InvariantCulture));
                 ApplyCommandToConfigString(commandParts);
             }
         }
@@ -71,7 +72,8 @@ namespace P_SCAAT.ViewModels
             {
                 _timebasePosition = value;
                 OnPropertyChanged(nameof(TimebasePosition));
-                (string, string) commandParts = Oscilloscope.Commands.TimebasePositionCommandString(TimebasePosition);
+                //(string, string) commandParts = Oscilloscope.Commands.TimebasePositionCommandString(TimebasePosition);
+                (string, string) commandParts = CommandList.UniversalCommandString(Oscilloscope.Commands.TimebasePositionCommand, TimebasePosition.ToString("0.###E00", CultureInfo.InvariantCulture));
                 ApplyCommandToConfigString(commandParts);
             }
         }
@@ -176,8 +178,10 @@ namespace P_SCAAT.ViewModels
             foreach (ChannelSettingsViewModel channel in TempChannels)
             {
                 ChannelSettings tempChannel =
+                    //new ChannelSettings(channel.ChannelNumber, channel.ChannelLabel, channel.ChannelDisplay,
+                    //channel.ChannelScale, channel.ChannelPosition, channel.ChannelOffset, channel.ChannelCouplingModes, channel.ChannelCouplingIndex);
                     new ChannelSettings(channel.ChannelNumber, channel.ChannelLabel, channel.ChannelDisplay,
-                    channel.ChannelScale, channel.ChannelPosition, channel.ChannelOffset, channel.ChannelCouplingModes, channel.ChannelCouplingIndex);
+                    channel.ChannelScale, channel.ChannelOffset, channel.ChannelCouplingModes, channel.ChannelCouplingIndex);
 
                 channelListForModel.Add(tempChannel);
             }
@@ -186,8 +190,8 @@ namespace P_SCAAT.ViewModels
 
         public TriggerSettings TriggerSettingsVMtoModel()
         {
-            return new TriggerSettings(new List<string>(TriggerVM.TriggerEdgeSourceOptions), TriggerVM.TriggerEdgeSourceIndex,
-                new List<string>(TriggerVM.TriggerEdgeSlopeOptions), TriggerVM.TriggerEdgeSlopeIndex);
+            return new TriggerSettings(TriggerVM.TriggerEdgeSourceOptions, TriggerVM.TriggerEdgeSourceIndex,
+               TriggerVM.TriggerEdgeSlopeOptions, TriggerVM.TriggerEdgeSlopeIndex);
         }
 
         private void TempChannels_Changed(object sender, NotifyCollectionChangedEventArgs e)
@@ -211,13 +215,12 @@ namespace P_SCAAT.ViewModels
         private void ChannelSettingsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ChannelSettingsViewModel channel = sender as ChannelSettingsViewModel;
-            (string, string) commandParts = (string.Empty, string.Empty);
-            string command = string.Empty, commandParameter1 = string.Empty, commandParameter2 = string.Empty;
+            string command = string.Empty, desiredValue = string.Empty;
             switch (e.PropertyName)
             {
                 case nameof(channel.ChannelDisplay):
                     command = Oscilloscope.Commands.ChannelDisplayCommand;
-                    commandParameter2 = Oscilloscope.Commands.TrueFalseOptions != null
+                    desiredValue = Oscilloscope.Commands.TrueFalseOptions != null
                         ? channel.ChannelDisplay ? Oscilloscope.Commands.TrueFalseOptions.ElementAtOrDefault(0) ?? "1" : Oscilloscope.Commands.TrueFalseOptions.ElementAtOrDefault(1) ?? "0"
                         : channel.ChannelDisplay ? "ON" : "OFF";
                     //commandParts = Oscilloscope.Commands.ChannelDisplayCommandString(channel.ChannelNumber, channel.ChannelDisplay);
@@ -226,28 +229,28 @@ namespace P_SCAAT.ViewModels
                     //commandParts = Oscilloscope.Commands.ChannelLabelCommandString(channel.ChannelNumber, channel.ChannelLabel);
                     command = Oscilloscope.Commands.ChannelLabelCommand;
                     //commandParameter1 = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
-                    commandParameter2 = channel.ChannelLabel;
+                    desiredValue = "\"" + channel.ChannelLabel + "\"";
                     break;
                 case nameof(channel.ChannelScale):
                     //commandParts = Oscilloscope.Commands.ChannelScaleCommandString(channel.ChannelNumber, channel.ChannelScale);
                     command = Oscilloscope.Commands.ChannelScaleCommand;
-                    commandParameter2 = channel.ChannelScale.ToString("##0E00", CultureInfo.InvariantCulture);
+                    desiredValue = channel.ChannelScale.ToString("0.###E00", CultureInfo.InvariantCulture);
                     //commandParts = CommandList.UniversalCommandString(command, channel.ChannelNumber.ToString(CultureInfo.InvariantCulture),
                     //    channel.ChannelScale.ToString("##0E00", CultureInfo.InvariantCulture));
                     break;
-                case nameof(channel.ChannelPosition):
-                    command = Oscilloscope.Commands.ChannelPositionCommand;
-                    commandParameter2 = channel.ChannelPosition.ToString("##0E00", CultureInfo.InvariantCulture);
-                    //commandParts = Oscilloscope.Commands.ChannelPositionCommandString(channel.ChannelNumber, channel.ChannelPosition);
-                    break;
+                //case nameof(channel.ChannelPosition):
+                //    command = Oscilloscope.Commands.ChannelPositionCommand;
+                //    desiredValue = channel.ChannelPosition.ToString("##0E00", CultureInfo.InvariantCulture);
+                //    //commandParts = Oscilloscope.Commands.ChannelPositionCommandString(channel.ChannelNumber, channel.ChannelPosition);
+                //    break;
                 case nameof(channel.ChannelOffset):
                     command = Oscilloscope.Commands.ChannelOffsetCommand;
-                    commandParameter2 = channel.ChannelOffset.ToString("##0E00", CultureInfo.InvariantCulture);
+                    desiredValue = channel.ChannelOffset.ToString("0.###E00", CultureInfo.InvariantCulture);
                     //commandParts = Oscilloscope.Commands.ChannelOffsetCommandString(channel.ChannelNumber, channel.ChannelOffset);
                     break;
                 case nameof(channel.ChannelCouplingIndex):
                     command = Oscilloscope.Commands.ChannelCouplingCommand;
-                    commandParameter2 = Oscilloscope.Commands.ChannelCouplingModes != null
+                    desiredValue = Oscilloscope.Commands.ChannelCouplingModes != null
                         ? Oscilloscope.Commands.ChannelCouplingModes.ElementAtOrDefault(channel.ChannelCouplingIndex)
                         : string.Empty;
                     //commandParts = Oscilloscope.Commands.ChannelCouplingCommandString(channel.ChannelNumber, channel.ChannelCouplingSelected);
@@ -255,25 +258,35 @@ namespace P_SCAAT.ViewModels
                 default:
                     break;
             }
-            commandParameter1 = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
-            commandParts = CommandList.UniversalCommandString(command, commandParameter1, commandParameter2);
+            string channelNumber = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
+            (string, string) commandParts = CommandList.UniversalCommandString(command, channelNumber, desiredValue);
             ApplyCommandToConfigString(commandParts);
         }
         private void TriggerViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             TriggerViewModel trigger = sender as TriggerViewModel;
-            (string, string) commandParts = (string.Empty, string.Empty);
+            string command = string.Empty, desiredValue = string.Empty;
             switch (e.PropertyName)
             {
                 case nameof(trigger.TriggerEdgeSourceIndex):
-                    commandParts = Oscilloscope.Commands.TriggerEdgeSourceCommandString(trigger.TriggerEdgeSourceIndex);
+                    //commandParts = Oscilloscope.Commands.TriggerEdgeSourceCommandString(trigger.TriggerEdgeSourceIndex);
+                    command = Oscilloscope.Commands.TriggerEdgeSourceCommand;
+                    desiredValue = Oscilloscope.Commands.TriggerEdgeSourceOptions != null
+                        ? Oscilloscope.Commands.TriggerEdgeSourceOptions.ElementAtOrDefault(trigger.TriggerEdgeSourceIndex)
+                        : string.Empty;
+
                     break;
                 case nameof(trigger.TriggerEdgeSlopeIndex):
-                    commandParts = Oscilloscope.Commands.TriggerEdgeSlopeCommandString(trigger.TriggerEdgeSlopeIndex);
+                    //commandParts = Oscilloscope.Commands.TriggerEdgeSlopeCommandString(trigger.TriggerEdgeSlopeIndex);
+                    command = Oscilloscope.Commands.TriggerEdgeSlopeCommand;
+                    desiredValue = Oscilloscope.Commands.TriggerEdgeSlopeOptions != null
+                        ? Oscilloscope.Commands.TriggerEdgeSlopeOptions.ElementAtOrDefault(trigger.TriggerEdgeSlopeIndex)
+                        : string.Empty;
                     break;
                 default:
                     break;
             }
+            (string, string) commandParts = CommandList.UniversalCommandString(command, desiredValue);
             ApplyCommandToConfigString(commandParts);
         }
         private void ApplyCommandToConfigString((string, string) commandParts)

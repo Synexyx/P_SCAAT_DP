@@ -5,7 +5,6 @@
   "ChannelDisplayCommand": null,
   "ChannelLabelCommand": null,
   "ChannelScaleCommand": null,
-  "ChannelPositionCommand": null,
   "ChannelOffsetCommand": null,
   "ChannelCouplingCommand": null,
   "ChannelCouplingModes": [],

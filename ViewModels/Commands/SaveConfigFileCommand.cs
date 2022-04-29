@@ -21,9 +21,11 @@ namespace P_SCAAT.ViewModels.Commands
         public override async Task ExecuteAsync(object parameter)
         {
             //Debug.WriteLine("SAVE 1 " + Thread.CurrentThread.ManagedThreadId);
-            SaveFileDialog saveFileDialog = new SaveFileDialog ();
-            saveFileDialog.InitialDirectory = Path.GetFullPath("..\\..\\..\\OscilloscopeConfigFiles");
-            saveFileDialog.Filter = "Text (*.txt)|*.txt|All files (*.*)|*.*";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                InitialDirectory = Path.GetFullPath("..\\..\\OscilloscopeConfigFiles"),
+                Filter = "Text (*.txt)|*.txt|All files (*.*)|*.*"
+            };
 
             if ((bool)saveFileDialog.ShowDialog())
             {

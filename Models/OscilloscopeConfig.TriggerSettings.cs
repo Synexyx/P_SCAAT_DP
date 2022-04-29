@@ -15,17 +15,19 @@ namespace P_SCAAT.Models
             {
                 TriggerEdgeSourceOptions = new List<string>();
                 TriggerEdgeSourceIndex = 0;
-                TriggerEdgeSlopeOptions = new List<string>();
-                TriggerEdgeSlopeOptions.Add("Positive");
-                TriggerEdgeSlopeOptions.Add("Negative");
-                TriggerEdgeSlopeOptions.Add("Either");
+                TriggerEdgeSlopeOptions = new List<string>
+                {
+                    "Positive",
+                    "Negative",
+                    "Either"
+                };
                 TriggerEdgeSlopeIndex = 0;
             }
             public TriggerSettings(List<string> triggerEdgeSourceOptions, int triggerEdgeSourceIndex, List<string> triggerEdgeSlopeOptions, int triggerEdgeSlopeIndex)
             {
-                TriggerEdgeSourceOptions = triggerEdgeSourceOptions;
+                TriggerEdgeSourceOptions = new List<string>(triggerEdgeSourceOptions);
                 TriggerEdgeSourceIndex = triggerEdgeSourceIndex;
-                TriggerEdgeSlopeOptions = triggerEdgeSlopeOptions;
+                TriggerEdgeSlopeOptions = new List<string>(triggerEdgeSlopeOptions);
                 TriggerEdgeSlopeIndex = triggerEdgeSlopeIndex;
             }
         }
