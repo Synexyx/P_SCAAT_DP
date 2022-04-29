@@ -32,7 +32,7 @@ namespace P_SCAAT.ViewModels.Commands
             //    ? !_oscilloscopeViewModel.IsSessionOpen
             //    : _oscilloscopeViewModel.IsSessionOpen;
             return parameter.ToString().Equals("OPEN", StringComparison.OrdinalIgnoreCase)
-                ? !_sessionDeviceVM.IsSessionOpen
+                ? _sessionDeviceVM.IsSessionClosed
                 : _sessionDeviceVM.IsSessionOpen;
         }
         public override void Execute(object parameter)

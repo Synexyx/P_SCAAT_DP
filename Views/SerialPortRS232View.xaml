@@ -10,7 +10,7 @@
              d:DataContext="{d:DesignInstance Type=viewModels:SerialPortRS232ViewModel}"
              d:DesignWidth="400">
     <UserControl.Resources>
-        <converters:InverseBooleanConverter x:Key="inverseBoolConverter"/>
+        <!--<converters:InverseBooleanConverter x:Key="inverseBoolConverter"/>-->
 
         <Style TargetType="Button" x:Key="RoundButton">
             <Style.Resources>
@@ -50,7 +50,7 @@
                       VerticalAlignment="Center"
                       Width="260"
                       SelectedIndex="0"
-                      IsEnabled="{Binding IsSessionOpen, Converter={StaticResource inverseBoolConverter}, FallbackValue=True}"/>
+                      IsEnabled="{Binding IsSessionClosed, FallbackValue=True}"/>
 
         <Button Name="btnRefreshOscilloscopeList" HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Height="20" Width="20" Grid.Column="0" Grid.Row="1" Margin="5" Style="{DynamicResource RoundButton}"

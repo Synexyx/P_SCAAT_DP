@@ -326,11 +326,13 @@ namespace P_SCAAT.ViewModels
             return messageBoxResult == MessageBoxResult.OK;
         }
 
+        //ToDo ideálně odstranit všechny valueConvertery a mít to tady ve VM
 
         public override void Dispose()
         {
             TempChannels.CollectionChanged -= TempChannels_Changed;
             TriggerVM.PropertyChanged -= TriggerViewModel_PropertyChanged;
+            base.Dispose();
         }
 
         ~OscilloscopeConfigViewModel()

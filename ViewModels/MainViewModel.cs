@@ -54,6 +54,7 @@ namespace P_SCAAT.ViewModels
         public override void Dispose()
         {
             _oscilloscopeViewControlState.OscilloscopeConfigViewSwitched -= OnOscilloscopeConfigViewSwitch;
+            base.Dispose();
         }
     }
 }

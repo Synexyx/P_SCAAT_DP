@@ -11,6 +11,7 @@ namespace P_SCAAT.ViewModels
     {
         public abstract ISessionDevice SessionDevice { get; }
         public bool IsSessionOpen => SessionDevice.IsSessionOpen;
+        public bool IsSessionClosed => !SessionDevice.IsSessionOpen;
         public abstract bool ChangingSession { get; set; }
         public abstract string SelectedAvailableResource { get; }
     }

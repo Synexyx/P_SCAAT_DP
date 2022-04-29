@@ -187,6 +187,7 @@ namespace P_SCAAT.ViewModels
         public override void Dispose()
         {
             CryptoDeviceMessage.MessageCreation -= OnCryptoMessageCreated;
+            base.Dispose();
         }
     }
 }

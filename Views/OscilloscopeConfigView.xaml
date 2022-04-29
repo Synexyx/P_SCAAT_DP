@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:ListToTextConverter x:Key="listToTextConverter"/>
-        <converters:EnumToListConverter x:Key="enumToListConverter"/>
+        <!--<converters:EnumToListConverter x:Key="enumToListConverter"/>-->
         <converters:OscilloscopeValuesConverter x:Key="oscilloscopeValuesConverter"/>
         <converters:RadioBTNBoolToStringConverter x:Key="radioBTNBoolToStringConverter"/>
         <converters:InverseBooleanConverter x:Key="inverseBooleanConverter"/>
