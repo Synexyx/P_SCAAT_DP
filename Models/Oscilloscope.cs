@@ -127,7 +127,15 @@ namespace P_SCAAT.Models
             Debug.WriteLine("Session succesfully closed.");
         }
 
-        //ToDo MEASSURE LOOP - new TASK ve kterém pak cyklovat zvolené Waveform sources
+        //ToDo MEASURE LOOP - new TASK ve kterém pak cyklovat zvolené Waveform sources
+        internal async Task Measure(CryptoDeviceMessage cryptoDeviceMessage, int messageLenght)
+        {
+            await Task.Run(() =>
+            {
+                cryptoDeviceMessage.InitializeRNGMessageGenerator(messageLenght);
+                cryptoDeviceMessage.GenerateNewMessage();
+            });
+        }
 
         internal void ListCurrentCommands()
         {
@@ -145,7 +153,7 @@ namespace P_SCAAT.Models
         {
             foreach (string setting in OscilloscopeConfigString)
             {
-                SendData(setting);
+                //SendData(setting);
             }
         }
 
@@ -179,6 +187,12 @@ namespace P_SCAAT.Models
             //    _ = MessageBox.Show($"Query data to the device failed!{Environment.NewLine}{exp.Message}", "Data query ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
             //}
             //return string.Empty;
+        }
+
+        public string ReadWaveformData()
+        {
+            //MessageBasedSession.RawIO.AbortAsyncOperation();
+            return string.Empty;
         }
 
         public string ReadData()

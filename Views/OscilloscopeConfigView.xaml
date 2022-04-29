@@ -61,30 +61,31 @@
             <DataGrid AutoGenerateColumns="False" DockPanel.Dock="Bottom"
                       HorizontalAlignment="Left"
                       MinHeight="50"
-                      x:Name="dataGrid"
                       ItemsSource="{Binding TempChannels}"
                       CanUserResizeRows="False"
                       CanUserDeleteRows="False"
                       CanUserAddRows="False"
+                      CanUserSortColumns="False"
                       CanUserResizeColumns="True"
                       RowHeight="25"
                       ColumnWidth="Auto"
                       MaxColumnWidth="120"
                       VerticalContentAlignment="Center"
                       HorizontalContentAlignment="Center"
+                      ToolTip="Analog channels settings"
                       Style="{DynamicResource BoldHeaderGrid}">
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="#" FontWeight="Black" IsReadOnly="True" Binding="{Binding ChannelNumber, Mode=OneTime}" CanUserSort="False"/>
-                    <DataGridCheckBoxColumn Header="Display" Binding="{Binding ChannelDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" CanUserSort="False"/>
-                    <DataGridTextColumn Header="Label (16 max)" Binding="{Binding ChannelLabel, Mode=TwoWay}" CanUserSort="False"/>
+                    <DataGridTextColumn Header="#" FontWeight="Black" IsReadOnly="True" Binding="{Binding ChannelNumber, Mode=OneTime}"/>
+                    <DataGridCheckBoxColumn Header="Display" Binding="{Binding ChannelDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Label (16 max)" Binding="{Binding ChannelLabel, Mode=TwoWay}"/>
                     <DataGridTextColumn Header="Scale" Binding="{Binding ChannelScale, Mode=TwoWay,
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}" CanUserSort="False"/>
+                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
                     <!--<DataGridTextColumn Header="Position" Binding="{Binding ChannelPosition, Mode=TwoWay,
                                         Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}" CanUserSort="False"/>-->
                     <DataGridTextColumn Header="Offset" Binding="{Binding ChannelOffset, Mode=TwoWay,
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}" CanUserSort="False"/>
-                    <DataGridTemplateColumn Header="Coupling" CanUserSort="False">
+                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
+                    <DataGridTemplateColumn Header="Coupling">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox ItemsSource="{Binding ChannelCouplingModes, Mode=OneTime}" 
@@ -191,19 +192,22 @@
 
 
 
-            <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" 
+                       ToolTip="This corresponds to the horizontal scale value displayed as time/div on the oscilloscope screen.">
                 <Label Content="Timebase SCALE" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 <TextBox DockPanel.Dock="Bottom" Width="110" HorizontalAlignment="Left"
                      Text="{Binding TimebaseScale, Mode=TwoWay, Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=SECONDS}"/>
             </DockPanel>
 
-            <DockPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <DockPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"
+                       ToolTip="This corresponds to the horizontal offset value of signal on the oscilloscope screen.">
                 <Label Content="Timebase POSITION" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 <TextBox DockPanel.Dock="Bottom" Width="110" HorizontalAlignment="Left"
                      Text="{Binding TimebasePosition, Mode=TwoWay, Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=SECONDS}"/>
             </DockPanel>
 
-            <DockPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <DockPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
+                       ToolTip="This will select the source for edge mode triggering.">
                 <Label Content="Trigger source" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 <ComboBox ItemsSource="{Binding TriggerVM.TriggerEdgeSourceOptions, Mode=OneTime}" 
                           SelectedIndex="{Binding TriggerVM.TriggerEdgeSourceIndex, Mode=TwoWay}" 
@@ -229,7 +233,8 @@
                 </Grid>-->
             </DockPanel>
 
-            <DockPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <DockPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
+                       ToolTip="This will select the slope type for edge mode triggering.">
                 <Label Content="Trigger edge slope" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 <Grid DockPanel.Dock="Bottom">
                     <Grid.RowDefinitions>
@@ -299,7 +304,8 @@
                 </Grid>
             </DockPanel>
 
-            <DockPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <DockPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left"
+                       ToolTip="Selects how the data transmission mode for waveform data output. This command controls how the data is formatted when it is sent from the oscilloscope">
                 <Label Content="Waveform format" DockPanel.Dock="Top"/>
                 <ComboBox 
                     ItemsSource="{Binding WaveformFormatOptions, Mode=OneTime}"
@@ -308,7 +314,8 @@
                     />
             </DockPanel>
 
-            <DockPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <DockPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left"
+                       ToolTip="Enables oscilloscope to send more bytes of data to PC">
                 <Label Content="Waveform Streaming" DockPanel.Dock="Top"/>
                 <CheckBox Content="Streaming" DockPanel.Dock="Bottom" IsChecked="{Binding WaveformStreaming, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </DockPanel>

@@ -18,6 +18,10 @@ namespace P_SCAAT.Models
 
             private List<string> _trueFalseOptions;
             public List<string> TrueFalseOptions { get => _trueFalseOptions ?? new List<string>(); set => _trueFalseOptions = value; }
+            public string OscilloscopeSingleAcquisitionCommand { get; set; }
+            public string OscilloscopeStopCommand { get; set; }
+            public string OsclloscopeRunCommand { get; set; }
+            public string OscilloscopeOperationCompleteCommand { get; set; } 
 
             public string ChannelDisplayCommand { get; set; }
             public string ChannelLabelCommand { get; set; }
@@ -37,6 +41,7 @@ namespace P_SCAAT.Models
             public string TriggerEdgeSlopeCommand { get; set; }
             private List<string> _triggerEdgeSlopeOptions;
             public List<string> TriggerEdgeSlopeOptions { get => _triggerEdgeSlopeOptions ?? new List<string>(); set => _triggerEdgeSlopeOptions = value; }
+            public string TriggerLevelCommand { get; set; }
 
             public string WaveformDataCommand { get; set; }
             public string WaveformSourceCommand { get; set; }

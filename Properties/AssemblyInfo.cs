@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("P_SCAAT(.NET F 4.8)")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("P_SCAAT")]
+[assembly: AssemblyDescription("Master's thesis for BUT Brno")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("P_SCAAT(.NET F 4.8)")]
+[assembly: AssemblyCompany("karabina.lukas@gmail.com")]
+[assembly: AssemblyProduct("P_SCAAT")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using P_SCAAT.Models;
 using P_SCAAT.ViewModels.ViewControlState;
 
@@ -45,7 +46,6 @@ namespace P_SCAAT.ViewModels
             //OsciloscopeViewModel = new OsciloscopeViewModel(Osciloscope);
             //OsciloscopeConfigViewModel = new OsciloscopeConfigViewModel(Osciloscope);
         }
-
         private void OnOscilloscopeConfigViewSwitch()
         {
             OnPropertyChanged(nameof(OscilloscopeSelectedVM));

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -77,6 +79,7 @@ namespace P_SCAAT.ViewModels
                 _changingSession = value;
                 OnPropertyChanged(nameof(ChangingSession));
                 OnPropertyChanged(nameof(IsSessionOpen));
+                FillWaveformSource();
             }
         }
         //public bool IsSessionOpen => Oscilloscope.IsSessionOpen;
@@ -110,6 +113,16 @@ namespace P_SCAAT.ViewModels
                 OnPropertyChanged(nameof(ManualMessageRead));
             }
         }
+        private ObservableCollection<WaveformSourceViewModel> _waveformSource;
+        public ObservableCollection<WaveformSourceViewModel> WaveformSource
+        {
+            get => _waveformSource;
+            set
+            {
+                _waveformSource = value;
+                OnPropertyChanged(nameof(WaveformSource));
+            }
+        }
         #endregion
 
 
@@ -118,13 +131,12 @@ namespace P_SCAAT.ViewModels
             CryptoDeviceMessage = cryptoDeviceMessage;
 
             Oscilloscope = oscilloscope;
-
-
+            WaveformSource = new ObservableCollection<WaveformSourceViewModel>();
+            FillWaveformSource();
 
             RefreshOscilloscopeList();
 
-
-            CreateCommands(oscilloscope, oscilloscopeControlState, oscilloscopeConfigVM);
+            CreateCommands(oscilloscope, cryptoDeviceMessage, oscilloscopeControlState, oscilloscopeConfigVM);
 
 
 
@@ -133,6 +145,18 @@ namespace P_SCAAT.ViewModels
             //    Debug.WriteLine(item);
             //}
         }
+
+        public void FillWaveformSource()
+        {
+            if(Oscilloscope.Channels != null && Oscilloscope.Channels.Any())
+            {
+                foreach (OscilloscopeConfig.ChannelSettings channel in Oscilloscope.Channels)
+                {
+                    WaveformSource.Add(new WaveformSourceViewModel(channel.ChannelLabel, false));
+                }
+            }
+        }
+
         public void RefreshOscilloscopeList()
         {
             try
@@ -154,8 +178,9 @@ namespace P_SCAAT.ViewModels
         public ICommand RefreshOscilloscopeListCommand { get; set; }
         public ICommand ConfigViewSelectCommand { get; set; }
         public ICommand ManualControlCommand { get; set; }
+        public ICommand MeasureCommand { get; set; }
 
-        private void CreateCommands(Oscilloscope oscilloscope, OscilloscopeViewControlState oscilloscopeControlState, Func<OscilloscopeConfigViewModel> oscilloscopeConfigVM)
+        private void CreateCommands(Oscilloscope oscilloscope, CryptoDeviceMessage cryptoDeviceMessage, OscilloscopeViewControlState oscilloscopeControlState, Func<OscilloscopeConfigViewModel> oscilloscopeConfigVM)
         {
             ControlOscilloscopeSessionCommand = new ControlSessionCommand(this);
             RefreshOscilloscopeListCommand = new SimpleCommand(RefreshOscilloscopeList);
@@ -163,6 +188,8 @@ namespace P_SCAAT.ViewModels
             //OsciloscopeConfigViewSelectCommand = new OsciloscopeConfigViewSelectCommand(osciloscope, osciloscopeControlState, osciloscopeConfigVM);
             ConfigViewSelectCommand = new ConfigViewSelectCommand(this, oscilloscope, oscilloscopeControlState, oscilloscopeConfigVM);
             ManualControlCommand = new ManualControlCommand(this, oscilloscope);
+            MeasureCommand = new MeasureCommand(oscilloscope, cryptoDeviceMessage, 20);
+
         }
         #endregion
 

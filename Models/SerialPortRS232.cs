@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
+using P_SCAAT.Exceptions;
+using System.Diagnostics;
 
 namespace P_SCAAT.Models
 {
@@ -20,6 +22,7 @@ namespace P_SCAAT.Models
         public SerialPortRS232()
         {
             SerialPort = new SerialPort();
+            PortName = string.Empty;
             BaudRate = 115200;
             Parity = Parity.None;
             DataBits = 8;
@@ -30,29 +33,31 @@ namespace P_SCAAT.Models
         {
             PortName = portName;
 
-            SerialPort.PortName = PortName;
-            SerialPort.BaudRate = BaudRate;
-            SerialPort.Parity = Parity;
-            SerialPort.DataBits = DataBits;
-            SerialPort.StopBits = StopBits;
-            SerialPort.DtrEnable = true;
-            SerialPort.RtsEnable = true;
-            SerialPort.WriteTimeout = 1000;
-            SerialPort.ReadTimeout = 1000;
             try
             {
+                SerialPort.PortName = PortName;
+                SerialPort.BaudRate = BaudRate;
+                SerialPort.Parity = Parity;
+                SerialPort.DataBits = DataBits;
+                SerialPort.StopBits = StopBits;
+                SerialPort.DtrEnable = true;
+                SerialPort.RtsEnable = true;
+                SerialPort.WriteTimeout = 1000;
+                SerialPort.ReadTimeout = 1000;
                 SerialPort.Open();
             }
-            catch
+            catch (Exception exp)
             {
-
+                throw new SessionControlException($"Serial port session cannot be estabilished!{Environment.NewLine}REASON :{exp.GetType()}{Environment.NewLine}{exp.Message}");
             }
         }
 
         public void CloseSession()
         {
-            SerialPort.Close();
-            SerialPort.Dispose();
+            using (SerialPort)
+            {
+                SerialPort.Close();
+            }
         }
 
 

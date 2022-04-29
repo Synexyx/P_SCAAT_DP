@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -18,6 +19,11 @@ namespace P_SCAAT.ViewModels
         private string _selectedAvailablePort;
         private SerialPortRS232 _serialPortRS232;
         private bool _changingSession;
+
+        private int _baudRate;
+        private string _selectedParity;
+        private int _dataBits;
+        private string _selectedStopBits;
 
         //private SerialPort _serialPort;
 
@@ -67,6 +73,48 @@ namespace P_SCAAT.ViewModels
                 OnPropertyChanged(nameof(IsSessionOpen));
             }
         }
+
+        public int BaudRate
+        {
+            get => _baudRate; set
+            {
+                _baudRate = value;
+                OnPropertyChanged(nameof(BaudRate));
+            }
+        }
+        public string[] SerialPortParity => Enum.GetNames(typeof(Parity));
+        public string SelectedParity
+        {
+            get => _selectedParity;
+            set
+            {
+                _selectedParity = value;
+                OnPropertyChanged(nameof(SelectedParity));
+            }
+        }
+        public int DataBits
+        {
+            get => _dataBits;
+            set
+            {
+                _dataBits = value;
+                OnPropertyChanged(nameof(DataBits));
+            }
+        }
+        public string[] SerialPortStopBits => Enum.GetNames(typeof(StopBits));
+        public string SelectedStopBits
+        {
+            get => _selectedStopBits;
+            set
+            {
+                _selectedStopBits = value;
+                OnPropertyChanged(nameof(SelectedStopBits));
+            }
+        }
+
+
+
+
         //public SerialPort SerialPort
         //{
         //    get => _serialPort;
@@ -85,14 +133,26 @@ namespace P_SCAAT.ViewModels
             CryptoDeviceMessage = cryptoDeviceMessage;
 
             SerialPortRS232 = new SerialPortRS232();
+            BaudRate = SerialPortRS232.BaudRate;
+            SelectedParity = SerialPortRS232.Parity.ToString();
+            DataBits = SerialPortRS232.DataBits;
+            SelectedStopBits = SerialPortRS232.StopBits.ToString();
+
 
             AvailablePorts = new ObservableCollection<string>();
 
             RefreshPortList();
 
+            CryptoDeviceMessage.MessageCreation += OnCryptoMessageCreated;
+
             CreateCommands();
         }
 
+        private void OnCryptoMessageCreated()
+        {
+            Thread.Sleep(20000);
+            throw new NotImplementedException();
+        }
 
         internal void RefreshPortList()
         {
@@ -117,11 +177,16 @@ namespace P_SCAAT.ViewModels
         public ICommand RefreshPortListCommand { get; set; }
         public ICommand ControlSerialPortSessionCommand { get; set; }
 
+
         private void CreateCommands()
         {
             RefreshPortListCommand = new SimpleCommand(RefreshPortList);
             ControlSerialPortSessionCommand = new ControlSessionCommand(this);
+        }
 
+        public override void Dispose()
+        {
+            CryptoDeviceMessage.MessageCreation -= OnCryptoMessageCreated;
         }
     }
 }

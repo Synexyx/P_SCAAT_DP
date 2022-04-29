@@ -19,6 +19,15 @@
                 </Style>
             </Style.Resources>
         </Style>
+
+        <Style TargetType="DataGrid" x:Key="BoldHeaderGrid">
+            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource BoldHeader}"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader" x:Key="BoldHeader">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
     </UserControl.Resources>
     
     <Grid>
@@ -124,9 +133,12 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                
+                <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <Label Content="Traces in total:" DockPanel.Dock="Left" FontWeight="Bold"/>
@@ -136,6 +148,41 @@
                 <Label Content="Traces per file:" DockPanel.Dock="Left" FontWeight="Bold"/>
                 <TextBox Text="100" DockPanel.Dock="Right" VerticalContentAlignment="Center" Width="50" Height="20"/>
             </DockPanel>
+
+            
+            
+            <DataGrid Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                      AutoGenerateColumns="False"
+                      HorizontalAlignment="Left"
+                      MinHeight="50"
+                      ItemsSource="{Binding WaveformSource}"
+                      CanUserResizeRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserAddRows="False"
+                      CanUserResizeColumns="False"
+                      CanUserSortColumns="False"
+                      CanUserReorderColumns="False"
+                      ColumnWidth="Auto"
+                      MaxColumnWidth="130"
+                      Margin="5"
+                      VerticalContentAlignment="Center"
+                      HorizontalContentAlignment="Center"
+                      ToolTip="Selection of sources for measurement. Note that selecting more sources at once will cause the measurement process to slow down."
+                      Style="{DynamicResource BoldHeaderGrid}">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Source" Binding="{Binding SourceName, Mode=OneWay}" IsReadOnly="True"/>
+                    <DataGridCheckBoxColumn Header="Enable" Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <DockPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <Label Content="Message lenght [bytes]:" DockPanel.Dock="Left" FontWeight="Bold"/>
+                <TextBox Text="100" DockPanel.Dock="Right" VerticalContentAlignment="Center" Width="50" Height="20"/>
+            </DockPanel>
+            
+            <Button Grid.Row="3" Grid.Column="0" Content="START MEASSURE" Command="{Binding MeasureCommand, Mode=OneTime}"/>
+            <Button Grid.Row="3" Grid.Column="1" Content="SINGLE ACQ"/>
         </Grid>
         
             

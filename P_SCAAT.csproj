@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,7 +38,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>PSCAAT.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>P_SCAAT.App</StartupObject>
@@ -97,6 +99,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Exceptions\SessionControlException.cs" />
     <Compile Include="Models\CryptoDeviceMessage.cs" />
     <Compile Include="Models\ISessionDevice.cs" />
     <Compile Include="Models\Oscilloscope.cs" />
@@ -114,6 +117,7 @@
     <Compile Include="ViewModels\Commands\ControlSessionCommand.cs" />
     <Compile Include="ViewModels\Commands\CoreCommand.cs" />
     <Compile Include="ViewModels\Commands\ManualControlCommand.cs" />
+    <Compile Include="ViewModels\Commands\MeasureCommand.cs" />
     <Compile Include="ViewModels\Commands\OpenConfigFileCommand.cs" />
     <Compile Include="ViewModels\Commands\SaveConfigFileCommand.cs" />
     <Compile Include="ViewModels\Commands\SimpleCommand.cs" />
@@ -125,6 +129,7 @@
     <Compile Include="ViewModels\SessionDeviceVM.cs" />
     <Compile Include="ViewModels\TriggerViewModel.cs" />
     <Compile Include="ViewModels\ViewControlState\OscilloscopeViewControlState.cs" />
+    <Compile Include="ViewModels\WaveformSourceViewModel.cs" />
     <Compile Include="Views\OscilloscopeConfigView.xaml.cs">
       <DependentUpon>OscilloscopeConfigView.xaml</DependentUpon>
     </Compile>
