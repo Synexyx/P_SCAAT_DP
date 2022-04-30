@@ -180,7 +180,7 @@
                 <TextBox Text="100" DockPanel.Dock="Right" VerticalContentAlignment="Center" Width="50" Height="20"/>
             </DockPanel>
             
-            <Button Grid.Row="3" Grid.Column="0" Content="START MEASSURE" Command="{Binding MeasureCommand, Mode=OneTime}"/>
+            <Button Grid.Row="3" Grid.Column="0" Content="{Binding MeasureButtonContent}" Command="{Binding MeasureCommand, Mode=OneTime}"/>
             <Button Grid.Row="3" Grid.Column="1" Content="SINGLE ACQ"/>
         </Grid>
         

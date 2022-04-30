@@ -14,7 +14,7 @@
   "ChannelCouplingCommand": ":CHANnel{0}:INPut {1}",
   "ChannelCouplingModes": [
     "AC",
-    "DC"
+    "DCC"
   ],
   "TimebasePositionCommand": ":TIMebase:Position {0}",
   "TimebaseScaleCommand": ":TIMebase:SCALe {0}",

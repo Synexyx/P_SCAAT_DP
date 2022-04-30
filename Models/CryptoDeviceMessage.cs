@@ -9,6 +9,7 @@ namespace P_SCAAT.Models
     internal class CryptoDeviceMessage
     {
         public event Action MessageCreation;
+
         public byte[] MessageBytes { get; set; }
         public int MessageLenght => MessageBytes.Length;
         public DateTime TimeCreated { get; set; }

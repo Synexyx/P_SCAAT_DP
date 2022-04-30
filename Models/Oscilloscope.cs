@@ -128,13 +128,32 @@ namespace P_SCAAT.Models
         }
 
         //ToDo MEASURE LOOP - new TASK ve kterém pak cyklovat zvolené Waveform sources
-        internal async Task Measure(CryptoDeviceMessage cryptoDeviceMessage, int messageLenght)
+        //CancellationTokenSource tokenSource = new CancellationTokenSource();
+
+        //ToDo asi tady metoda StartMeassure
+        //Předat zprávu + seznam kanálů, na kterých se bude měřit
+        //internal async Task<string> Measure(CryptoDeviceMessage cryptoDeviceMessage, int messageLenght, CancellationToken token)
+        internal string Measure(CryptoDeviceMessage cryptoDeviceMessage, int messageLenght, CancellationToken token)
         {
-            await Task.Run(() =>
+            while (true)
             {
-                cryptoDeviceMessage.InitializeRNGMessageGenerator(messageLenght);
-                cryptoDeviceMessage.GenerateNewMessage();
-            });
+                Debug.WriteLine("EXEC");
+                Debug.WriteLine(DateTime.Now);
+                Thread.Sleep(50);
+                //token.ThrowIfCancellationRequested();
+                if (token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                    return "H";
+                }
+            }
+            //await Task.Run(() =>
+            //{
+            //    Thread.Sleep(50000);
+            //    cryptoDeviceMessage.InitializeRNGMessageGenerator(messageLenght);
+            //    cryptoDeviceMessage.GenerateNewMessage();
+            //});
+            //return "G";
         }
 
         internal void ListCurrentCommands()
@@ -231,11 +250,10 @@ namespace P_SCAAT.Models
             base.ClearAllData();
         }
 
-        //ToDo asi tady metoda StartMeassure
-        //Předat zprávu + seznam kanálů, na kterých se bude měřit
-
         public void UpdateAllResources()
         {
+            Thread.Sleep(5000);
+
             List<string> tempConfigString = new List<string>(OscilloscopeConfigString);
             //OscilloscopeConfigString.Clear(); //ToDo not sure if will work properly
 
@@ -276,7 +294,7 @@ namespace P_SCAAT.Models
                 string forgeCommand = CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(), "?").Item2.Replace(" ", "");
                 //oscilloscopeResponse = TESTQUERY2(CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(CultureInfo.InvariantCulture), "?").Item2);
 
-                oscilloscopeResponse = QueryData(forgeCommand).Replace("\\n", "");
+                //oscilloscopeResponse = QueryData(forgeCommand).Replace("\\n", "");
                 _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
                 channel.ChannelScale = numberResult;
 

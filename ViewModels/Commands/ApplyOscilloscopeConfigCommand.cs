@@ -11,6 +11,9 @@ namespace P_SCAAT.ViewModels.Commands
 {
     internal class ApplyOscilloscopeConfigCommand : CoreCommand
     {
+
+        //ToDo async?
+
         //private readonly Oscilloscope _oscilloscope;
         private readonly OscilloscopeConfigViewModel _oscilloscopeConfigViewModel;
         private readonly OscilloscopeViewControlState _oscilloscopeControlState;
@@ -32,14 +35,15 @@ namespace P_SCAAT.ViewModels.Commands
             //_oscilloscope.InsertNewChannelSettings(_oscilloscopeConfigViewModel.ChannelSettingsVMtoModel());
             _oscilloscopeConfigViewModel.Oscilloscope.InsertNewChannelSettings(_oscilloscopeConfigViewModel.ChannelSettingsVMtoModel());
             _oscilloscopeConfigViewModel.Oscilloscope.InsertTriggerSettings(_oscilloscopeConfigViewModel.TriggerSettingsVMtoModel());
+            
+            //ToDo APPLY OTHER SETTING
+            _oscilloscopeConfigViewModel.Oscilloscope.InsertOtherSettings(_oscilloscopeConfigViewModel.TimebaseScale);
+            //ToDo APPLY OTHER SETTING
+
 
             _oscilloscopeConfigViewModel.Oscilloscope.ApplyAllSettingsToDevice();
 
 
-            //ToDo APPLY TRIGGER
-            //ToDo APPLY TRIGGER
-            //ToDo APPLY OTHER SETTING
-            //ToDo APPLY OTHER SETTING
 
 
             //_oscilloscope.ListCurrentCommands();

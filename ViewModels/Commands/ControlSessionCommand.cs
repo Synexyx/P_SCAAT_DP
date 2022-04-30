@@ -13,6 +13,8 @@ namespace P_SCAAT.ViewModels.Commands
 {
     internal class ControlSessionCommand : CoreCommand
     {
+        //ToDo async?
+
         //private readonly OscilloscopeViewModel _oscilloscopeViewModel;
 
         //public ControlOscilloscopeSessionCommand(OscilloscopeViewModel oscilloscopeViewModel)

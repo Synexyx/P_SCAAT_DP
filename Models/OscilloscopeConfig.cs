@@ -48,8 +48,6 @@ namespace P_SCAAT.Models
             //ToDo dynamic commandList loading
 
 
-            //Commands = LoadCommandList("../../../OscilloscopeCommandLists/active.json");
-            //string filePathName = FindCorrectCommandListFile(oscilloscopeID);
             Commands = LoadCommandList(oscilloscopeID);
             Trigger.TriggerEdgeSourceOptions = Commands.TriggerEdgeSourceOptions;
             Trigger.TriggerEdgeSlopeOptions = Commands.TriggerEdgeSlopeOptions;
@@ -57,7 +55,10 @@ namespace P_SCAAT.Models
 
             for (int i = 0; i < Commands.NumberOfAnalogChannels; i++)
             {
-                ChannelSettings channel = new ChannelSettings(i + 1);
+                ChannelSettings channel = new ChannelSettings(i + 1)
+                {
+                    ChannelCouplingModes = Commands.ChannelCouplingModes
+                };
                 Channels.Add(channel);
             }
 

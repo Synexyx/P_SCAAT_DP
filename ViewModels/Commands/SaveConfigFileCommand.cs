@@ -11,7 +11,7 @@ using P_SCAAT.ViewModels;
 
 namespace P_SCAAT.ViewModels.Commands
 {
-    internal class SaveConfigFileCommand : AsyncCoreCommand
+    internal class SaveConfigFileCommand : AsyncIsExcecutingCoreCommand
     {
         private readonly OscilloscopeConfigViewModel _oscilloscopeConfigViewModel;
         public SaveConfigFileCommand(OscilloscopeConfigViewModel oscilloscopeConfigViewModel)

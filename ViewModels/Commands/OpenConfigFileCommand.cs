@@ -12,7 +12,7 @@ using P_SCAAT.ViewModels;
 
 namespace P_SCAAT.ViewModels.Commands
 {
-    internal class OpenConfigFileCommand : AsyncCoreCommand
+    internal class OpenConfigFileCommand : AsyncIsExcecutingCoreCommand
     {
         private readonly OscilloscopeConfigViewModel _oscilloscopeConfigViewModel;
         public OpenConfigFileCommand(OscilloscopeConfigViewModel oscilloscopeConfigViewModel)
@@ -52,8 +52,8 @@ namespace P_SCAAT.ViewModels.Commands
             };
             if ((bool)openFileDialog.ShowDialog())
             {
-                await Task.Run(async () =>
-                {
+                //await Task.Run(async () =>
+                //{
                     //Debug.WriteLine("OPEN 2 " + Thread.CurrentThread.ManagedThreadId);
 
                     Stream fileStream = openFileDialog.OpenFile();
@@ -65,7 +65,7 @@ namespace P_SCAAT.ViewModels.Commands
                     //List<string> loadedConfigString = Regex.Split(fileContent, @"\r|\n|\r\n").Where(line => line != string.Empty).ToList();
                     List<string> loadedConfigString = Regex.Split(fileContent, Environment.NewLine).Where(line => line != string.Empty).ToList();
                     _oscilloscopeConfigViewModel.TempOscilloscopeConfigString.AddRange(loadedConfigString);
-                });
+                //});
                 List<string> resultList = _oscilloscopeConfigViewModel.TempOscilloscopeConfigString.Distinct().ToList();
                 _oscilloscopeConfigViewModel.TempOscilloscopeConfigString = resultList;
             }

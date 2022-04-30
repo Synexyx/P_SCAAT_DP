@@ -26,6 +26,8 @@ namespace P_SCAAT.ViewModels
         private Oscilloscope _oscilloscope;
         private bool _changingSession;
 
+        private string _measureButtonContent = "Start";
+
         private string _errorMessage = string.Empty;
 
         private string _manualMessageWrite = "*IDN?";
@@ -79,10 +81,20 @@ namespace P_SCAAT.ViewModels
                 _changingSession = value;
                 OnPropertyChanged(nameof(ChangingSession));
                 OnPropertyChanged(nameof(IsSessionOpen));
-                FillWaveformSource();
+                if (IsSessionOpen)
+                {
+                    FillWaveformSource();
+                }
+                WaveformSource.Clear();
             }
         }
         //public bool IsSessionOpen => Oscilloscope.IsSessionOpen;
+
+        public string MeasureButtonContent
+        {
+            get => _measureButtonContent;
+            set { _measureButtonContent = value; OnPropertyChanged(nameof(MeasureButtonContent)); }
+        }
 
         public string ErrorMessage
         {
@@ -123,6 +135,36 @@ namespace P_SCAAT.ViewModels
                 OnPropertyChanged(nameof(WaveformSource));
             }
         }
+        private int _tracesTotal;
+        private int _tracesPerFile;
+        private int _messageLenght;
+        public int MessageLenght
+        {
+            get => _messageLenght;
+            set
+            {
+                _messageLenght = value;
+                OnPropertyChanged(nameof(MessageLenght));
+            }
+        }
+        public int TracesTotal
+        {
+            get => _tracesTotal;
+            set
+            {
+                _tracesTotal = value;
+                OnPropertyChanged(nameof(TracesTotal));
+            }
+        }
+        public int TracesPerFile
+        {
+            get => _tracesPerFile;
+            set
+            {
+                _tracesPerFile = value;
+                OnPropertyChanged(nameof(TracesPerFile));
+            }
+        }
         #endregion
 
 
@@ -148,7 +190,7 @@ namespace P_SCAAT.ViewModels
 
         public void FillWaveformSource()
         {
-            if(Oscilloscope.Channels != null && Oscilloscope.Channels.Any())
+            if (Oscilloscope.Channels != null && Oscilloscope.Channels.Any())
             {
                 foreach (OscilloscopeConfig.ChannelSettings channel in Oscilloscope.Channels)
                 {
@@ -188,7 +230,7 @@ namespace P_SCAAT.ViewModels
             //OsciloscopeConfigViewSelectCommand = new OsciloscopeConfigViewSelectCommand(osciloscope, osciloscopeControlState, osciloscopeConfigVM);
             ConfigViewSelectCommand = new ConfigViewSelectCommand(this, oscilloscope, oscilloscopeControlState, oscilloscopeConfigVM);
             ManualControlCommand = new ManualControlCommand(this, oscilloscope);
-            MeasureCommand = new MeasureCommand(oscilloscope, cryptoDeviceMessage, 20);
+            MeasureCommand = new MeasureCommand(this, oscilloscope, cryptoDeviceMessage);
 
         }
         #endregion

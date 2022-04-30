@@ -112,6 +112,7 @@
     <Compile Include="ViewModels\ChannelSettingsViewModel.cs" />
     <Compile Include="ViewModels\Commands\ApplyOscilloscopeConfigCommand.cs" />
     <Compile Include="ViewModels\Commands\AsyncCoreCommand.cs" />
+    <Compile Include="ViewModels\Commands\AsyncIsExcecutingCoreCommand.cs" />
     <Compile Include="ViewModels\Commands\CancelOscilloscopeConfigCommand.cs" />
     <Compile Include="ViewModels\Commands\ConfigViewSelectCommand.cs" />
     <Compile Include="ViewModels\Commands\ControlSessionCommand.cs" />

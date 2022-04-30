@@ -90,14 +90,14 @@ namespace P_SCAAT.Models
             }
             public string ChannelDisplayAskCommandString(int channelNumber)
             {
-                //ToDo check if space between command and ? is ok -- NENÍ
+                
                 return string.IsNullOrEmpty(ChannelDisplayCommand)
                     ? string.Empty
                     : ForgeCommandToString(ChannelDisplayCommand, channelNumber.ToString(CultureInfo.InvariantCulture), "?").Item2;
             }
             //public (string, string) ChannelLabelCommandString(int channelNumber, string channelLabel)
             //{
-            //    //ToDo check if characters need to be limited
+            //    
             //    return string.IsNullOrEmpty(ChannelLabelCommand)
             //        ? (string.Empty, string.Empty)
             //        : ForgeCommandToString(ChannelLabelCommand, channelNumber.ToString(CultureInfo.InvariantCulture),
@@ -122,28 +122,12 @@ namespace P_SCAAT.Models
             //        ? string.Empty
             //        : ForgeCommandToString(ChannelScaleCommand, channelNumber.ToString(CultureInfo.InvariantCulture), "?").Item2;
             //}
-            //public (string, string) ChannelPositionCommandString(int channelNumber, decimal channelPosition)
-            //{
-            //    //ToDo check co to má vlastně být
-            //    return string.IsNullOrEmpty(ChannelPositionCommand)
-            //        ? (string.Empty, string.Empty)
-            //        : ForgeCommandToString(ChannelPositionCommand, channelNumber.ToString(CultureInfo.InvariantCulture),
-            //        channelPosition.ToString("##0E00", CultureInfo.InvariantCulture));
-            //}
             //public (string, string) ChannelOffsetCommandString(int channelNumber, decimal channelOffset)
             //{
             //    return string.IsNullOrEmpty(ChannelOffsetCommand)
             //        ? (string.Empty, string.Empty)
             //        : ForgeCommandToString(ChannelOffsetCommand, channelNumber.ToString(CultureInfo.InvariantCulture),
             //        channelOffset.ToString("##0E00", CultureInfo.InvariantCulture));
-            //}
-            //public (string, string) ChannelCouplingCommandString(int channelNumber, string channelCoupling)
-            //{
-            //    //ToDo check jestli tohle sedí :CHANnel<N>:PROBe:COUPling
-            //    return string.IsNullOrEmpty(ChannelCouplingCommand)
-            //        ? (string.Empty, string.Empty)
-            //        : ForgeCommandToString(ChannelCouplingCommand, channelNumber.ToString(CultureInfo.InvariantCulture),
-            //        channelCoupling);
             //}
             #endregion
             #region ====== TIMEBASE =====
@@ -191,7 +175,7 @@ namespace P_SCAAT.Models
                     ? (string.Empty, string.Empty)
                     : ForgeCommandToString(WaveformDataCommand, string.Empty);
             }
-
+            //ToDo předělat na universal
             public (string, string) WaveformFormatCommandString(int waveformFormatIndex)
             {
                 if (string.IsNullOrEmpty(WaveformFormatCommand) || WaveformFormatOptions == null)
@@ -201,7 +185,7 @@ namespace P_SCAAT.Models
                 string selectedOptionByIndex = WaveformFormatOptions.ElementAtOrDefault(waveformFormatIndex) ?? string.Empty;
                 return ForgeCommandToString(WaveformFormatCommand, selectedOptionByIndex);
             }
-
+            //ToDo předělat na universal
             public (string, string) WaveformStreamingCommandString(bool waveformStreaming)
             {
                 if (string.IsNullOrEmpty(WaveformStreamingCommand))

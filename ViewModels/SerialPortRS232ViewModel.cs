@@ -14,7 +14,7 @@ namespace P_SCAAT.ViewModels
 {
     class SerialPortRS232ViewModel : SessionDeviceVM
     {
-        private CryptoDeviceMessage _cryptoDeviceMessage;
+        //private CryptoDeviceMessage _cryptoDeviceMessage;
         private ObservableCollection<string> _availablePorts;
         private string _selectedAvailablePort;
         private SerialPortRS232 _serialPortRS232;
@@ -80,6 +80,7 @@ namespace P_SCAAT.ViewModels
             {
                 _baudRate = value;
                 OnPropertyChanged(nameof(BaudRate));
+                SerialPortRS232.BaudRate = BaudRate;
             }
         }
         public string[] SerialPortParity => Enum.GetNames(typeof(Parity));
@@ -90,6 +91,10 @@ namespace P_SCAAT.ViewModels
             {
                 _selectedParity = value;
                 OnPropertyChanged(nameof(SelectedParity));
+                if (Enum.TryParse(SelectedParity, out Parity result))
+                {
+                    SerialPortRS232.Parity = result;
+                }
             }
         }
         public int DataBits
@@ -99,6 +104,7 @@ namespace P_SCAAT.ViewModels
             {
                 _dataBits = value;
                 OnPropertyChanged(nameof(DataBits));
+                SerialPortRS232.DataBits = DataBits;
             }
         }
         public string[] SerialPortStopBits => Enum.GetNames(typeof(StopBits));
@@ -109,6 +115,10 @@ namespace P_SCAAT.ViewModels
             {
                 _selectedStopBits = value;
                 OnPropertyChanged(nameof(SelectedStopBits));
+                if (Enum.TryParse(SelectedStopBits, out StopBits result))
+                {
+                    SerialPortRS232.StopBits = result;
+                }
             }
         }
 
@@ -151,6 +161,7 @@ namespace P_SCAAT.ViewModels
         private void OnCryptoMessageCreated()
         {
             Thread.Sleep(20000);
+            SerialPortRS232.Send(CryptoDeviceMessage.MessageBytes);
             throw new NotImplementedException();
         }
 

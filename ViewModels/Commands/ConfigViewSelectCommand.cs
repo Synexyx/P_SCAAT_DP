@@ -11,7 +11,7 @@ using P_SCAAT.ViewModels.ViewControlState;
 namespace P_SCAAT.ViewModels.Commands
 {
     //internal class OscilloscopeConfigViewSelectCommand : CoreCommand
-    internal class ConfigViewSelectCommand : AsyncCoreCommand
+    internal class ConfigViewSelectCommand : AsyncIsExcecutingCoreCommand
     {
         private readonly OscilloscopeViewModel _oscilloscopeViewModel;
         private readonly Oscilloscope _osciloscope;
@@ -30,7 +30,7 @@ namespace P_SCAAT.ViewModels.Commands
 
         public override bool CanExecute(object parameter)
         {
-            return _oscilloscopeViewModel.IsSessionOpen;
+            return !IsExecuting && _oscilloscopeViewModel.IsSessionOpen;
         }
         //public override void Execute(object parameter)
         //{
@@ -41,7 +41,7 @@ namespace P_SCAAT.ViewModels.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            //await Task.Run(() => _osciloscope.UpdateAllResources());
+            await Task.Run(() => _osciloscope.UpdateAllResources());
             _oscilloscopeControlState.OscilloscopeSelectedVM = _oscilloscopeConfigVM();
         }
         private void OnOscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
