@@ -1,6 +1,7 @@
 ﻿using P_SCAAT.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -20,25 +21,42 @@ namespace P_SCAAT.ViewModels.Commands
 
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
+        //ToDo implement through this
+        private Measurement measurement = new Measurement();
+
 
         public MeasureCommand(OscilloscopeViewModel oscilloscopeViewModel, Oscilloscope oscilloscope, CryptoDeviceMessage cryptoDeviceMessage)
         {
             _oscilloscopeViewModel = oscilloscopeViewModel;
+;
+
             _oscilloscope = oscilloscope;
             _cryptoDeviceMessage = cryptoDeviceMessage;
 
+            _oscilloscopeViewModel.PropertyChanged += OnOscilloscopeViewModel_PropertyChanged;
             //_measureButtonContent = _oscilloscopeViewModel.MeasureButtonContent;
+        }
+
+        private void _oscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool CanExecute(object parameter)
+        {
+            return _oscilloscopeViewModel.IsSessionOpen;
         }
         public override async Task ExecuteAsync(object parameter)
         {
             _measureButtonContent = _oscilloscopeViewModel.MeasureButtonContent;
-            if (_measureButtonContent.Equals("start", StringComparison.OrdinalIgnoreCase))
+            if (_measureButtonContent.Equals(_oscilloscopeViewModel.MeasureButtonContentStart, StringComparison.OrdinalIgnoreCase))
             {
                 tokenSource = new CancellationTokenSource();
-                _oscilloscopeViewModel.MeasureButtonContent = "CANCEL";
+                _oscilloscopeViewModel.MeasureButtonContent = _oscilloscopeViewModel.MeasureButtonContentCancel;
 
                 await Task.Run(() =>
                 {
+
                     try
                     {
                         //ToDo cykl podle počtu záznamů celkem a na soubor
@@ -59,14 +77,17 @@ namespace P_SCAAT.ViewModels.Commands
             }
             else
             {
-                tokenSource.Cancel(false);
-                _oscilloscopeViewModel.MeasureButtonContent = "START";
+                tokenSource.Cancel();
+                _oscilloscopeViewModel.MeasureButtonContent = _oscilloscopeViewModel.MeasureButtonContentStart;
                 //_ = _oscilloscope.Measure(_cryptoDeviceMessage, _messageLenght);
             }
-
-
-
-
+        }
+        private void OnOscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(OscilloscopeViewModel.IsSessionOpen))
+            {
+                OnCanExecuteChanged();
+            }
         }
     }
 }

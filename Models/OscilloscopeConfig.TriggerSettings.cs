@@ -10,6 +10,7 @@ namespace P_SCAAT.Models
             public int TriggerEdgeSourceIndex { get; set; }
             public List<string> TriggerEdgeSlopeOptions { get; set; }
             public int TriggerEdgeSlopeIndex { get; set; }
+            public decimal TriggerLevel { get; set; }
 
             public TriggerSettings()
             {
@@ -22,13 +23,15 @@ namespace P_SCAAT.Models
                     "Either"
                 };
                 TriggerEdgeSlopeIndex = 0;
+                TriggerLevel = 0;
             }
-            public TriggerSettings(List<string> triggerEdgeSourceOptions, int triggerEdgeSourceIndex, List<string> triggerEdgeSlopeOptions, int triggerEdgeSlopeIndex)
+            public TriggerSettings(List<string> triggerEdgeSourceOptions, int triggerEdgeSourceIndex, List<string> triggerEdgeSlopeOptions, int triggerEdgeSlopeIndex, decimal triggerLevel)
             {
                 TriggerEdgeSourceOptions = new List<string>(triggerEdgeSourceOptions);
                 TriggerEdgeSourceIndex = triggerEdgeSourceIndex;
                 TriggerEdgeSlopeOptions = new List<string>(triggerEdgeSlopeOptions);
                 TriggerEdgeSlopeIndex = triggerEdgeSlopeIndex;
+                TriggerLevel = triggerLevel;
             }
         }
 

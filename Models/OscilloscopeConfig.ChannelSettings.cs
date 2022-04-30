@@ -15,7 +15,6 @@ namespace P_SCAAT.Models
             public string ChannelLabel { get; set; }
             public bool ChannelDisplay { get; set; }
             public decimal ChannelScale { get; set; }
-            //public decimal ChannelPosition { get; set; }
             public decimal ChannelOffset { get; set; }
             public List<string> ChannelCouplingModes { get; set; }
             public int ChannelCouplingIndex { get; set; }
@@ -26,7 +25,6 @@ namespace P_SCAAT.Models
                 ChannelLabel = "Channel " + channelNumber;
                 ChannelDisplay = false;
                 ChannelScale = 0;
-                //ChannelPosition = 0;
                 ChannelOffset = 0;
 
                 ChannelCouplingModes = new List<string>
@@ -36,9 +34,6 @@ namespace P_SCAAT.Models
                 };
                 ChannelCouplingIndex = 0;
             }
-            //public ChannelSettings(int channelNumber, bool channelDisplay, decimal channelScale, decimal channelTimebase, ChannelCouplingMode channelCoupling) { }
-            //public ChannelSettings(int channelNumber, string label, bool channelDisplay,
-            //    decimal channelScale, decimal channelPosition, decimal channelOffset, List<string> channelCouplingModes, int channelCouplingIndex)
             public ChannelSettings(int channelNumber, string label, bool channelDisplay,
                 decimal channelScale, decimal channelOffset, List<string> channelCouplingModes, int channelCouplingIndex)
             {
@@ -46,7 +41,6 @@ namespace P_SCAAT.Models
                 ChannelLabel = label;
                 ChannelDisplay = channelDisplay;
                 ChannelScale = channelScale;
-                //ChannelPosition = channelPosition;
                 ChannelOffset = channelOffset;
                 ChannelCouplingModes = new List<string>(channelCouplingModes);
                 ChannelCouplingIndex = channelCouplingIndex;

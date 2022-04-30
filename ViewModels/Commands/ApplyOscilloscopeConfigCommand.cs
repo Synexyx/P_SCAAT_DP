@@ -37,7 +37,7 @@ namespace P_SCAAT.ViewModels.Commands
             _oscilloscopeConfigViewModel.Oscilloscope.InsertTriggerSettings(_oscilloscopeConfigViewModel.TriggerSettingsVMtoModel());
             
             //ToDo APPLY OTHER SETTING
-            _oscilloscopeConfigViewModel.Oscilloscope.InsertOtherSettings(_oscilloscopeConfigViewModel.TimebaseScale);
+            //_oscilloscopeConfigViewModel.Oscilloscope.InsertOtherSettings(_oscilloscopeConfigViewModel.TimebaseScale);
             //ToDo APPLY OTHER SETTING
 
 

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:P_SCAAT.Views"
              xmlns:converters="clr-namespace:P_SCAAT.Views.ValueConverters"
              xmlns:viewModels="clr-namespace:P_SCAAT.ViewModels" 
              mc:Ignorable="d"
@@ -40,11 +39,6 @@
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
 
-        <!--<Style x:Key="PaddedColumnHeader" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Padding" Value="5,0,5,0"/>
-            <EventSetter Event="FrameworkElement.SizeChanged" Handler="GridViewColumnHeader_SizeChanged"/>
-        </Style>-->
-
 
     </UserControl.Resources>
     <Grid>
@@ -61,17 +55,12 @@
             <DataGrid AutoGenerateColumns="False" DockPanel.Dock="Bottom"
                       HorizontalAlignment="Left"
                       MinHeight="50"
-                      ItemsSource="{Binding TempChannels}"
-                      CanUserResizeRows="False"
-                      CanUserDeleteRows="False"
-                      CanUserAddRows="False"
-                      CanUserSortColumns="False"
-                      CanUserResizeColumns="True"
-                      RowHeight="25"
-                      ColumnWidth="Auto"
-                      MaxColumnWidth="120"
-                      VerticalContentAlignment="Center"
-                      HorizontalContentAlignment="Center"
+                      ItemsSource="{Binding TempChannels, Mode=OneWay}"
+                      CanUserResizeRows="False" CanUserDeleteRows="False"
+                      CanUserAddRows="False" CanUserSortColumns="False"
+                      CanUserResizeColumns="True" RowHeight="25"
+                      ColumnWidth="Auto" MaxColumnWidth="120"
+                      VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                       ToolTip="Analog channels settings"
                       Style="{DynamicResource BoldHeaderGrid}">
 
@@ -81,8 +70,6 @@
                     <DataGridTextColumn Header="Label (16 max)" Binding="{Binding ChannelLabel, Mode=TwoWay}"/>
                     <DataGridTextColumn Header="Scale" Binding="{Binding ChannelScale, Mode=TwoWay,
                                         Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
-                    <!--<DataGridTextColumn Header="Position" Binding="{Binding ChannelPosition, Mode=TwoWay,
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}" CanUserSort="False"/>-->
                     <DataGridTextColumn Header="Offset" Binding="{Binding ChannelOffset, Mode=TwoWay,
                                         Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
                     <DataGridTemplateColumn Header="Coupling">
@@ -110,88 +97,6 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!--<ListView ItemsSource="{Binding TempChannels}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="10,10,10,10" 
-                      MinWidth="50" MinHeight="50" >
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.View>
-                    <GridView AllowsColumnReorder="True">
-                        <GridViewColumn Header="#" HeaderContainerStyle="{StaticResource PaddedColumnHeader}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding ChannelNumber}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-
-                        <GridViewColumn Header="Display" HeaderContainerStyle="{StaticResource PaddedColumnHeader}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding ChannelDisplay}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-
-                        <GridViewColumn Header="Label" HeaderContainerStyle="{StaticResource PaddedColumnHeader}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding ChannelLabel, Mode=TwoWay}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-
-                        <GridViewColumn Header="Scale" HeaderContainerStyle="{StaticResource PaddedColumnHeader}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding ChannelScale, Mode=TwoWay, 
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-
-                        <GridViewColumn Header="Position" HeaderContainerStyle="{StaticResource PaddedColumnHeader}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding ChannelPosition, Mode=TwoWay, 
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-
-                        <GridViewColumn Header="Offset" HeaderContainerStyle="{StaticResource PaddedColumnHeader}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding ChannelOffset, Mode=TwoWay, 
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-
-                        <GridViewColumn Header="Coupling" HeaderContainerStyle="{StaticResource PaddedColumnHeader}" >
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    -->
-            <!--<ComboBox ItemsSource="{Binding ChannelCoupling, Converter={StaticResource enumToListConverter}, Mode=OneTime}"
-                                              SelectedValue="{Binding ChannelCoupling, Mode=TwoWay}"
-                                              IsSynchronizedWithCurrentItem="True"/>-->
-            <!--
-                                    <ComboBox ItemsSource="{Binding ChannelCouplingModes, Mode=OneWay}"
-                                              SelectedItem="{Binding ChannelCouplingSelected, Mode=TwoWay}"
-                                              IsSynchronizedWithCurrentItem="False"
-                                              SelectedIndex="{Binding ChannelCouplingSelectedID, Mode=OneWay}"
-                                              />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>-->
-
-
-
             <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" 
                        ToolTip="This corresponds to the horizontal scale value displayed as time/div on the oscilloscope screen.">
                 <Label Content="Timebase SCALE" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
@@ -213,27 +118,16 @@
                           SelectedIndex="{Binding TriggerVM.TriggerEdgeSourceIndex, Mode=TwoWay}" 
                           IsSynchronizedWithCurrentItem="False"
                           />
-                <!--<Grid DockPanel.Dock="Bottom">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <RadioButton Grid.Row="0" Grid.Column="0" Margin="2" GroupName="TriggerEdgeSource" Content="CH 1" 
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSource, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=Channel1}"/>
-                    <RadioButton Grid.Row="0" Grid.Column="1" Margin="2" GroupName="TriggerEdgeSource" Content="CH 2" 
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSource, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=Channel2}"/>
-                    <RadioButton Grid.Row="1" Grid.Column="0" Margin="2" GroupName="TriggerEdgeSource" Content="CH 3" 
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSource, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=Channel3}"/>
-                    <RadioButton Grid.Row="1" Grid.Column="1" Margin="2" GroupName="TriggerEdgeSource" Content="CH 4" 
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSource, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=Channel4}"/>
-                </Grid>-->
             </DockPanel>
 
             <DockPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
+                       ToolTip="This corresponds to the level at which trigger event occurs in oscilloscope.">
+                <Label Content="Trigger LEVEL" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
+                <TextBox DockPanel.Dock="Bottom" Width="110" HorizontalAlignment="Left"
+                     Text="{Binding TriggerVM.TriggerLevel, Mode=TwoWay, Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
+            </DockPanel>
+
+            <DockPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
                        ToolTip="This will select the slope type for edge mode triggering.">
                 <Label Content="Trigger edge slope" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 <Grid DockPanel.Dock="Bottom">
@@ -246,7 +140,7 @@
                     </Grid.RowDefinitions>
 
                     <RadioButton Grid.Row="0" Margin="2,0,2,0" GroupName="TriggerEdgeSlope"
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=0}">
+                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Mode=TwoWay, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=0}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -254,8 +148,6 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0"
                                    Content="RISING"/>
-                            <!--<Label Grid.Column="0"
-                                   Content="{Binding TriggerVM.TriggerEdgeSlopeOptions, Converter={StaticResource edgeSlopeOptionsToStringConverter}, ConverterParameter=0}"/>-->
                             <Image Source="/Views/Assets/Positive-Edge-Crop.png" RenderOptions.BitmapScalingMode="Fant" Height="25" Grid.Column="1"/>
                         </Grid>
                     </RadioButton>
@@ -263,7 +155,7 @@
                     <Separator Grid.Row="1"/>
 
                     <RadioButton Grid.Row="2" Margin="2,0,2,0" GroupName="TriggerEdgeSlope"
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=1}">
+                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Mode=TwoWay, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=1}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -271,19 +163,13 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0"
                                    Content="FALLING"/>
-                            <!--<Label Grid.Column="0"
-                                   Content="{Binding TriggerVM.TriggerEdgeSlopeOptions, Converter={StaticResource edgeSlopeOptionsToStringConverter}, ConverterParameter=1}"/>-->
                             <Image Source="/Views/Assets/Negative-Edge-Crop.png" RenderOptions.BitmapScalingMode="Fant" Height="25" Grid.Column="1"/>
                         </Grid>
                     </RadioButton>
-                    <!--<RadioButton Grid.Row="2" Grid.Column="0" Margin="2,0,2,0" GroupName="TriggerEdgeSlope" 
-                                 Content="{Binding TriggerEdgeSlopeOptions, Converter={StaticResource edgeSlopeOptionsToStringConverter}, ConverterParameter=1}" 
-                                 IsChecked="{Binding TriggerEdgeSlopeIndex, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=1}"/>
-                    <Image Source="/Views/Negative-Edge.png" Height="25" Grid.Row="2" Grid.Column="1"/>-->
                     <Separator Grid.Row="3"/>
 
                     <RadioButton Grid.Row="4" Margin="2,0,2,0" GroupName="TriggerEdgeSlope"
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=2}">
+                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Mode=TwoWay, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=2}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -291,15 +177,9 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0"
                                    Content="EITHER"/>
-                            <!--<Label Grid.Column="0"
-                                   Content="{Binding TriggerVM.TriggerEdgeSlopeOptions, Converter={StaticResource edgeSlopeOptionsToStringConverter}, ConverterParameter=2}"/>-->
                             <Image Source="/Views/Assets/Either-Edge-Crop.png" RenderOptions.BitmapScalingMode="Fant" Height="25" Grid.Column="1"/>
                         </Grid>
                     </RadioButton>
-                    <!--<RadioButton Grid.Row="4" Grid.Column="0" Margin="2,0,2,0" GroupName="TriggerEdgeSlope" 
-                                 Content="{Binding TriggerEdgeSlopeOptions, Converter={StaticResource edgeSlopeOptionsToStringConverter}, ConverterParameter=2}" 
-                                 IsChecked="{Binding TriggerEdgeSlopeIndex, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=2}"/>
-                    <Image Source="/Views/Either-Edge.png" Height="25" Grid.Row="4" Grid.Column="1"/>-->
 
                 </Grid>
             </DockPanel>
@@ -317,18 +197,9 @@
             <DockPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left"
                        ToolTip="Enables oscilloscope to send more bytes of data to PC">
                 <Label Content="Waveform Streaming" DockPanel.Dock="Top"/>
-                <CheckBox Content="Streaming" DockPanel.Dock="Bottom" IsChecked="{Binding WaveformStreaming, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Content="Streaming" DockPanel.Dock="Bottom"
+                          IsChecked="{Binding WaveformStreaming, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </DockPanel>
-            <!--<TextBox HorizontalAlignment="Left" Margin="80,35,0,0" Text="{Binding TestNumberProp, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Row="2"/>-->
-            <!--<Label Content="{Binding TestNumberProp}" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top"/>-->
-
-            <!--<GridSplitter Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-                  HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Top"
-                  Background="DarkGray" 
-                  Height="2"/>-->
-            <!--<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Top" Fill="DarkGray" Height="2"
-                       Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>-->
             <Separator Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="2"/>
         </Grid>
 
@@ -337,10 +208,6 @@
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>-->
 
             <DockPanel Grid.Row="0" Grid.Column="0">
                 <Label Content="Oscilloscope configuration string" DockPanel.Dock="Top" HorizontalAlignment="Left" VerticalAlignment="Top"/>

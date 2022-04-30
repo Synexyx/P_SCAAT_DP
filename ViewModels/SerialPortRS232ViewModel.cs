@@ -138,7 +138,7 @@ namespace P_SCAAT.ViewModels
         //public override bool IsSessionOpen => SerialPort.IsOpen;
 
 
-        public SerialPortRS232ViewModel(CryptoDeviceMessage cryptoDeviceMessage)
+        public SerialPortRS232ViewModel(CryptoDeviceMessage cryptoDeviceMessage) : base()
         {
             CryptoDeviceMessage = cryptoDeviceMessage;
 

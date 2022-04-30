@@ -38,8 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>PSCAAT.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>P_SCAAT.App</StartupObject>
@@ -99,9 +98,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Exceptions\SessionCommunicationException.cs" />
     <Compile Include="Exceptions\SessionControlException.cs" />
     <Compile Include="Models\CryptoDeviceMessage.cs" />
     <Compile Include="Models\ISessionDevice.cs" />
+    <Compile Include="Models\Measurement.cs" />
     <Compile Include="Models\Oscilloscope.cs" />
     <Compile Include="Models\OscilloscopeConfig.ChannelSettings.cs" />
     <Compile Include="Models\OscilloscopeConfig.CommandList.cs" />

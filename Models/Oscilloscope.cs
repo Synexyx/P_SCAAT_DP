@@ -11,6 +11,7 @@ using Ivi.Visa;
 using System.Threading;
 using System.Globalization;
 using ResourceManager = NationalInstruments.Visa.ResourceManager;
+using P_SCAAT.Exceptions;
 
 namespace P_SCAAT.Models
 {
@@ -96,9 +97,10 @@ namespace P_SCAAT.Models
                 }
                 catch (Exception exp)
                 {
-                    CloseSession();
-                    _ = MessageBox.Show($"Session failed to open!{Environment.NewLine}{exp.Message}", "Session ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Debug.WriteLine("Session: " + SessionName + " FAILED to open.");
+                    throw new SessionControlException($"Oscilloscope session cannot be estabilished!{Environment.NewLine}REASON :{exp.GetType()}{Environment.NewLine}{exp.Message}");
+
+                    //_ = MessageBox.Show($"Session failed to open!{Environment.NewLine}{exp.Message}", "Session ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //Debug.WriteLine("Session: " + SessionName + " FAILED to open.");
                 }
             }
         }
@@ -117,9 +119,6 @@ namespace P_SCAAT.Models
             {
                 MessageBasedSession.Dispose();
             }
-            //MessageBasedSession = null;
-            //SessionName = null;
-            //IsSessionOpen = false;
             ClearAllData();
 
 
@@ -172,7 +171,7 @@ namespace P_SCAAT.Models
         {
             foreach (string setting in OscilloscopeConfigString)
             {
-                //SendData(setting);
+                SendData(setting);
             }
         }
 
@@ -187,14 +186,24 @@ namespace P_SCAAT.Models
             }
             catch (Exception exp)
             {
+                throw new SessionCommunicationException($"Sending data to the oscilloscope failed!{Environment.NewLine}REASON :{exp.GetType()}{Environment.NewLine}{exp.Message}");
                 //ToDo maybe throw exception as error in VM
-                _ = MessageBox.Show($"Sending data to the device failed!{Environment.NewLine}{exp.Message}", "Data write ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                //_ = MessageBox.Show($"Sending data to the device failed!{Environment.NewLine}{exp.Message}", "Data write ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         public string QueryData(string dataString)
         {
-            SendData(dataString);
-            return ReadData();
+            string resultData;
+            try
+            {
+                SendData(dataString);
+                resultData = ReadData();
+            }
+            catch (SessionCommunicationException sessionComExp)
+            {
+                throw new SessionCommunicationException($"Data query to the oscilloscope failed!{Environment.NewLine}REASON :{sessionComExp.GetType()}{Environment.NewLine}{sessionComExp.Message}");
+            }
+            return resultData;
             //try
             //{
             //    string oscilloscopeReply = MessageBasedSession.RawIO.ReadString();
@@ -218,17 +227,19 @@ namespace P_SCAAT.Models
         {
             try
             {
+                //ToDo somehow fix this
                 //MessageBasedSession t;
                 string receivedMessage = MessageBasedSession.RawIO.ReadString(10000000);
                 //var receivedMessage2 = MessageBasedSession.RawIO.BeginRead(0);
-                return InsertEscapeSeq(receivedMessage); ;
+                return InsertEscapeSeq(receivedMessage);
             }
             catch (Exception exp)
             {
+                throw new SessionCommunicationException($"Reading data from the oscilloscope failed!{Environment.NewLine}REASON :{exp.GetType()}{Environment.NewLine}{exp.Message}");
                 //ToDo maybe throw exception as error in VM
-                _ = MessageBox.Show($"Reading data from the device failed!{Environment.NewLine}{exp.Message}", "Data read ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                //_ = MessageBox.Show($"Reading data from the device failed!{Environment.NewLine}{exp.Message}", "Data read ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            return string.Empty;
+            //return string.Empty;
         }
 
         private static string ReplaceEscapeSeq(string message)
@@ -291,7 +302,8 @@ namespace P_SCAAT.Models
                 ////Debug.WriteLine(channel.ChannelDisplay);//
 
                 //ChannelScale
-                string forgeCommand = CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(), "?").Item2.Replace(" ", "");
+                //string forgeCommand = CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(), "?").Item2.Replace(" ", "");
+                string forgeCommand = CommandList.UniversalAskCommandString(Commands.ChannelScaleCommand);
                 //oscilloscopeResponse = TESTQUERY2(CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(CultureInfo.InvariantCulture), "?").Item2);
 
                 //oscilloscopeResponse = QueryData(forgeCommand).Replace("\\n", "");

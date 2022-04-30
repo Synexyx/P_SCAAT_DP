@@ -14,7 +14,6 @@ namespace P_SCAAT.ViewModels
         private string _channelLabel;
         private bool _channelDisplay;
         private decimal _channelScale;
-        //private decimal _channelPosition;
         private decimal _channelOffset;
         private List<string> _channelCouplingModes;
         private int _channelCouplingIndex;
@@ -26,10 +25,7 @@ namespace P_SCAAT.ViewModels
             set
             {
                 _channelLabel = value;
-                if (_channelLabel.Length > 16)//Kind of workaround to enforce strings of max lenght.
-                {
-                    _channelLabel = _channelLabel.Substring(0, 16);
-                }
+                if (_channelLabel.Length > 16) { _channelLabel = _channelLabel.Substring(0, 16); }
                 OnPropertyChanged(nameof(ChannelLabel));
             }
         }
@@ -43,11 +39,6 @@ namespace P_SCAAT.ViewModels
             get => _channelScale;
             set { _channelScale = value; OnPropertyChanged(nameof(ChannelScale)); }
         }
-        //public decimal ChannelPosition
-        //{
-        //    get => _channelPosition;
-        //    set { _channelPosition = value; OnPropertyChanged(nameof(ChannelPosition)); }
-        //}
         public decimal ChannelOffset
         {
             get => _channelOffset;
@@ -70,7 +61,6 @@ namespace P_SCAAT.ViewModels
             ChannelLabel = channelSettingsToCopy.ChannelLabel;
             ChannelDisplay = channelSettingsToCopy.ChannelDisplay;
             ChannelScale = channelSettingsToCopy.ChannelScale;
-            //ChannelPosition = channelSettingsToCopy.ChannelPosition;
             ChannelOffset = channelSettingsToCopy.ChannelOffset;
             ChannelCouplingModes = new List<string>(channelSettingsToCopy.ChannelCouplingModes);
             ChannelCouplingIndex = channelSettingsToCopy.ChannelCouplingIndex;

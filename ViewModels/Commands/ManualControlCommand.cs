@@ -1,4 +1,5 @@
-﻿using P_SCAAT.Models;
+﻿using P_SCAAT.Exceptions;
+using P_SCAAT.Models;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace P_SCAAT.ViewModels.Commands
 {
     internal class ManualControlCommand : CoreCommand
     {
-        private readonly  OscilloscopeViewModel _oscilloscopeViewModel;
+        private readonly OscilloscopeViewModel _oscilloscopeViewModel;
         private readonly Oscilloscope _oscilloscope;
 
         public ManualControlCommand(OscilloscopeViewModel oscilloscopeViewModel, Oscilloscope oscilloscope)
@@ -25,19 +26,26 @@ namespace P_SCAAT.ViewModels.Commands
         }
         public override void Execute(object parameter)
         {
-            switch (parameter.ToString())
+            try
             {
-                case "WRITE":
-                    _oscilloscope.SendData(_oscilloscopeViewModel.ManualMessageWrite);
-                    break;
-                case "READ":
-                    _oscilloscopeViewModel.ManualMessageRead = _oscilloscope.ReadData();
-                    break;
-                case "QUERY":
-                    _oscilloscopeViewModel.ManualMessageRead = _oscilloscope.QueryData(_oscilloscopeViewModel.ManualMessageWrite);
-                    break;
-                default:
-                    break;
+                switch (parameter.ToString())
+                {
+                    case "WRITE":
+                        _oscilloscope.SendData(_oscilloscopeViewModel.ManualMessageWrite);
+                        break;
+                    case "READ":
+                        _oscilloscopeViewModel.ManualMessageRead = _oscilloscope.ReadData();
+                        break;
+                    case "QUERY":
+                        _oscilloscopeViewModel.ManualMessageRead = _oscilloscope.QueryData(_oscilloscopeViewModel.ManualMessageWrite);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (SessionCommunicationException sessionComExp)
+            {
+                _oscilloscopeViewModel.ErrorMessages.Add(sessionComExp);
             }
         }
         private void OnOscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

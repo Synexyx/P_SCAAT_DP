@@ -14,6 +14,8 @@ namespace P_SCAAT.ViewModels
         private int _triggerEdgeSourceIndex;
         private List<string> _triggerEdgeSlopeOptions;
         private int _triggerEdgeSlopeIndex;
+        private decimal _triggerLevel;
+
         public List<string> TriggerEdgeSourceOptions
         {
             get => _triggerEdgeSourceOptions;
@@ -34,6 +36,12 @@ namespace P_SCAAT.ViewModels
             get => _triggerEdgeSlopeIndex;
             set { _triggerEdgeSlopeIndex = value; OnPropertyChanged(nameof(TriggerEdgeSlopeIndex)); }
         }
+
+        public decimal TriggerLevel
+        {
+            get => _triggerLevel;
+            set { _triggerLevel = value; OnPropertyChanged(nameof(TriggerLevel)); }
+        }
         #endregion
         public TriggerViewModel(OscilloscopeConfig.TriggerSettings trigger)
         {
@@ -41,6 +49,7 @@ namespace P_SCAAT.ViewModels
             TriggerEdgeSourceIndex = trigger.TriggerEdgeSourceIndex;
             TriggerEdgeSlopeOptions = new List<string>(trigger.TriggerEdgeSlopeOptions);
             TriggerEdgeSlopeIndex = trigger.TriggerEdgeSlopeIndex;
+            TriggerLevel = trigger.TriggerLevel;
         }
     }
 }
