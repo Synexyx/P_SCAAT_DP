@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace P_SCAAT.Models
 {
@@ -92,11 +93,28 @@ namespace P_SCAAT.Models
                 if (!string.IsNullOrEmpty(commad))
                 {
                     StringBuilder stringBuilder = new StringBuilder();
-                    return stringBuilder.AppendFormat(CultureInfo.InvariantCulture, $"{commad}?").ToString();
+                    string askCommand = stringBuilder.AppendFormat(CultureInfo.InvariantCulture, commad, "?").ToString();
+                    return Regex.Replace(askCommand, @"\s+", string.Empty);
                 }
                 throw new FormatException("The command could not be created because it was not found in the command list file.");
             }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="commad"></param>
+            /// <returns></returns>
+            /// <exception cref="FormatException"></exception>
+            public static string UniversalAskCommandString(string commad, string parameter1)
+            {
+                if (!string.IsNullOrEmpty(commad))
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    string askCommand = stringBuilder.AppendFormat(CultureInfo.InvariantCulture, commad, parameter1, "?").ToString();
+                    return Regex.Replace(askCommand, @"\s+", string.Empty);
 
+                }
+                throw new FormatException("The command could not be created because it was not found in the command list file.");
+            }
 
             private static (string, string) ForgeCommandToString(string selectedCommand, string commandParameter1)
             {

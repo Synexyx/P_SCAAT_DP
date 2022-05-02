@@ -216,7 +216,8 @@ namespace P_SCAAT.ViewModels
                     CreateCommandString(Oscilloscope.Commands.ChannelDisplayCommand, channel.ChannelDisplay, channel.ChannelNumber);
                     break;
                 case nameof(channel.ChannelLabel):
-                    CreateCommandString(Oscilloscope.Commands.ChannelLabelCommand, channel.ChannelLabel, channel.ChannelNumber);
+                    //CreateCommandString(Oscilloscope.Commands.ChannelLabelCommand, channel.ChannelLabel, channel.ChannelNumber);
+                    CreateCommandString(Oscilloscope.Commands.ChannelLabelCommand, $"\"{channel.ChannelLabel}\"", channel.ChannelNumber);
                     break;
                 case nameof(channel.ChannelScale):
                     CreateCommandString(Oscilloscope.Commands.ChannelScaleCommand, channel.ChannelScale, channel.ChannelNumber);

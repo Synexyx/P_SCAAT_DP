@@ -118,8 +118,6 @@ namespace P_SCAAT.Models
             return commandListFilePathName;
         }
 
-
-
         public void InsertNewConfigString(List<string> oscilloscopeConfigString)
         {
             OscilloscopeConfigString.Clear();

@@ -12,6 +12,7 @@ using System.Threading;
 using System.Globalization;
 using ResourceManager = NationalInstruments.Visa.ResourceManager;
 using P_SCAAT.Exceptions;
+using System.Text.RegularExpressions;
 
 namespace P_SCAAT.Models
 {
@@ -227,7 +228,8 @@ namespace P_SCAAT.Models
             {
                 //ToDo somehow fix this
                 //MessageBasedSession t;
-                string receivedMessage = MessageBasedSession.RawIO.ReadString(10000000);
+                //string receivedMessage = MessageBasedSession.RawIO.ReadString(10000000);
+                string receivedMessage = MessageBasedSession.RawIO.ReadString();
                 //var receivedMessage2 = MessageBasedSession.RawIO.BeginRead(0);
                 return InsertEscapeSeq(receivedMessage);
             }
@@ -245,7 +247,7 @@ namespace P_SCAAT.Models
         private static string InsertEscapeSeq(string message)
         {
             //return message.Replace("\n", "\\n").Replace("\r", "\\r");
-            return message.Replace("\n", "").Replace("\r", "");
+            return message.Replace("\n", string.Empty).Replace("\r", string.Empty);
 
         }
 
@@ -256,63 +258,109 @@ namespace P_SCAAT.Models
             base.ClearAllData();
         }
 
-        public void UpdateAllResources()
+        public void SynchronizeConfig()
         {
             //Thread.Sleep(5000);
 
-            List<string> tempConfigString = new List<string>(OscilloscopeConfigString);
-            //OscilloscopeConfigString.Clear(); 
-            //ToDo not sure if will work properly
+            //List<string> tempConfigString = new List<string>(OscilloscopeConfigString);
+            //OscilloscopeConfigString.Clear();
+            //ToDo should not do that cause of custom settings
 
-            //TEST
-            //WaveformFormatIndex = WaveformFormatOptions.IndexOf("WORD");
-            //Trigger.TriggerEdgeSourceIndex = 2;
-            //Trigger.TriggerEdgeSlopeSelectedIndex = 1;
+            //SynchronizeChannels();
+            SynchronizeTrigger();
 
-            string oscilloscopeResponse = string.Empty;
-            //ToDo UPDATE CONFIG STRING!!
 
-            //ToDo prvně načíst config string a z něj pak nastavení tříd??
+
+        }
+        private void SynchronizeChannels()
+        {
             foreach (ChannelSettings channel in Channels)
             {
+                string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
 
                 ////ChannelLabel
-                //oscilloscopeResponse = TESTQUERY(Commands.ChannelLabelAskCommandString(channel.ChannelNumber));
-                //channel.ChannelLabel = oscilloscopeResponse;
+                string commandPart = Commands.ChannelLabelCommand;
+                string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+                string removedQuotes = Regex.Replace(oscilloscopeResponse, $"\"+", string.Empty);
+                channel.ChannelLabel = removedQuotes;
+                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
 
                 ////ChannelDisplay
-                ////Debug.WriteLine(channel.ChannelDisplay);//
-                //oscilloscopeResponse = TESTQUERY(Commands.ChannelDisplayAskCommandString(channel.ChannelNumber));
-                ////Debug.WriteLine(Commands.TrueFalseOptions.IndexOf(oscilloscopeResponse));//
-                //if (Commands.TrueFalseOptions.IndexOf(oscilloscopeResponse) % 2 != 0)
-                //{
-                //    channel.ChannelDisplay = true;
-                //    //tempConfigString.Add(Commands.ChannelDisplayCommandString(channel.ChannelNumber, channel.ChannelDisplay).Item2);
-                //}
-                //string displayToString = Commands.TrueFalseOptions != null
-                //    ? channel.ChannelDisplay ? Commands.TrueFalseOptions.ElementAtOrDefault(0) ?? "1" : Commands.TrueFalseOptions.ElementAtOrDefault(1) ?? "0"
-                //    : channel.ChannelDisplay ? "ON" : "OFF";
-                //tempConfigString.Add(CommandList.UniversalCommandString(Commands.ChannelDisplayCommand, channel.ChannelNumber.ToString(CultureInfo.InvariantCulture), displayToString).Item2);
-                ////channel.ChannelDisplay = Convert.ToBoolean(oscilloscopeResponse.Replace("\\n", ""), CultureInfo.InvariantCulture);
+                commandPart = Commands.ChannelDisplayCommand;
+                oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+                if (Commands.TrueFalseOptions.IndexOf(oscilloscopeResponse) % 2 == 0)
+                {
+                    channel.ChannelDisplay = true;
+                }
+                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
 
-                ////Debug.WriteLine(channel.ChannelDisplay);//
-
-                //ChannelScale
-                //string forgeCommand = CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(), "?").Item2.Replace(" ", "");
-                //string forgeCommand = CommandList.UniversalAskCommandString(Commands.ChannelScaleCommand); //ToDo need chNumber
-                //oscilloscopeResponse = TESTQUERY2(CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(CultureInfo.InvariantCulture), "?").Item2);
-
-                //oscilloscopeResponse = QueryData(forgeCommand).Replace("\\n", "");
+                ////ChannelScale
+                commandPart = Commands.ChannelScaleCommand;
+                oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
                 _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
                 channel.ChannelScale = numberResult;
+                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
 
-                //ChannelPosition
-                //ChannelOffset
-                //ChannelCouplingModes
-                //ChannelCouplingSelected
+                ////ChannelOffset
+                commandPart = Commands.ChannelOffsetCommand;
+                oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+                _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out numberResult);
+                channel.ChannelOffset = numberResult;
+                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
 
-                OscilloscopeConfigString = tempConfigString.Distinct().ToList();
+                ////ChannelCoupling
+                commandPart = Commands.ChannelCouplingCommand;
+                oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+                channel.ChannelCouplingIndex = Commands.ChannelCouplingModes.IndexOf(oscilloscopeResponse);
+                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
             }
+        }
+        private void SynchronizeTrigger()
+        {
+            ////TriggerEdgeSource
+            string commandPart = Commands.TriggerEdgeSourceCommand;
+            string oscilloscopeResponse = AskCommand(commandPart);
+            Trigger.TriggerEdgeSourceIndex = Commands.TriggerEdgeSourceOptions.IndexOf(oscilloscopeResponse);
+            //LINQ?
+            AddResponseToConfig(commandPart, oscilloscopeResponse);
+
+            ////TriggerEdgeSlope
+            commandPart = Commands.TriggerEdgeSlopeCommand;
+            oscilloscopeResponse = AskCommand(commandPart);
+            Trigger.TriggerEdgeSlopeIndex = Commands.TriggerEdgeSlopeOptions.IndexOf(oscilloscopeResponse);
+            AddResponseToConfig(commandPart, oscilloscopeResponse);
+        }
+        private string AskCommand(string commandPart)
+        {
+            string askCommand = CommandList.UniversalAskCommandString(commandPart);
+            //ToDo just testing
+            //return QueryData(askCommand);
+            return TESTQUERY6(askCommand);
+        }
+        private string AskCommand(string commandPart, string channelNumberString)
+        {
+            string askCommand = CommandList.UniversalAskCommandString(commandPart, channelNumberString);
+            //ToDo just testing
+            //return QueryData(askCommand);
+            return TESTQUERY5(askCommand);
+        }
+        private void AddResponseToConfig(string commandPart, string oscilloscopeResponse)
+        {
+            string configPart = CommandList.UniversalCommandString(commandPart, oscilloscopeResponse).Item2;
+            List<string> tempConfigString = new List<string>();
+            tempConfigString.AddRange(OscilloscopeConfigString);
+            tempConfigString.Add(configPart);
+            OscilloscopeConfigString = tempConfigString.Distinct().ToList();
+            OscilloscopeConfigString.Sort();
+        }
+        private void AddResponseToConfig(string commandPart, string channelNumberString, string oscilloscopeResponse)
+        {
+            string configPart = CommandList.UniversalCommandString(commandPart, channelNumberString, oscilloscopeResponse).Item2;
+            List<string> tempConfigString = new List<string>();
+            tempConfigString.AddRange(OscilloscopeConfigString);
+            tempConfigString.Add(configPart);
+            OscilloscopeConfigString = tempConfigString.Distinct().ToList();
+            OscilloscopeConfigString.Sort();
         }
 
         public string TESTQUERY(string dataToSent)
@@ -324,6 +372,26 @@ namespace P_SCAAT.Models
         {
             Debug.WriteLine("SENDING " + dataToSent);
             return "250E-03\\n".Replace("\\n", string.Empty);
+        }
+        public string TESTQUERY3(string dataToSent)
+        {
+            Debug.WriteLine("SENDING " + dataToSent);
+            return "\"channelLabel1\"";
+        }
+        public string TESTQUERY4(string dataToSent)
+        {
+            Debug.WriteLine("SENDING " + dataToSent);
+            return "1";
+        }
+        public string TESTQUERY5(string dataToSent)
+        {
+            Debug.WriteLine("SENDING " + dataToSent);
+            return "DCC";
+        }
+        public string TESTQUERY6(string dataToSent)
+        {
+            Debug.WriteLine("SENDING " + dataToSent);
+            return "CHAN2";
         }
     }
 }

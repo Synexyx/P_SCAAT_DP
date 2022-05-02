@@ -219,7 +219,7 @@
                          MinWidth="50"
                          MinHeight="75"
                          MaxWidth="400"
-                         MaxHeight="150"
+                         MaxHeight="250"
                          VerticalScrollBarVisibility="Auto"
                          TextWrapping="WrapWithOverflow">
                     <TextBox.Style>
