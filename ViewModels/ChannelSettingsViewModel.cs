@@ -8,7 +8,7 @@ using static P_SCAAT.Models.OscilloscopeConfig.ChannelSettings;
 
 namespace P_SCAAT.ViewModels
 {
-    internal class ChannelSettingsViewModel : CorePropChangedVM
+    internal class ChannelSettingsViewModel : OscilloscopeValueConversionVM
     {
         #region Properties
         private string _channelLabel;
@@ -39,10 +39,20 @@ namespace P_SCAAT.ViewModels
             get => _channelScale;
             set { _channelScale = value; OnPropertyChanged(nameof(ChannelScale)); }
         }
+        public string ChannelScaleForTextBox
+        {
+            get => DecimalToString(ChannelScale, "V");
+            set { ChannelScale = StringToDecimal(value); OnPropertyChanged(nameof(ChannelScaleForTextBox)); }
+        }
         public decimal ChannelOffset
         {
             get => _channelOffset;
             set { _channelOffset = value; OnPropertyChanged(nameof(ChannelOffset)); }
+        }
+        public string ChannelOffsetForTextBox
+        {
+            get => DecimalToString(ChannelOffset, "V");
+            set { ChannelOffset = StringToDecimal(value); OnPropertyChanged(nameof(ChannelOffsetForTextBox)); }
         }
         public List<string> ChannelCouplingModes
         {

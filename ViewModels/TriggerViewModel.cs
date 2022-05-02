@@ -7,7 +7,7 @@ using P_SCAAT.Models;
 
 namespace P_SCAAT.ViewModels
 {
-    internal class TriggerViewModel : CorePropChangedVM
+    internal class TriggerViewModel : OscilloscopeValueConversionVM
     {
         #region Properties
         private List<string> _triggerEdgeSourceOptions;
@@ -41,6 +41,11 @@ namespace P_SCAAT.ViewModels
         {
             get => _triggerLevel;
             set { _triggerLevel = value; OnPropertyChanged(nameof(TriggerLevel)); }
+        }
+        public string TriggerLevelForTextBox
+        {
+            get => DecimalToString(TriggerLevel, "V");
+            set { TriggerLevel = StringToDecimal(value); OnPropertyChanged(nameof(TriggerLevelForTextBox)); }
         }
         #endregion
         public TriggerViewModel(OscilloscopeConfig.TriggerSettings trigger)

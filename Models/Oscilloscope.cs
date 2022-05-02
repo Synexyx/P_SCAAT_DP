@@ -187,8 +187,6 @@ namespace P_SCAAT.Models
             catch (Exception exp)
             {
                 throw new SessionCommunicationException($"Sending data to the oscilloscope failed!{Environment.NewLine}REASON :{exp.GetType()}{Environment.NewLine}{exp.Message}");
-                //ToDo maybe throw exception as error in VM
-                //_ = MessageBox.Show($"Sending data to the device failed!{Environment.NewLine}{exp.Message}", "Data write ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         public string QueryData(string dataString)
@@ -236,10 +234,7 @@ namespace P_SCAAT.Models
             catch (Exception exp)
             {
                 throw new SessionCommunicationException($"Reading data from the oscilloscope failed!{Environment.NewLine}REASON :{exp.GetType()}{Environment.NewLine}{exp.Message}");
-                //ToDo maybe throw exception as error in VM
-                //_ = MessageBox.Show($"Reading data from the device failed!{Environment.NewLine}{exp.Message}", "Data read ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            //return string.Empty;
         }
 
         private static string ReplaceEscapeSeq(string message)
@@ -263,10 +258,11 @@ namespace P_SCAAT.Models
 
         public void UpdateAllResources()
         {
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
 
             List<string> tempConfigString = new List<string>(OscilloscopeConfigString);
-            //OscilloscopeConfigString.Clear(); //ToDo not sure if will work properly
+            //OscilloscopeConfigString.Clear(); 
+            //ToDo not sure if will work properly
 
             //TEST
             //WaveformFormatIndex = WaveformFormatOptions.IndexOf("WORD");
@@ -303,7 +299,7 @@ namespace P_SCAAT.Models
 
                 //ChannelScale
                 //string forgeCommand = CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(), "?").Item2.Replace(" ", "");
-                string forgeCommand = CommandList.UniversalAskCommandString(Commands.ChannelScaleCommand);
+                //string forgeCommand = CommandList.UniversalAskCommandString(Commands.ChannelScaleCommand); //ToDo need chNumber
                 //oscilloscopeResponse = TESTQUERY2(CommandList.UniversalCommandString(Commands.ChannelScaleCommand, channel.ChannelNumber.ToString(CultureInfo.InvariantCulture), "?").Item2);
 
                 //oscilloscopeResponse = QueryData(forgeCommand).Replace("\\n", "");

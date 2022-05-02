@@ -8,13 +8,13 @@
     "1"
   ],
   "ChannelDisplayCommand": ":CHANnel{0}:DISPlay {1}",
-  "ChannelLabelCommand": ":CHANnel{0}:LABel {1}",
+  "ChannelLabelCommand": ":CHANnel{0}:LABel \"{1}\"",
   "ChannelScaleCommand": ":CHANnel{0}:SCALe {1}",
   "ChannelOffsetCommand": ":CHANnel{0}:OFFSet {1}",
   "ChannelCouplingCommand": ":CHANnel{0}:INPut {1}",
   "ChannelCouplingModes": [
     "AC",
-    "DCC"
+    "DC"
   ],
   "TimebasePositionCommand": ":TIMebase:Position {0}",
   "TimebaseScaleCommand": ":TIMebase:SCALe {0}",

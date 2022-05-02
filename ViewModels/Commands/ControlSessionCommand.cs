@@ -14,8 +14,6 @@ namespace P_SCAAT.ViewModels.Commands
 {
     internal class ControlSessionCommand : AsyncIsExcecutingCoreCommand
     {
-        //ToDo async?
-
         private readonly SessionDeviceVM _sessionDeviceVM;
         public ControlSessionCommand(SessionDeviceVM sessionDeviceVM)
         {

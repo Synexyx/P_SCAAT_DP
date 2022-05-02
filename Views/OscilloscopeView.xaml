@@ -115,9 +115,11 @@
                     Command="{Binding ManualControlCommand, Mode=OneTime}" CommandParameter="READ"/>
             <Button Grid.Column="2" Grid.Row="1" Margin="3" Content="Query" Style="{DynamicResource RoundButton}"
                     Command="{Binding ManualControlCommand, Mode=OneTime}" CommandParameter="QUERY"/>
-            <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="3" Text="{Binding ManualMessageWrite, Mode=TwoWay}" Width="250"/>
-            <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" Margin="3" IsReadOnly="True" Background="LightGray" Foreground="#FF7A7A7A" 
-                     MinHeight="36" TextWrapping="WrapWithOverflow" Width="250" Text="{Binding ManualMessageRead, Mode=TwoWay}"/>
+            <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="3" Text="{Binding ManualMessageWrite, Mode=TwoWay}" Width="250" 
+                     IsEnabled="{Binding IsSessionOpen, Mode=OneWay}"/>
+            <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" Margin="3" IsReadOnly="True" Background="#FFEAEAEA" Foreground="#FF5A5A5A" 
+                     MinHeight="36" TextWrapping="WrapWithOverflow" Width="250" Text="{Binding ManualMessageRead, Mode=TwoWay}"
+                     IsEnabled="{Binding IsSessionOpen, Mode=OneWay}"/>
         </Grid>
 
         <Separator Grid.Row="2" HorizontalAlignment="Stretch"/>

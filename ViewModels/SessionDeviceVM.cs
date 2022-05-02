@@ -31,7 +31,7 @@ namespace P_SCAAT.ViewModels
             //  {
             if (e.NewItems != null)
             {
-                List<string> errorMessages = new List<string>();
+                //List<string> errorMessages = new List<string>();
                 foreach (Exception item in e.NewItems)
                 {
                     //_ = MessageBox.Show(item.Message);

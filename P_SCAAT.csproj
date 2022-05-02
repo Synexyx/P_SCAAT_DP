@@ -121,11 +121,13 @@
     <Compile Include="ViewModels\Commands\ManualControlCommand.cs" />
     <Compile Include="ViewModels\Commands\MeasureCommand.cs" />
     <Compile Include="ViewModels\Commands\OpenConfigFileCommand.cs" />
+    <Compile Include="ViewModels\Commands\RadioButtonEdgeSlopeCommand.cs" />
     <Compile Include="ViewModels\Commands\SaveConfigFileCommand.cs" />
     <Compile Include="ViewModels\Commands\SimpleCommand.cs" />
     <Compile Include="ViewModels\CorePropChangedVM.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OscilloscopeConfigViewModel.cs" />
+    <Compile Include="ViewModels\OscilloscopeValueConversionVM.cs" />
     <Compile Include="ViewModels\OscilloscopeViewModel.cs" />
     <Compile Include="ViewModels\SerialPortRS232ViewModel.cs" />
     <Compile Include="ViewModels\SessionDeviceVM.cs" />
@@ -141,13 +143,7 @@
     <Compile Include="Views\SerialPortRS232View.xaml.cs">
       <DependentUpon>SerialPortRS232View.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ValueConverters\EdgeSlopeOptionsToStringConverter.cs" />
-    <Compile Include="Views\ValueConverters\EnumToListConverter.cs" />
-    <Compile Include="Views\ValueConverters\ExistsConverter.cs" />
     <Compile Include="Views\ValueConverters\InverseBooleanConverter.cs" />
-    <Compile Include="Views\ValueConverters\ListToTextConverter.cs" />
-    <Compile Include="Views\ValueConverters\OscilloscopeValuesConverter.cs" />
-    <Compile Include="Views\ValueConverters\RadioBTNBoolToStringConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

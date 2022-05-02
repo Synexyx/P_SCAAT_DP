@@ -11,16 +11,16 @@
              >
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <converters:ListToTextConverter x:Key="listToTextConverter"/>
+        <!--<converters:ListToTextConverter x:Key="listToTextConverter"/>-->
         <!--<converters:EnumToListConverter x:Key="enumToListConverter"/>-->
-        <converters:OscilloscopeValuesConverter x:Key="oscilloscopeValuesConverter"/>
-        <converters:RadioBTNBoolToStringConverter x:Key="radioBTNBoolToStringConverter"/>
-        <converters:InverseBooleanConverter x:Key="inverseBooleanConverter"/>
+        <!--<converters:OscilloscopeValuesConverter x:Key="oscilloscopeValuesConverter"/>-->
+        <!--<converters:RadioBTNBoolToStringConverter x:Key="radioBTNBoolToStringConverter"/>-->
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+
+        <!--<converters:ExistsConverter x:Key="existsConverter"/>-->
+        <!--<converters:EdgeSlopeOptionsToStringConverter x:Key="edgeSlopeOptionsToStringConverter"/>-->
 
 
-        <converters:ExistsConverter x:Key="existsConverter"/>
-
-        <converters:EdgeSlopeOptionsToStringConverter x:Key="edgeSlopeOptionsToStringConverter"/>
 
         <Style TargetType="Button" x:Key="RoundButton">
             <Style.Resources>
@@ -68,10 +68,8 @@
                     <DataGridTextColumn Header="#" FontWeight="Black" IsReadOnly="True" Binding="{Binding ChannelNumber, Mode=OneTime}"/>
                     <DataGridCheckBoxColumn Header="Display" Binding="{Binding ChannelDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridTextColumn Header="Label (16 max)" Binding="{Binding ChannelLabel, Mode=TwoWay}"/>
-                    <DataGridTextColumn Header="Scale" Binding="{Binding ChannelScale, Mode=TwoWay,
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
-                    <DataGridTextColumn Header="Offset" Binding="{Binding ChannelOffset, Mode=TwoWay,
-                                        Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
+                    <DataGridTextColumn Header="Scale" Binding="{Binding ChannelScaleForTextBox, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                    <DataGridTextColumn Header="Offset" Binding="{Binding ChannelOffsetForTextBox, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                     <DataGridTemplateColumn Header="Coupling">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -101,14 +99,14 @@
                        ToolTip="This corresponds to the horizontal scale value displayed as time/div on the oscilloscope screen.">
                 <Label Content="Timebase SCALE" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 <TextBox DockPanel.Dock="Bottom" Width="110" HorizontalAlignment="Left"
-                     Text="{Binding TimebaseScale, Mode=TwoWay, Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=SECONDS}"/>
+                     Text="{Binding TimebaseScaleForTextBox, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
             </DockPanel>
 
             <DockPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"
                        ToolTip="This corresponds to the horizontal offset value of signal on the oscilloscope screen.">
                 <Label Content="Timebase POSITION" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 <TextBox DockPanel.Dock="Bottom" Width="110" HorizontalAlignment="Left"
-                     Text="{Binding TimebasePosition, Mode=TwoWay, Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=SECONDS}"/>
+                     Text="{Binding TimebasePositionForTextBox, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
             </DockPanel>
 
             <DockPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
@@ -124,7 +122,7 @@
                        ToolTip="This corresponds to the level at which trigger event occurs in oscilloscope.">
                 <Label Content="Trigger LEVEL" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                 <TextBox DockPanel.Dock="Bottom" Width="110" HorizontalAlignment="Left"
-                     Text="{Binding TriggerVM.TriggerLevel, Mode=TwoWay, Converter={StaticResource oscilloscopeValuesConverter}, ConverterParameter=VOLTS}"/>
+                     Text="{Binding TriggerVM.TriggerLevelForTextBox, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
             </DockPanel>
 
             <DockPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
@@ -140,7 +138,8 @@
                     </Grid.RowDefinitions>
 
                     <RadioButton Grid.Row="0" Margin="2,0,2,0" GroupName="TriggerEdgeSlope"
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Mode=TwoWay, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=0}">
+                                 Command="{Binding RadioButtonEdgeSlopeCommand, Mode=OneTime}"
+                                 CommandParameter="0">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -155,7 +154,8 @@
                     <Separator Grid.Row="1"/>
 
                     <RadioButton Grid.Row="2" Margin="2,0,2,0" GroupName="TriggerEdgeSlope"
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Mode=TwoWay, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=1}">
+                                 Command="{Binding RadioButtonEdgeSlopeCommand, Mode=OneTime}"
+                                 CommandParameter="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -169,7 +169,8 @@
                     <Separator Grid.Row="3"/>
 
                     <RadioButton Grid.Row="4" Margin="2,0,2,0" GroupName="TriggerEdgeSlope"
-                                 IsChecked="{Binding TriggerVM.TriggerEdgeSlopeIndex, Mode=TwoWay, Converter={StaticResource radioBTNBoolToStringConverter}, ConverterParameter=2}">
+                                 Command="{Binding RadioButtonEdgeSlopeCommand, Mode=OneTime}"
+                                 CommandParameter="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="70"/>
@@ -212,8 +213,8 @@
             <DockPanel Grid.Row="0" Grid.Column="0">
                 <Label Content="Oscilloscope configuration string" DockPanel.Dock="Top" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <TextBox Name="textBoxOscilloscopeConfigString" DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                         Text="{Binding TempOscilloscopeConfigString, Mode=TwoWay, Converter={StaticResource listToTextConverter}}"
-                         IsReadOnly="{Binding ElementName=editTBConfigString, Path=IsChecked, Converter={StaticResource inverseBooleanConverter}}"
+                         Text="{Binding TempOscilloscopeConfigStringForTextBox, Mode=TwoWay}"
+                         IsReadOnly="{Binding ElementName=editTBConfigString, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"
                          AcceptsReturn="True"  
                          MinWidth="50"
                          MinHeight="75"

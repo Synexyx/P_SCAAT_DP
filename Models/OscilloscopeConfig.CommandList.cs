@@ -50,52 +50,53 @@ namespace P_SCAAT.Models
             public string WaveformStreamingCommand { get; set; }
             #endregion
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="command"></param>
+            /// <param name="parameter1"></param>
+            /// <returns></returns>
+            /// <exception cref="FormatException"></exception>
             public static (string, string) UniversalCommandString(string command, string parameter1)
             {
-                return string.IsNullOrEmpty(command)
-                    ? (string.Empty, string.Empty)
-                    : ForgeCommandToString(command, parameter1);
+                if (!string.IsNullOrEmpty(command))
+                {
+                    return ForgeCommandToString(command, parameter1);
+                }
+                throw new FormatException($"The command could not be created because it was not found in the command list file.{Environment.NewLine}{command}");
             }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="command"></param>
+            /// <param name="parameter1"></param>
+            /// <param name="parameter2"></param>
+            /// <returns></returns>
+            /// <exception cref="FormatException"></exception>
             public static (string, string) UniversalCommandString(string command, string parameter1, string parameter2)
             {
-                return string.IsNullOrEmpty(command)
-                    ? (string.Empty, string.Empty)
-                    : ForgeCommandToString(command, parameter1, parameter2);
+                if (!string.IsNullOrEmpty(command))
+                {
+                    return ForgeCommandToString(command, parameter1, parameter2);
+                }
+                throw new FormatException("The command could not be created because it was not found in the command list file.");
             }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="commad"></param>
+            /// <returns></returns>
+            /// <exception cref="FormatException"></exception>
             public static string UniversalAskCommandString(string commad)
             {
-                if (string.IsNullOrEmpty(commad))
+                if (!string.IsNullOrEmpty(commad))
                 {
-                    return string.Empty;
+                    StringBuilder stringBuilder = new StringBuilder();
+                    return stringBuilder.AppendFormat(CultureInfo.InvariantCulture, $"{commad}?").ToString();
                 }
-                StringBuilder stringBuilder = new StringBuilder();
-                return stringBuilder.AppendFormat(CultureInfo.InvariantCulture, commad + "?").ToString();
+                throw new FormatException("The command could not be created because it was not found in the command list file.");
             }
 
-
-
-
-            #region ====== WAVEFORM =====
-
-
-
-            //ToDo předělat na universal
-            public (string, string) WaveformStreamingCommandString(bool waveformStreaming)
-            {
-                if (string.IsNullOrEmpty(WaveformStreamingCommand))
-                {
-                    return (string.Empty, string.Empty);
-                }
-                string waveformStreamingString = TrueFalseOptions != null
-                    ? waveformStreaming ? TrueFalseOptions.ElementAtOrDefault(0) ?? "1" : TrueFalseOptions.ElementAtOrDefault(1) ?? "0"
-                    : waveformStreaming ? "ON" : "OFF";
-                return ForgeCommandToString(WaveformStreamingCommand, waveformStreamingString);
-            }
-            public (string, string) WaveformSourceCommandString()
-            {
-                return (string.Empty, string.Empty);
-            }
-            #endregion
 
             private static (string, string) ForgeCommandToString(string selectedCommand, string commandParameter1)
             {
@@ -118,8 +119,23 @@ namespace P_SCAAT.Models
                 return (partCommand, resultCommand);
             }
 
-
+            //ToDo smazat
             #region NOT USING
+            //public (string, string) WaveformStreamingCommandString(bool waveformStreaming)
+            //{
+            //    if (string.IsNullOrEmpty(WaveformStreamingCommand))
+            //    {
+            //        return (string.Empty, string.Empty);
+            //    }
+            //    string waveformStreamingString = TrueFalseOptions != null
+            //        ? waveformStreaming ? TrueFalseOptions.ElementAtOrDefault(0) ?? "1" : TrueFalseOptions.ElementAtOrDefault(1) ?? "0"
+            //        : waveformStreaming ? "ON" : "OFF";
+            //    return ForgeCommandToString(WaveformStreamingCommand, waveformStreamingString);
+            //}
+            //public (string, string) WaveformSourceCommandString()
+            //{
+            //    return (string.Empty, string.Empty);
+            //}
             //public (string, string) WaveformFormatCommandString(int waveformFormatIndex)
             //{
             //    if (string.IsNullOrEmpty(WaveformFormatCommand) || WaveformFormatOptions == null)
@@ -144,7 +160,6 @@ namespace P_SCAAT.Models
             //{
             //    if (string.IsNullOrEmpty(ChannelDisplayCommand))
             //    {
-            //        //ToDo MAYBE THROW EXCEPTION??
             //        return (string.Empty, string.Empty);
             //    }
             //    string channelDisplayString = TrueFalseOptions != null
@@ -208,7 +223,6 @@ namespace P_SCAAT.Models
 
             //public (string, string) TimebasePositionCommandString(decimal timebasePosition)
             //{
-            //    //ToDo check jestli :TIMebase:POSition nebo :TIMebase:RANGe
             //    return string.IsNullOrEmpty(TimebasePositionCommand)
             //        ? (string.Empty, string.Empty)
             //        : ForgeCommandToString(TimebasePositionCommand, timebasePosition.ToString("##0E00", CultureInfo.InvariantCulture));
@@ -222,9 +236,6 @@ namespace P_SCAAT.Models
             //#endregion
             //internal void UpdateDynamicOptions()
             //{
-
-            //    //ToDo maybe kdyby šlo dávat třeba trigger source podle počtu kanálů bylo by nice
-
             //    //if (TriggerEdgeSourceOptions != null)
             //    //{
             //    //    List<string> partList = new();

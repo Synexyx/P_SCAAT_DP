@@ -30,15 +30,18 @@ namespace P_SCAAT.ViewModels.Commands
 
         public override void Execute(object parameter)
         {
-            //_oscilloscope.InsertNewConfigString(_oscilloscopeConfigViewModel.TempOscilloscopeConfigString.ToList());
             _oscilloscopeConfigViewModel.Oscilloscope.InsertNewConfigString(_oscilloscopeConfigViewModel.TempOscilloscopeConfigString.ToList());
-            //_oscilloscope.InsertNewChannelSettings(_oscilloscopeConfigViewModel.ChannelSettingsVMtoModel());
+
+            //ToDo dát tam config string a z něj updatovat properties??
             _oscilloscopeConfigViewModel.Oscilloscope.InsertNewChannelSettings(_oscilloscopeConfigViewModel.ChannelSettingsVMtoModel());
             _oscilloscopeConfigViewModel.Oscilloscope.InsertTriggerSettings(_oscilloscopeConfigViewModel.TriggerSettingsVMtoModel());
-            
-            //ToDo APPLY OTHER SETTING
-            //_oscilloscopeConfigViewModel.Oscilloscope.InsertOtherSettings(_oscilloscopeConfigViewModel.TimebaseScale);
-            //ToDo APPLY OTHER SETTING
+
+
+            decimal timebaseScale = _oscilloscopeConfigViewModel.TimebaseScale;
+            decimal timebasePosition = _oscilloscopeConfigViewModel.TimebasePosition;
+            int waveformFormatIndex = _oscilloscopeConfigViewModel.WaveformFormatIndex;
+            bool waveformStreaming = _oscilloscopeConfigViewModel.WaveformStreaming;
+            _oscilloscopeConfigViewModel.Oscilloscope.InsertOtherSettings(timebaseScale, timebasePosition, waveformFormatIndex, waveformStreaming);
 
 
             _oscilloscopeConfigViewModel.Oscilloscope.ApplyAllSettingsToDevice();

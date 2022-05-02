@@ -18,9 +18,11 @@ namespace P_SCAAT.Models
         public List<ChannelSettings> Channels { get; protected set; }
         public TriggerSettings Trigger { get; protected set; }
         public decimal TimebaseScale { get; protected set; }
+        public decimal TimebasePosition { get; protected set; }
         public int WaveformFormatIndex { get; protected set; }
-        public List<string> WaveformFormatOptions { get; protected set; }
-        public string WaveformStreaming { get; protected set; }
+        private List<string> _waveformFormatOptions;
+        public List<string> WaveformFormatOptions { get => _waveformFormatOptions ?? new List<string>(); protected set => _waveformFormatOptions = value; }
+        public bool WaveformStreaming { get; protected set; }
 
 
         public CommandList Commands { get; protected set; }
@@ -38,7 +40,6 @@ namespace P_SCAAT.Models
             Trigger = new TriggerSettings();
 
             //ToDo dynamic commandList loading
-
 
             Commands = LoadCommandList(oscilloscopeID);
             Trigger.TriggerEdgeSourceOptions = Commands.TriggerEdgeSourceOptions;
@@ -77,13 +78,15 @@ namespace P_SCAAT.Models
                 CommandList commandList = JsonSerializer.Deserialize<CommandList>(jsonString);
                 return commandList;
             }
-            catch
+            catch (Exception exp)
             {
                 //ToDo dát správnou exception
                 throw new NotImplementedException();
             }
 
         }
+
+        //ToDo hledat z názvu souboru část v response stringu
         private static string FindCorrectCommandListFile(string oscilloscopeID)
         {
             string defaultFileDirectoryPath = "../../OscilloscopeCommandLists/";
@@ -105,6 +108,7 @@ namespace P_SCAAT.Models
             }
             catch (Exception exp)
             {
+                //ToDo probably better exception
                 throw new FileLoadException(exp.Message);
             }
             if (!commandListFileFound)
@@ -132,9 +136,10 @@ namespace P_SCAAT.Models
             Trigger = trigger;
         }
         //ToDo update this
-        public void InsertOtherSettings(decimal timebaseScale, int waveformFormatIndex, string waveformSource, string waveformStreaming)
+        public void InsertOtherSettings(decimal timebaseScale, decimal timebasePosition, int waveformFormatIndex, bool waveformStreaming)
         {
             TimebaseScale = timebaseScale;
+            TimebasePosition = timebasePosition;
             WaveformFormatIndex = waveformFormatIndex;
             //WaveformSource = waveformSource;
             WaveformStreaming = waveformStreaming;
@@ -151,7 +156,7 @@ namespace P_SCAAT.Models
             WaveformFormatIndex = 0;
             WaveformFormatOptions = null;
             //WaveformSource = null;
-            WaveformStreaming = null;
+            WaveformStreaming = false;
         }
 
     }
