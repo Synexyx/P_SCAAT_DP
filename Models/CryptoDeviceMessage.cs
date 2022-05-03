@@ -15,7 +15,7 @@ namespace P_SCAAT.Models
         public DateTime TimeCreated { get; set; }
         public RNGMessageGenerator RNGMessageGenerator { get; private set; }
 
-        public void InitializeRNGMessageGenerator(int messageLenght)
+        public void InitializeRNGMessageGenerator(uint messageLenght)
         {
             RNGMessageGenerator = new RNGMessageGenerator(messageLenght);
         }

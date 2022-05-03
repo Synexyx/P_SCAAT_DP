@@ -35,7 +35,7 @@ namespace P_SCAAT.ViewModels
                 foreach (Exception item in e.NewItems)
                 {
                     //_ = MessageBox.Show(item.Message);
-                    _ = MessageBox.Show($"{item.Message}", $"{item.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _ = MessageBox.Show($"{item.Message}{Environment.NewLine}{item.StackTrace}", $"{item.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
 
                     //              errorMessages.Add($"{DateTime.Now} {item.Message}{Environment.NewLine}");
                 }

@@ -48,7 +48,7 @@ namespace P_SCAAT.ViewModels
             set { TriggerLevel = StringToDecimal(value); OnPropertyChanged(nameof(TriggerLevelForTextBox)); }
         }
         #endregion
-        public TriggerViewModel(OscilloscopeConfig.TriggerSettings trigger)
+        public TriggerViewModel(TriggerSettings trigger)
         {
             TriggerEdgeSourceOptions = new List<string>(trigger.TriggerEdgeSourceOptions);
             TriggerEdgeSourceIndex = trigger.TriggerEdgeSourceIndex;

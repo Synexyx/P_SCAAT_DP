@@ -12,7 +12,7 @@ namespace P_SCAAT.Models
         private readonly byte[] messageBytes;
         private readonly RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
-        public RNGMessageGenerator(int messageLenght)
+        public RNGMessageGenerator(uint messageLenght)
         {
             messageBytes = new byte[messageLenght];
         }

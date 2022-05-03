@@ -399,52 +399,5 @@ namespace P_SCAAT.ViewModels
         {
             Debug.WriteLine("KILLING OCVM");
         }
-
-
-        //ToDo don't forget it here
-        #region TESTING
-        private void TestOscConfigListBinding()
-        {
-            //Osciloscope.UpdateConfigString();
-            //Debug.WriteLine("VM: " + TempOsciloscopeConfigString.Count);
-            //Debug.WriteLine("Model: " + Osciloscope.OsciloscopeConfigString.Count);
-
-            //foreach (OscilloscopeConfig.ChannelSettings item in TempChannels)
-            //{
-            //    Debug.WriteLine("\nVM");
-            //    //Debug.WriteLine(item.ChannelScale.GetType());
-            //    Debug.WriteLine(item.ChannelScale);
-
-            //    Debug.WriteLine(item.ChannelNumber + " " + item.ChannelCoupling);
-            //    //Debug.WriteLine(item.ChannelCoupling);
-            //}
-            //foreach (OsciloscopeConfig.ChannelSettings item in Osciloscope.Channels)
-            //{
-            //    Debug.WriteLine("\nM");
-            //    //Debug.WriteLine(item.ChannelScale.GetType());
-            //    Debug.WriteLine(item.ChannelScale);
-
-            //    Debug.WriteLine(item.ChannelNumber + " " + item.ChannelCoupling);
-            //    //Debug.WriteLine(item.ChannelCoupling);
-            //}
-        }
-
-        //private decimal _testNumberProp = 0.25E-19M;
-        //private decimal _testNumberProp = 0.25E19M;
-        private bool _testProp;
-
-        public bool TestProp
-        {
-            get => _testProp;
-            set
-            {
-                _testProp = value;
-                //OnPropertyChanged(nameof(TestProp));
-                //OnPropertyChanged(""); //Refresh all forced
-                TestOscConfigListBinding();
-                //Osciloscope.UpdateConfigString();
-            }
-        }
-        #endregion
     }
 }

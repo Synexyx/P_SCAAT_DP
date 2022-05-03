@@ -138,11 +138,11 @@
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <Label Content="Traces in total:" DockPanel.Dock="Left" FontWeight="Bold"/>
-                <TextBox Text="100" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalContentAlignment="Center" Width="50" Height="20"/>
+                <TextBox Text="{Binding TracesTotal}" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalContentAlignment="Center" Width="50" Height="20"/>
             </DockPanel>
             <DockPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <Label Content="Traces per file:" DockPanel.Dock="Left" FontWeight="Bold"/>
-                <TextBox Text="100" DockPanel.Dock="Right" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="50" Height="20"/>
+                <TextBox Text="{Binding TracesPerFile}" DockPanel.Dock="Right" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="50" Height="20"/>
             </DockPanel>
 
             <DataGrid Grid.Row="0" Grid.RowSpan="5" Grid.Column="1"

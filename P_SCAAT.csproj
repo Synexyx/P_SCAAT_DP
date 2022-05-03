@@ -104,10 +104,10 @@
     <Compile Include="Models\ISessionDevice.cs" />
     <Compile Include="Models\Measurement.cs" />
     <Compile Include="Models\Oscilloscope.cs" />
-    <Compile Include="Models\OscilloscopeConfig.ChannelSettings.cs" />
-    <Compile Include="Models\OscilloscopeConfig.CommandList.cs" />
+    <Compile Include="Models\ChannelSettings.cs" />
+    <Compile Include="Models\CommandList.cs" />
     <Compile Include="Models\OscilloscopeConfig.cs" />
-    <Compile Include="Models\OscilloscopeConfig.TriggerSettings.cs" />
+    <Compile Include="Models\TriggerSettings.cs" />
     <Compile Include="Models\RNGMessageGenerator.cs" />
     <Compile Include="Models\SerialPortRS232.cs" />
     <Compile Include="ViewModels\ChannelSettingsViewModel.cs" />

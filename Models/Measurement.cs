@@ -9,5 +9,7 @@ namespace P_SCAAT.Models
     class Measurement
     {
         //ToDo implement measurment here?
+
+        //ToDo test Waveform:Data?;*OPC?
     }
 }

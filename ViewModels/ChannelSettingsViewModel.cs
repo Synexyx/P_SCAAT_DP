@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using P_SCAAT.Models;
-using static P_SCAAT.Models.OscilloscopeConfig.ChannelSettings;
+using static P_SCAAT.Models.ChannelSettings;
 
 namespace P_SCAAT.ViewModels
 {
@@ -65,7 +65,7 @@ namespace P_SCAAT.ViewModels
             set { _channelCouplingIndex = value; OnPropertyChanged(nameof(ChannelCouplingIndex)); }
         }
         #endregion
-        public ChannelSettingsViewModel(OscilloscopeConfig.ChannelSettings channelSettingsToCopy)
+        public ChannelSettingsViewModel(ChannelSettings channelSettingsToCopy)
         {
             ChannelNumber = channelSettingsToCopy.ChannelNumber;
             ChannelLabel = channelSettingsToCopy.ChannelLabel;

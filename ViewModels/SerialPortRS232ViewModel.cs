@@ -160,9 +160,9 @@ namespace P_SCAAT.ViewModels
 
         private void OnCryptoMessageCreated()
         {
-            Thread.Sleep(20000);
+            Thread.Sleep(5);
             SerialPortRS232.Send(CryptoDeviceMessage.MessageBytes);
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         internal void RefreshPortList()

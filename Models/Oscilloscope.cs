@@ -133,7 +133,17 @@ namespace P_SCAAT.Models
         //ToDo asi tady metoda StartMeassure
         //Předat zprávu + seznam kanálů, na kterých se bude měřit
         //internal async Task<string> Measure(CryptoDeviceMessage cryptoDeviceMessage, int messageLenght, CancellationToken token)
-        internal string Measure(CryptoDeviceMessage cryptoDeviceMessage, int messageLenght, CancellationToken token)
+        internal void MeasurePrep()
+        {
+            SendData(Commands.OscilloscopeSingleAcquisitionCommand);
+        }
+
+        internal byte[] GetMeasuredData()
+        {
+            return MessageBasedSession.RawIO.Read();
+        }
+
+        internal string Measure(CryptoDeviceMessage cryptoDeviceMessage, uint messageLenght, CancellationToken token)
         {
             while (true)
             {
@@ -183,6 +193,7 @@ namespace P_SCAAT.Models
             {
                 string messageForge = ReplaceEscapeSeq(dataString);
                 MessageBasedSession.RawIO.Write(messageForge);
+                MessageBasedSession.FormattedIO.Write(messageForge);
                 //Debug.WriteLine(MessageBasedSession.RawIO.ReadString());
             }
             catch (Exception exp)
@@ -276,66 +287,155 @@ namespace P_SCAAT.Models
         {
             foreach (ChannelSettings channel in Channels)
             {
-                string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
+                //ToDo better exception handling
 
                 ////ChannelLabel
-                string commandPart = Commands.ChannelLabelCommand;
-                string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
-                string removedQuotes = Regex.Replace(oscilloscopeResponse, $"\"+", string.Empty);
-                channel.ChannelLabel = removedQuotes;
-                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+                SynchronizeChannelLabel(channel);
 
                 ////ChannelDisplay
-                commandPart = Commands.ChannelDisplayCommand;
-                oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
-                if (Commands.TrueFalseOptions.IndexOf(oscilloscopeResponse) % 2 == 0)
-                {
-                    channel.ChannelDisplay = true;
-                }
-                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+                SynchronizeChannelDisplay(channel);
 
                 ////ChannelScale
-                commandPart = Commands.ChannelScaleCommand;
-                oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
-                _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
-                channel.ChannelScale = numberResult;
-                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+                SynchronizeChannelScale(channel);
 
                 ////ChannelOffset
-                commandPart = Commands.ChannelOffsetCommand;
-                oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
-                _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out numberResult);
-                channel.ChannelOffset = numberResult;
-                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+                SynchronizeChannelOffset(channel);
 
                 ////ChannelCoupling
-                commandPart = Commands.ChannelCouplingCommand;
-                oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
-                channel.ChannelCouplingIndex = Commands.ChannelCouplingModes.IndexOf(oscilloscopeResponse);
-                AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+                SynchronizeChannelCoupling(channel);
             }
         }
         private void SynchronizeTrigger()
         {
+            //ToDo better exception handling
+            //ToDo use inner exception
+            //ToDo mayby add ErrorMessage to OscilloscopeConfigView
+
             ////TriggerEdgeSource
-            string commandPart = Commands.TriggerEdgeSourceCommand;
-            string oscilloscopeResponse = AskCommand(commandPart);
-            Trigger.TriggerEdgeSourceIndex = Commands.TriggerEdgeSourceOptions.IndexOf(oscilloscopeResponse);
-            //LINQ?
-            AddResponseToConfig(commandPart, oscilloscopeResponse);
+            SynchronizeTriggerEdgeSource(Trigger);
 
             ////TriggerEdgeSlope
-            commandPart = Commands.TriggerEdgeSlopeCommand;
-            oscilloscopeResponse = AskCommand(commandPart);
-            Trigger.TriggerEdgeSlopeIndex = Commands.TriggerEdgeSlopeOptions.IndexOf(oscilloscopeResponse);
-            AddResponseToConfig(commandPart, oscilloscopeResponse);
+            SynchronizeTriggerEdgeSlope(Trigger);
+
+            ////TriggerLevel
+            SynchronizeTriggerLevel(Trigger);
         }
+
+        #region Partial synchronization methods
+        private void SynchronizeChannelLabel(ChannelSettings channel)
+        {
+            string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
+            string commandPart = Commands.ChannelLabelCommand;
+            string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+            string removedQuotes = Regex.Replace(oscilloscopeResponse, $"\"+", string.Empty);
+            channel.ChannelLabel = removedQuotes;
+            AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+        }
+        private void SynchronizeChannelDisplay(ChannelSettings channel)
+        {
+            string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
+            string commandPart = Commands.ChannelDisplayCommand;
+            string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+            if (Commands.TrueFalseOptions.IndexOf(oscilloscopeResponse) % 2 == 0)
+            {
+                channel.ChannelDisplay = true;
+            }
+            AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+        }
+        private void SynchronizeChannelScale(ChannelSettings channel)
+        {
+            string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
+            string commandPart = Commands.ChannelScaleCommand;
+            string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            channel.ChannelScale = numberResult;
+            AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+        }
+        private void SynchronizeChannelOffset(ChannelSettings channel)
+        {
+            string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
+            string commandPart = Commands.ChannelOffsetCommand;
+            string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            channel.ChannelOffset = numberResult;
+            AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+        }
+        private void SynchronizeChannelCoupling(ChannelSettings channel)
+        {
+            string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
+            string commandPart = Commands.ChannelCouplingCommand;
+            string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
+            channel.ChannelCouplingIndex = Commands.ChannelCouplingModes.IndexOf(oscilloscopeResponse);
+            AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
+        }
+        private void SynchronizeTriggerEdgeSource(TriggerSettings trigger)
+        {
+            try
+            {
+                string commandPart = Commands.TriggerEdgeSourceCommand;
+                string oscilloscopeResponse = AskCommand(commandPart);
+                trigger.TriggerEdgeSourceIndex = Commands.TriggerEdgeSourceOptions
+                    .Select(x => x = Regex.Replace(x, @"[a-z]+", string.Empty))
+                    .Select((item, index) => (item, index))
+                    .Where(x => x.item.Contains(oscilloscopeResponse))
+                    .Select(x => x.index)
+                    .FirstOrDefault();
+                AddResponseToConfig(commandPart, Commands.TriggerEdgeSourceOptions.ElementAt(trigger.TriggerEdgeSourceIndex));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine(exp.Message);
+            }
+        }
+        private void SynchronizeTriggerEdgeSlope(TriggerSettings trigger)
+        {
+            try
+            {
+                string commandPart = Commands.TriggerEdgeSlopeCommand;
+                string oscilloscopeResponse = AskCommand(commandPart);
+                trigger.TriggerEdgeSlopeIndex = Commands.TriggerEdgeSlopeOptions
+                    .Select(x => x = Regex.Replace(x, @"[a-z]+", string.Empty))
+                    .Select((item, index) => (item, index))
+                    .Where(x => x.item.Contains(oscilloscopeResponse))
+                    .Select(x => x.index)
+                    .FirstOrDefault();
+                AddResponseToConfig(commandPart, Commands.TriggerEdgeSlopeOptions.ElementAt(trigger.TriggerEdgeSlopeIndex));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine(exp.Message);
+            }
+        }
+        private void SynchronizeTriggerLevel(TriggerSettings trigger)
+        {
+            try
+            {
+                string commandPart = Commands.TriggerLevelCommand;
+                string oscilloscopeResponse = AskCommand(commandPart);
+                _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+                trigger.TriggerLevel = numberResult;
+                AddResponseToConfig(commandPart, oscilloscopeResponse);
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine(exp.Message);
+            }
+        }
+        #endregion
+
         private string AskCommand(string commandPart)
         {
-            string askCommand = CommandList.UniversalAskCommandString(commandPart);
-            //ToDo just testing
-            //return QueryData(askCommand);
-            return TESTQUERY6(askCommand);
+            try
+            {
+                string askCommand = CommandList.UniversalAskCommandString(commandPart);
+                //ToDo just testing
+                //return QueryData(askCommand);
+                return TESTQUERY6(askCommand);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         private string AskCommand(string commandPart, string channelNumberString)
         {

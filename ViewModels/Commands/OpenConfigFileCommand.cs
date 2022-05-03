@@ -47,7 +47,7 @@ namespace P_SCAAT.ViewModels.Commands
             string fileContent;
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = Path.GetFullPath("..\\..\\OscilloscopeConfigFiles"),
+                InitialDirectory = Path.GetFullPath(@"..\..\OscilloscopeConfigFiles"),
                 Filter = "Text (*.txt)|*.txt|All files (*.*)|*.*"
             };
             if ((bool)openFileDialog.ShowDialog())

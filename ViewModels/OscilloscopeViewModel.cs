@@ -33,6 +33,10 @@ namespace P_SCAAT.ViewModels
         private string _manualMessageWrite = "*IDN?";
         private string _manualMessageRead = "Response";
 
+        private uint _tracesTotal;
+        private uint _tracesPerFile;
+        private uint _messageLenght;
+
 
         public CryptoDeviceMessage CryptoDeviceMessage
         {
@@ -98,8 +102,8 @@ namespace P_SCAAT.ViewModels
             get => _measureButtonContent;
             set { _measureButtonContent = value; OnPropertyChanged(nameof(MeasureButtonContent)); }
         }
-        public string MeasureButtonContentStart { get => "START"; }
-        public string MeasureButtonContentCancel { get => "CANCEL"; }
+        public string MeasureButtonContentStart => "START";
+        public string MeasureButtonContentCancel => "CANCEL";
 
         public string ErrorMessage
         {
@@ -140,10 +144,7 @@ namespace P_SCAAT.ViewModels
                 OnPropertyChanged(nameof(WaveformSource));
             }
         }
-        private int _tracesTotal;
-        private int _tracesPerFile;
-        private int _messageLenght;
-        public int MessageLenght
+        public uint MessageLenght
         {
             get => _messageLenght;
             set
@@ -152,7 +153,7 @@ namespace P_SCAAT.ViewModels
                 OnPropertyChanged(nameof(MessageLenght));
             }
         }
-        public int TracesTotal
+        public uint TracesTotal
         {
             get => _tracesTotal;
             set
@@ -161,12 +162,19 @@ namespace P_SCAAT.ViewModels
                 OnPropertyChanged(nameof(TracesTotal));
             }
         }
-        public int TracesPerFile
+        public uint TracesPerFile
         {
             get => _tracesPerFile;
             set
             {
-                _tracesPerFile = value;
+                if (_tracesTotal >= value)
+                {
+                    _tracesPerFile = value;
+                }
+                else
+                {
+                    _tracesPerFile = _tracesTotal;
+                }
                 OnPropertyChanged(nameof(TracesPerFile));
             }
         }
@@ -198,7 +206,7 @@ namespace P_SCAAT.ViewModels
         {
             if (Oscilloscope.Channels != null && Oscilloscope.Channels.Any())
             {
-                foreach (OscilloscopeConfig.ChannelSettings channel in Oscilloscope.Channels)
+                foreach (ChannelSettings channel in Oscilloscope.Channels)
                 {
                     WaveformSource.Add(new WaveformSourceViewModel(channel.ChannelLabel, false));
                 }
@@ -228,7 +236,7 @@ namespace P_SCAAT.ViewModels
         public ICommand ConfigViewSelectCommand { get; set; }
         public ICommand ManualControlCommand { get; set; }
         public ICommand MeasureCommand { get; set; }
-        
+
 
         private void CreateCommands(Oscilloscope oscilloscope, CryptoDeviceMessage cryptoDeviceMessage, OscilloscopeViewControlState oscilloscopeControlState, Func<OscilloscopeConfigViewModel> oscilloscopeConfigVM)
         {

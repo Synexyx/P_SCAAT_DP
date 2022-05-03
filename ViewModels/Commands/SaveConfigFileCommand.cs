@@ -23,7 +23,7 @@ namespace P_SCAAT.ViewModels.Commands
             //Debug.WriteLine("SAVE 1 " + Thread.CurrentThread.ManagedThreadId);
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                InitialDirectory = Path.GetFullPath("..\\..\\OscilloscopeConfigFiles"),
+                InitialDirectory = Path.GetFullPath(@"..\..\OscilloscopeConfigFiles"),
                 Filter = "Text (*.txt)|*.txt|All files (*.*)|*.*"
             };
 

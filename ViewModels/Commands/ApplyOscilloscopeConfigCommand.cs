@@ -12,7 +12,7 @@ namespace P_SCAAT.ViewModels.Commands
     internal class ApplyOscilloscopeConfigCommand : CoreCommand
     {
 
-        //ToDo async?
+        //ToDo async? určitě protože budu chtít Thread.Sleep() před write
 
         //private readonly Oscilloscope _oscilloscope;
         private readonly OscilloscopeConfigViewModel _oscilloscopeConfigViewModel;

@@ -8,16 +8,14 @@ namespace P_SCAAT.ViewModels
 {
     internal class WaveformSourceViewModel : CorePropChangedVM
     {
-        private string _sourceName;
         private bool _isSelected;
-        public string SourceName { get => _sourceName; }
-        public bool IsSelected { get => _isSelected; 
-            set { _isSelected = value; OnPropertyChanged(nameof(IsSelected)); } }
+        public string SourceName { get; }
+        public bool IsSelected { get => _isSelected; set { _isSelected = value; OnPropertyChanged(nameof(IsSelected)); } }
 
         public WaveformSourceViewModel(string sourceName, bool isSelected)
         {
-            _sourceName = sourceName;
-           _isSelected = isSelected;
+            SourceName = sourceName;
+            _isSelected = isSelected;
         }
 
     }
