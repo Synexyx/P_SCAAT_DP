@@ -213,5 +213,8 @@
   <ItemGroup>
     <Resource Include="PSCAAT.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Measurment\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

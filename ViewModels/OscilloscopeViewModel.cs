@@ -37,6 +37,8 @@ namespace P_SCAAT.ViewModels
         private uint _tracesPerFile;
         private uint _messageLenght;
 
+        private float _progressBarValue;
+
 
         public CryptoDeviceMessage CryptoDeviceMessage
         {
@@ -176,6 +178,15 @@ namespace P_SCAAT.ViewModels
                     _tracesPerFile = _tracesTotal;
                 }
                 OnPropertyChanged(nameof(TracesPerFile));
+            }
+        }
+        public float ProgressBarValue
+        {
+            get => _progressBarValue;
+            set
+            {
+                _progressBarValue = (value / _tracesTotal)*100;
+                OnPropertyChanged(nameof(ProgressBarValue));
             }
         }
         #endregion

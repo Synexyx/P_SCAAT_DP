@@ -117,8 +117,8 @@
                     Command="{Binding ManualControlCommand, Mode=OneTime}" CommandParameter="QUERY"/>
             <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="3" Text="{Binding ManualMessageWrite, Mode=TwoWay}" Width="250" 
                      IsEnabled="{Binding IsSessionOpen, Mode=OneWay}"/>
-            <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" Margin="3" IsReadOnly="True" Background="#FFEAEAEA" Foreground="#FF5A5A5A" 
-                     MinHeight="36" TextWrapping="WrapWithOverflow" Width="250" Text="{Binding ManualMessageRead, Mode=TwoWay}"
+            <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" Margin="3" IsReadOnly="False" Background="#FFEAEAEA" Foreground="#FF5A5A5A" 
+                     MinHeight="36" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Width="250" Text="{Binding ManualMessageRead, Mode=TwoWay}"
                      IsEnabled="{Binding IsSessionOpen, Mode=OneWay}"/>
         </Grid>
 
@@ -126,6 +126,7 @@
 
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -147,13 +148,13 @@
 
             <DataGrid Grid.Row="0" Grid.RowSpan="5" Grid.Column="1"
                       ItemsSource="{Binding WaveformSource, Mode=OneWay}"
-                      MinHeight="50" AutoGenerateColumns="False" HorizontalAlignment="Left"
+                      MinHeight="50" AutoGenerateColumns="False" HorizontalAlignment="Center"
                       CanUserResizeRows="False" CanUserDeleteRows="False"
                       CanUserAddRows="False" CanUserResizeColumns="False"
                       CanUserSortColumns="False" CanUserReorderColumns="False"
                       ColumnWidth="Auto" MaxColumnWidth="130"
                       Margin="5" VerticalContentAlignment="Center"
-                      HorizontalContentAlignment="Center"
+                      HorizontalContentAlignment="Left"
                       ToolTip="Selection of sources for measurement. Note that selecting more sources at once will cause the measurement process to slow down."
                       Style="{DynamicResource BoldHeaderGrid}">
 
@@ -176,6 +177,7 @@
                     Style="{DynamicResource RoundButton}"
                     Content="{Binding MeasureButtonContent, Mode=OneWay}" 
                     Command="{Binding MeasureCommand, Mode=OneTime}"/>
+            <ProgressBar Grid.Row="4" Grid.Column="0" Margin="5" Height="20" Value="{Binding ProgressBarValue, Mode=OneWay}"/>
         </Grid>
 
 

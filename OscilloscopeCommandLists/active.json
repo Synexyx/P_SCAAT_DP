@@ -7,6 +7,10 @@
     "ON",
     "OFF"
   ],
+  "OscilloscopeSingleAcquisitionCommand": "SINGle",
+  "OscilloscopeStopCommand": "STOP",
+  "OsclloscopeRunCommand": "RUN",
+  "OscilloscopeOperationCompleteCommand": "*OPC?",
   "ChannelDisplayCommand": ":CHANnel{0}:DISPlay {1}",
   "ChannelLabelCommand": ":CHANnel{0}:LABel {1}",
   "ChannelScaleCommand": ":CHANnel{0}:SCALe {1}",
@@ -14,7 +18,10 @@
   "ChannelCouplingCommand": ":CHANnel{0}:INPut {1}",
   "ChannelCouplingModes": [
     "AC",
-    "DC"
+    "DC",
+    "LFR1",
+    "LFR2",
+    "DC50"
   ],
   "TimebasePositionCommand": ":TIMebase:Position {0}",
   "TimebaseScaleCommand": ":TIMebase:SCALe {0}",
@@ -31,6 +38,7 @@
     "NEGative",
     "EITHer"
   ],
+  "TriggerLevelCommand": ":TRIGger:LEVel {0}",
   "WaveformDataCommand": ":WAVeform:DATA?",
   "WaveformSourceCommand": ":WAVeform:SOURce {0}",
   "WaveformFormatCommand": ":WAVeform:FORMat {0}",

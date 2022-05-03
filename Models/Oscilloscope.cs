@@ -13,6 +13,7 @@ using System.Globalization;
 using ResourceManager = NationalInstruments.Visa.ResourceManager;
 using P_SCAAT.Exceptions;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace P_SCAAT.Models
 {
@@ -91,7 +92,7 @@ namespace P_SCAAT.Models
 
                 try
                 {
-                    //MessageBasedSession = (MessageBasedSession)rmSession.Open(SessionName);
+                    MessageBasedSession = (MessageBasedSession)rmSession.Open(SessionName);
                     IsSessionOpen = true;
                     InitializeSessionSettings();
                     Debug.WriteLine("Session: " + SessionName + " succesfully opened.");
@@ -135,12 +136,55 @@ namespace P_SCAAT.Models
         //internal async Task<string> Measure(CryptoDeviceMessage cryptoDeviceMessage, int messageLenght, CancellationToken token)
         internal void MeasurePrep()
         {
+            bool isReady = false;
             SendData(Commands.OscilloscopeSingleAcquisitionCommand);
+            while (!isReady)
+            {
+                Thread.Sleep(100);
+                isReady = QueryData(Commands.OscilloscopeOperationCompleteCommand).Contains("1");
+            }
         }
 
         internal byte[] GetMeasuredData()
         {
-            return MessageBasedSession.RawIO.Read();
+            //MessageBasedSession.FormattedIO.DiscardBuffers();
+            //MessageBasedSession.RawIO.ReadString();
+            //bool isReady = false;
+            //while (!isReady)
+            //{
+            //    isReady = QueryData(Commands.OscilloscopeOperationCompleteCommand).Contains("1");
+            //}
+            //Thread.Sleep(100);
+            SendData(Commands.WaveformDataCommand);
+            MemoryStream memoryStream = new MemoryStream();
+            //MessageBasedSession.RawIO.Write(Commands.WaveformDataCommand);
+            while (true)
+            {
+                try
+                {
+                    //var test1 = MessageBasedSession.FormattedIO.ReadUntilEnd();
+                    byte[] response = MessageBasedSession.RawIO.Read();
+                    //byte[] response = MessageBasedSession.FormattedIO.ReadLineListOfByte();
+                    //byte[] response = MessageBasedSession.FormattedIO.ReadListOfByte();
+                    memoryStream.Write(response, 0, response.Length);
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine("Reading finished");
+                    break;
+                }
+            }
+            //var test = MessageBasedSession.RawIO.Read();
+            var bitconv = BitConverter.ToString(memoryStream.GetBuffer());
+            var utfString = Encoding.UTF8.GetString(memoryStream.GetBuffer());
+            var asciiString = Encoding.ASCII.GetString(memoryStream.ToArray());
+            var base64String = Convert.ToBase64String(memoryStream.ToArray());
+            //var test2 = MessageBasedSession.RawIO.Read();
+            byte[] result = memoryStream.GetBuffer();
+            int lastIndex = Array.FindLastIndex(result, b => b != 0);
+            Array.Resize(ref result, lastIndex + 1);
+            //return memoryStream.GetBuffer();
+            return result;
         }
 
         internal string Measure(CryptoDeviceMessage cryptoDeviceMessage, uint messageLenght, CancellationToken token)
@@ -191,9 +235,11 @@ namespace P_SCAAT.Models
             //*IDN ?\n
             try
             {
-                string messageForge = ReplaceEscapeSeq(dataString);
-                MessageBasedSession.RawIO.Write(messageForge);
-                MessageBasedSession.FormattedIO.Write(messageForge);
+                //    string messageForge = ReplaceEscapeSeq(dataString);
+                //    MessageBasedSession.RawIO.Write(messageForge);
+                MessageBasedSession.RawIO.Write(dataString);
+                //MessageBasedSession.FormattedIO.WriteLine(messageForge);
+                //MessageBasedSession.FormattedIO.Write(messageForge);
                 //Debug.WriteLine(MessageBasedSession.RawIO.ReadString());
             }
             catch (Exception exp)
@@ -240,9 +286,22 @@ namespace P_SCAAT.Models
                 //ToDo somehow fix this
                 //MessageBasedSession t;
                 //string receivedMessage = MessageBasedSession.RawIO.ReadString(10000000);
-                string receivedMessage = MessageBasedSession.RawIO.ReadString();
+                //string receivedMessage = string.Empty;
+                //MemoryStream memorystream = new MemoryStream();
+                //for (int i = 0; i < 10; i++)
+                //{
+
+                //var test = MessageBasedSession.FormattedIO.ReadBinaryBlockOfByte();
+                //var test = MessageBasedSession.FormattedIO.ReadInt64();
+                //MessageBasedSession.TimeoutMilliseconds = 5000;
+                //var time = MessageBasedSession.TimeoutMilliseconds;
+                string response = MessageBasedSession.FormattedIO.ReadUntilEnd();
+                //string response = MessageBasedSession.RawIO.ReadString();
+                //memorystream.Write(response, 0, response.Length);
+                //}
                 //var receivedMessage2 = MessageBasedSession.RawIO.BeginRead(0);
-                return InsertEscapeSeq(receivedMessage);
+                return response;
+                //return InsertEscapeSeq(response);
             }
             catch (Exception exp)
             {
@@ -277,8 +336,10 @@ namespace P_SCAAT.Models
             //OscilloscopeConfigString.Clear();
             //ToDo should not do that cause of custom settings
 
-            //SynchronizeChannels();
+            SynchronizeChannels();
             SynchronizeTrigger();
+
+            //SynchronizeTimebase();
 
 
 
@@ -318,7 +379,7 @@ namespace P_SCAAT.Models
             SynchronizeTriggerEdgeSlope(Trigger);
 
             ////TriggerLevel
-            SynchronizeTriggerLevel(Trigger);
+            //SynchronizeTriggerLevel(Trigger);
         }
 
         #region Partial synchronization methods
@@ -411,6 +472,7 @@ namespace P_SCAAT.Models
             try
             {
                 string commandPart = Commands.TriggerLevelCommand;
+                //ToDo trigger:level? channel<x> !!!!!! FUCK ME!!
                 string oscilloscopeResponse = AskCommand(commandPart);
                 _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
                 trigger.TriggerLevel = numberResult;
@@ -429,8 +491,8 @@ namespace P_SCAAT.Models
             {
                 string askCommand = CommandList.UniversalAskCommandString(commandPart);
                 //ToDo just testing
-                //return QueryData(askCommand);
-                return TESTQUERY6(askCommand);
+                return QueryData(askCommand);
+                //return TESTQUERY6(askCommand);
             }
             catch (Exception)
             {
@@ -441,8 +503,8 @@ namespace P_SCAAT.Models
         {
             string askCommand = CommandList.UniversalAskCommandString(commandPart, channelNumberString);
             //ToDo just testing
-            //return QueryData(askCommand);
-            return TESTQUERY5(askCommand);
+            return QueryData(askCommand);
+            //return TESTQUERY5(askCommand);
         }
         private void AddResponseToConfig(string commandPart, string oscilloscopeResponse)
         {
