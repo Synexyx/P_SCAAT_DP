@@ -41,8 +41,15 @@ namespace P_SCAAT.ViewModels.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await Task.Run(() => _osciloscope.SynchronizeConfig());
-            _oscilloscopeControlState.OscilloscopeSelectedVM = _oscilloscopeConfigVM();
+            try
+            {
+                await Task.Run(() => _osciloscope.SynchronizeConfig());
+                _oscilloscopeControlState.OscilloscopeSelectedVM = _oscilloscopeConfigVM();
+            }
+            catch (Exception ex)
+            {
+                _oscilloscopeViewModel.ErrorMessages.Add(ex);
+            }
         }
         private void OnOscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

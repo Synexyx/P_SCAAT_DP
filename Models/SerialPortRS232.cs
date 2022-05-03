@@ -46,9 +46,9 @@ namespace P_SCAAT.Models
                 SerialPort.ReadTimeout = 1000;
                 SerialPort.Open();
             }
-            catch (Exception exp)
+            catch (Exception ex)
             {
-                throw new SessionControlException($"Serial port session cannot be estabilished!{Environment.NewLine}REASON :{exp.GetType()}{Environment.NewLine}{exp.Message}");
+                throw new SessionControlException($"Serial port session cannot be estabilished!{Environment.NewLine}REASON :{ex.GetType()}{Environment.NewLine}{ex.Message}", ex);
             }
         }
 
@@ -62,6 +62,7 @@ namespace P_SCAAT.Models
 
         internal void Send(byte[] messageBytes)
         {
+            //ToDo don't forget
             //SerialPort.Write(messageBytes, 0, messageBytes.Length);
             Debug.WriteLine($"{DateTime.Now} SENDING MESSAGE OF LENGHT {messageBytes.Length}");
         }

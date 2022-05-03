@@ -32,7 +32,6 @@ namespace P_SCAAT.ViewModels.Commands
         {
             _oscilloscopeConfigViewModel.Oscilloscope.InsertNewConfigString(_oscilloscopeConfigViewModel.TempOscilloscopeConfigString.ToList());
 
-            //ToDo dát tam config string a z něj updatovat properties??
             _oscilloscopeConfigViewModel.Oscilloscope.InsertNewChannelSettings(_oscilloscopeConfigViewModel.ChannelSettingsVMtoModel());
             _oscilloscopeConfigViewModel.Oscilloscope.InsertTriggerSettings(_oscilloscopeConfigViewModel.TriggerSettingsVMtoModel());
 

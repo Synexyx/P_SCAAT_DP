@@ -26,9 +26,9 @@ namespace P_SCAAT.ViewModels
         private Oscilloscope _oscilloscope;
         private bool _changingSession;
 
-        private string _measureButtonContent = "Start";
+        private string _measureButtonContent;
 
-        private string _errorMessage = string.Empty;
+        //private string _errorMessage = string.Empty;
 
         private string _manualMessageWrite = "*IDN?";
         private string _manualMessageRead = "Response";
@@ -107,16 +107,16 @@ namespace P_SCAAT.ViewModels
         public string MeasureButtonContentStart => "START";
         public string MeasureButtonContentCancel => "CANCEL";
 
-        public string ErrorMessage
-        {
-            get => _errorMessage;
-            set
-            {
-                _errorMessage = value;
-                OnPropertyChanged(nameof(ErrorMessage));
-                //_ = MessageBox.Show(ErrorMessage);
-            }
-        }
+        //public string ErrorMessage
+        //{
+        //    get => _errorMessage;
+        //    set
+        //    {
+        //        _errorMessage = value;
+        //        OnPropertyChanged(nameof(ErrorMessage));
+        //        //_ = MessageBox.Show(ErrorMessage);
+        //    }
+        //}
 
         public string ManualMessageWrite
         {
@@ -185,7 +185,7 @@ namespace P_SCAAT.ViewModels
             get => _progressBarValue;
             set
             {
-                _progressBarValue = (value / _tracesTotal)*100;
+                _progressBarValue = value / _tracesTotal * 100;
                 OnPropertyChanged(nameof(ProgressBarValue));
             }
         }
@@ -196,6 +196,7 @@ namespace P_SCAAT.ViewModels
             Func<OscilloscopeConfigViewModel> oscilloscopeConfigVM) : base()
         {
             CryptoDeviceMessage = cryptoDeviceMessage;
+            MeasureButtonContent = MeasureButtonContentStart;
 
             Oscilloscope = oscilloscope;
             WaveformSource = new ObservableCollection<WaveformSourceViewModel>();
@@ -215,12 +216,13 @@ namespace P_SCAAT.ViewModels
 
         public void FillWaveformSource()
         {
-            if (Oscilloscope.Channels != null && Oscilloscope.Channels.Any())
+            if (Oscilloscope.WaveformSourceOptions != null && Oscilloscope.WaveformSourceOptions.Any())
             {
-                foreach (ChannelSettings channel in Oscilloscope.Channels)
+                foreach (string source in Oscilloscope.WaveformSourceOptions)
                 {
-                    WaveformSource.Add(new WaveformSourceViewModel(channel.ChannelLabel, false));
+                    WaveformSource.Add(new WaveformSourceViewModel(source, false));
                 }
+                WaveformSource.First().IsSelected = true;
                 OnPropertyChanged(nameof(WaveformSource));
             }
         }
@@ -231,14 +233,20 @@ namespace P_SCAAT.ViewModels
             {
                 AvailableOscilloscopes = Oscilloscope.GetOscilloscopeList();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                ErrorMessage += e.Message + Environment.NewLine;
+                //ErrorMessage += e.Message + Environment.NewLine;
                 AvailableOscilloscopes = new List<string> { "EMPTY" };
+                ErrorMessages.Add(ex);
             }
-            SelectedAvailableOscilloscopes = !string.IsNullOrEmpty(Oscilloscope.SessionName)
-                ? Oscilloscope.SessionName
-                : AvailableOscilloscopes.First();
+            if (string.IsNullOrEmpty(Oscilloscope.SessionName))
+            {
+                SelectedAvailableOscilloscopes = AvailableOscilloscopes.First();
+            }
+            else
+            {
+                SelectedAvailableOscilloscopes = Oscilloscope.SessionName;
+            }
         }
 
         #region Commands

@@ -18,13 +18,7 @@ namespace P_SCAAT.ViewModels.Commands
         private readonly CryptoDeviceMessage _cryptoDeviceMessage;
 
         private string _measureButtonContent;
-        //private bool _isCancellationRequested;
-
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
-
-        //ToDo implement through this
-        private Measurement measurement = new Measurement();
-
 
         public MeasureCommand(OscilloscopeViewModel oscilloscopeViewModel, Oscilloscope oscilloscope, CryptoDeviceMessage cryptoDeviceMessage)
         {
@@ -35,7 +29,6 @@ namespace P_SCAAT.ViewModels.Commands
             _cryptoDeviceMessage = cryptoDeviceMessage;
 
             _oscilloscopeViewModel.PropertyChanged += OnOscilloscopeViewModel_PropertyChanged;
-            //_measureButtonContent = _oscilloscopeViewModel.MeasureButtonContent;
         }
 
         public override bool CanExecute(object parameter)
@@ -51,78 +44,89 @@ namespace P_SCAAT.ViewModels.Commands
                 _oscilloscopeViewModel.ProgressBarValue = 0;
                 _oscilloscopeViewModel.MeasureButtonContent = _oscilloscopeViewModel.MeasureButtonContentCancel;
 
+                string fileNameSessionID = DateTime.Now.ToString("HHmmss");
+
                 await Task.Run(async () =>
                 {
-                    _cryptoDeviceMessage.InitializeRNGMessageGenerator(_oscilloscopeViewModel.MessageLenght);
-                    int perFile = 0;
-                    int fileNumber = 0;
-
-                    for (int total = 0; total < _oscilloscopeViewModel.TracesTotal; total++)
+                    try
                     {
-                        //    //ToDo nastavit osciloskop do čekacího režimu
-                        _oscilloscope.MeasurePrep();
-                        await Task.Run(() => { _cryptoDeviceMessage.GenerateNewMessage(); });
-                        //    //ToDo maybe zeptat se osciloskopu na triggerEvent??
-                        //    //ToDo cykl pro čtení všech source z osciloskopu
-                        //MemoryStream memoryStream = new MemoryStream();
-
-                        string response = Convert.ToBase64String(_oscilloscope.GetMeasuredData());
-                        //string response = BitConverter.ToString(_oscilloscope.GetMeasuredData());
-                        //ToDo save to buffer ??
-
-
-                        //    //ToDo jakmile přečteno -- zjistím po skončení cyklu -- uložit hodnoty do souboru (new Task?)
-                        if (perFile == _oscilloscopeViewModel.TracesPerFile && _oscilloscopeViewModel.TracesPerFile != 0)
+                        if (tokenSource.Token.IsCancellationRequested)
                         {
-                            fileNumber++;
-                            //ToDo await Task.Run
-                            //ToDo in measurment class method
-                            //Debug.WriteLine(stringBuilder.ToString());
-                            Debug.WriteLine("SAVING FILE");
-
-                            //await Task.Run(() => { });
-                            perFile = 0;
+                            Debug.WriteLine("CANCELED");
+                            tokenSource.Token.ThrowIfCancellationRequested();
                         }
-                        StringBuilder stringBuilder = new StringBuilder();
-                        string messageBytesToBase64 = Convert.ToBase64String(_cryptoDeviceMessage.MessageBytes);
-                        _ = stringBuilder.Append($"{_cryptoDeviceMessage.TimeCreated:T},{messageBytesToBase64},{response}{Environment.NewLine}");
-                        Debug.WriteLine(total);
-                        string directoryToSave = Path.GetFullPath(@"..\..\Measurment");
-                        File.AppendAllText($"{directoryToSave}\\{DateTime.Now:dd-MM}-Measurment-{fileNumber}.txt", stringBuilder.ToString());
-                        _ = stringBuilder.Clear();
+                        _cryptoDeviceMessage.InitializeRNGMessageGenerator(_oscilloscopeViewModel.MessageLenght);
+                        int perFile = 0;
+                        int fileNumber = 0;
 
-                        perFile++;
-                        _oscilloscopeViewModel.ProgressBarValue = total + 1;
-                        //tokenSource.Token.ThrowIfCancellationRequested();
-                        //ToDo nezapomentou cancel
-                        //for (int perFile = 0; perFile < _oscilloscopeViewModel.TracesPerFile; perFile++)
-                        //{
-                        //    foreach(var source in _oscilloscopeViewModel.WaveformSource)
-                        //    {
-                        //        _cryptoDeviceMessage.GenerateNewMessage();
-                        //    }
-                        //}
+
+                        for (int total = 0; total < _oscilloscopeViewModel.TracesTotal; total++)
+                        {
+                            //    //ToDo nastavit osciloskop do čekacího režimu
+                            _oscilloscope.MeasurePrep();
+                            //    //ToDo await nový task co pošle data
+                            await Task.Run(() => { _cryptoDeviceMessage.GenerateNewMessage(); });
+                            //    //ToDo maybe zeptat se osciloskopu na triggerEvent??
+                            //    //ToDo cykl pro čtení všech source z osciloskopu
+                            if (tokenSource.Token.IsCancellationRequested)
+                            {
+                                Debug.WriteLine("CANCELED");
+                                tokenSource.Token.ThrowIfCancellationRequested();
+                            }
+                            //ToDo save to buffer ??
+                            string response = Convert.ToBase64String(_oscilloscope.GetMeasuredData("src"));
+                            //string response = BitConverter.ToString(_oscilloscope.GetMeasuredData());
+
+
+                            //    //ToDo jakmile přečteno -- zjistím po skončení cyklu -- uložit hodnoty do souboru (new Task?)
+                            if (perFile == _oscilloscopeViewModel.TracesPerFile && _oscilloscopeViewModel.TracesPerFile != 0)
+                            {
+                                fileNumber++;
+                                perFile = 0;
+                            }
+                            StringBuilder stringBuilder = new StringBuilder();
+                            string messageBytesToBase64 = Convert.ToBase64String(_cryptoDeviceMessage.MessageBytes);
+                            _ = stringBuilder.Append($"{_cryptoDeviceMessage.TimeCreated:T},{messageBytesToBase64},{response}{Environment.NewLine}");
+                            Debug.WriteLine(total);
+                            string directoryToSave = Path.GetFullPath(@"..\..\Measurment");
+                            File.AppendAllText($"{directoryToSave}\\{DateTime.Now:yyyyMMdd}-{fileNameSessionID}-measurment-{fileNumber.ToString($"##0")}.txt", stringBuilder.ToString());
+                            _ = stringBuilder.Clear();
+
+                            perFile++;
+                            _oscilloscopeViewModel.ProgressBarValue = total + 1;
+                            if (tokenSource.Token.IsCancellationRequested)
+                            {
+                                Debug.WriteLine("CANCELED");
+                                tokenSource.Token.ThrowIfCancellationRequested();
+                            }
+                            //tokenSource.Token.ThrowIfCancellationRequested();
+                            //for (int perFile = 0; perFile < _oscilloscopeViewModel.TracesPerFile; perFile++)
+                            //{
+                            //    foreach(var source in _oscilloscopeViewModel.WaveformSource)
+                            //    {
+                            //        _cryptoDeviceMessage.GenerateNewMessage();
+                            //    }
+                            //}
+                        }
                     }
                     //try
                     //{
                     //    //ToDo cykl podle počtu záznamů celkem a na soubor
-                    //    //ToDo await nový task co pošle data
 
 
 
                     //    //ToDo continue
 
-                    //    _ = _oscilloscope.Measure(_cryptoDeviceMessage, _oscilloscopeViewModel.MessageLenght, tokenSource.Token);
                     //}
-                    //catch (OperationCanceledException e) when (e.CancellationToken == tokenSource.Token)
-                    //{
-                    //    Debug.WriteLine("TASK CANCELED");
-                    //}
-                });
+                    catch (OperationCanceledException e) when (e.CancellationToken == tokenSource.Token)
+                    {
+                        Debug.WriteLine("TASK CANCELED");
+                        _oscilloscopeViewModel.ProgressBarValue = 0;
+                    }
+                }, tokenSource.Token);
             }
             tokenSource.Cancel();
             _oscilloscopeViewModel.MeasureButtonContent = _oscilloscopeViewModel.MeasureButtonContentStart;
-            //_ = _oscilloscope.Measure(_cryptoDeviceMessage, _messageLenght);
         }
         private void OnOscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

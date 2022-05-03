@@ -21,6 +21,7 @@
   "TriggerLevelCommand": null,
   "WaveformDataCommand": null,
   "WaveformSourceCommand": null,
+  "WaveformSourceOptions": [],
   "WaveformFormatCommand": null,
   "WaveformFormatOptions": [],
   "WaveformStreamingCommand": null

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace P_SCAAT.Models
 {
-    internal abstract partial class OscilloscopeConfig
+    internal abstract class OscilloscopeConfig
     {
         #region Properties
         public List<string> OscilloscopeConfigString { get; protected set; }
@@ -22,6 +22,8 @@ namespace P_SCAAT.Models
         public int WaveformFormatIndex { get; protected set; }
         private List<string> _waveformFormatOptions;
         public List<string> WaveformFormatOptions { get => _waveformFormatOptions ?? new List<string>(); protected set => _waveformFormatOptions = value; }
+        private List<string> _waveformSourceOptions;
+        public List<string> WaveformSourceOptions { get => _waveformSourceOptions ?? new List<string>(); protected set => _waveformSourceOptions = value; }
         public bool WaveformStreaming { get; protected set; }
 
 
@@ -30,7 +32,7 @@ namespace P_SCAAT.Models
         #endregion
         public OscilloscopeConfig()
         {
-            //_ = CreateDefaultCommandList();
+            _ = CreateDefaultCommandList();
         }
 
         public void InitializeSettings(string oscilloscopeID)
@@ -45,6 +47,7 @@ namespace P_SCAAT.Models
             Trigger.TriggerEdgeSourceOptions = Commands.TriggerEdgeSourceOptions;
             Trigger.TriggerEdgeSlopeOptions = Commands.TriggerEdgeSlopeOptions;
             WaveformFormatOptions = Commands.WaveformFormatOptions;
+            WaveformSourceOptions = Commands.WaveformSourceOptions;
 
             for (int i = 0; i < Commands.NumberOfAnalogChannels; i++)
             {
@@ -72,18 +75,9 @@ namespace P_SCAAT.Models
         private static CommandList LoadCommandList(string oscilloscopeID)
         {
             string filePathName = FindCorrectCommandListFile(oscilloscopeID);
-            try
-            {
-                string jsonString = File.ReadAllText(filePathName);
-                CommandList commandList = JsonSerializer.Deserialize<CommandList>(jsonString);
-                return commandList;
-            }
-            catch (Exception exp)
-            {
-                //ToDo dát správnou exception
-                throw new NotImplementedException();
-            }
-
+            string jsonString = File.ReadAllText(filePathName);
+            CommandList commandList = JsonSerializer.Deserialize<CommandList>(jsonString);
+            return commandList;
         }
 
         //ToDo hledat z názvu souboru část v response stringu
@@ -92,24 +86,17 @@ namespace P_SCAAT.Models
             string defaultFileDirectoryPath = "../../OscilloscopeCommandLists/";
             string commandListFilePathName = string.Empty;
             bool commandListFileFound = false;
-            try
+
+            List<string> allFiles = Directory.GetFiles(defaultFileDirectoryPath).ToList();
+            foreach (string filePath in allFiles)
             {
-                List<string> allFiles = Directory.GetFiles(defaultFileDirectoryPath).ToList();
-                foreach (string filePath in allFiles)
+                string fileContent = File.ReadAllText(filePath);
+                if (fileContent.Contains(oscilloscopeID))
                 {
-                    string fileContent = File.ReadAllText(filePath);
-                    if (fileContent.Contains(oscilloscopeID))
-                    {
-                        commandListFilePathName = filePath;
-                        commandListFileFound = true;
-                        break;
-                    }
+                    commandListFilePathName = filePath;
+                    commandListFileFound = true;
+                    break;
                 }
-            }
-            catch (Exception exp)
-            {
-                //ToDo probably better exception
-                throw new FileLoadException(exp.Message);
             }
             if (!commandListFileFound)
             {
@@ -153,7 +140,7 @@ namespace P_SCAAT.Models
             TimebaseScale = 0;
             WaveformFormatIndex = 0;
             WaveformFormatOptions = null;
-            //WaveformSource = null;
+            WaveformSourceOptions = null;
             WaveformStreaming = false;
         }
 

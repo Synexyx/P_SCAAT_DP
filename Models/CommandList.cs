@@ -43,6 +43,8 @@ namespace P_SCAAT.Models
 
         public string WaveformDataCommand { get; set; }
         public string WaveformSourceCommand { get; set; }
+        private List<string> _waveformSourceOptions;
+        public List<string> WaveformSourceOptions { get => _waveformSourceOptions ?? new List<string>(); set => _waveformSourceOptions = value; }
         public string WaveformFormatCommand { get; set; }
         private List<string> _waveformFormatOptions;
         public List<string> WaveformFormatOptions { get => _waveformFormatOptions ?? new List<string>(); set => _waveformFormatOptions = value; }

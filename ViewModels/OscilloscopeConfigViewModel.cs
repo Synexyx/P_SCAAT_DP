@@ -21,7 +21,7 @@ using static P_SCAAT.Models.OscilloscopeConfig;
 
 namespace P_SCAAT.ViewModels
 {
-    internal class OscilloscopeConfigViewModel : OscilloscopeValueConversionVM
+    internal class OscilloscopeConfigViewModel : OscilloscopeValueConversionVM, IErrorMessage
     {
         #region Properties
         private Oscilloscope _oscilloscope;
@@ -33,6 +33,8 @@ namespace P_SCAAT.ViewModels
         private List<string> _waveformFormatOptions;
         private int _waveformFormatIndex;
         private bool _waveformStreaming;
+
+        public ObservableCollection<Exception> ErrorMessages { get; } = new ObservableCollection<Exception>();
         public Oscilloscope Oscilloscope
         {
             get => _oscilloscope;
@@ -130,9 +132,22 @@ namespace P_SCAAT.ViewModels
         {
             Oscilloscope = oscilloscope;
 
+
             GetOscilloscopeResourcesToVM();
 
+            ErrorMessages.CollectionChanged += ErrorMessage_Changed;
             CreateCommands(oscilloscopeControlState, oscilloscopeVM);
+        }
+
+        public void ErrorMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (Exception item in e.NewItems)
+                {
+                    _ = MessageBox.Show($"{item.Message}{Environment.NewLine}{item.StackTrace}", $"{item.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         private string ListToString(List<string> listToConvert)
@@ -373,6 +388,7 @@ namespace P_SCAAT.ViewModels
         public ICommand ApplyOscilloscopeConfigCommand { get; set; }
         public ICommand CancelOscilloscopeConfigCommand { get; set; }
         public ICommand RadioButtonEdgeSlopeCommand { get; set; }
+
         private void CreateCommands(OscilloscopeViewControlState oscilloscopeControlState, Func<OscilloscopeViewModel> oscilloscopeVM)
         {
             OpenConfigFileCommand = new OpenConfigFileCommand(this);
@@ -390,6 +406,8 @@ namespace P_SCAAT.ViewModels
 
         public override void Dispose()
         {
+            ErrorMessages.CollectionChanged -= ErrorMessage_Changed;
+
             TempChannels.CollectionChanged -= TempChannels_Changed;
             TriggerVM.PropertyChanged -= TriggerViewModel_PropertyChanged;
             base.Dispose();

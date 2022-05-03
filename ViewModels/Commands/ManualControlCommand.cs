@@ -2,6 +2,7 @@
 using P_SCAAT.Models;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -34,7 +35,7 @@ namespace P_SCAAT.ViewModels.Commands
                         _oscilloscope.SendData(_oscilloscopeViewModel.ManualMessageWrite);
                         break;
                     case "READ":
-                        _oscilloscopeViewModel.ManualMessageRead = _oscilloscope.ReadData();
+                        _oscilloscopeViewModel.ManualMessageRead = _oscilloscope.ReadStringData();
                         break;
                     case "QUERY":
                         _oscilloscopeViewModel.ManualMessageRead = _oscilloscope.QueryData(_oscilloscopeViewModel.ManualMessageWrite);
@@ -43,9 +44,13 @@ namespace P_SCAAT.ViewModels.Commands
                         break;
                 }
             }
-            catch (SessionCommunicationException sessionComExp)
+            catch (SessionCommunicationException ex)
             {
-                _oscilloscopeViewModel.ErrorMessages.Add(sessionComExp);
+                _oscilloscopeViewModel.ErrorMessages.Add(ex);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.StackTrace);
             }
         }
         private void OnOscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

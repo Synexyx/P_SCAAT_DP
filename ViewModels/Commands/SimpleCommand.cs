@@ -8,7 +8,7 @@ namespace P_SCAAT.ViewModels.Commands
 {
     internal class SimpleCommand : CoreCommand
     {
-        private Action _action;
+        private readonly Action _action;
         public SimpleCommand(Action action)
         {
             _action = action;

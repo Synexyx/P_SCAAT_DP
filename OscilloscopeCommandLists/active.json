@@ -41,6 +41,12 @@
   "TriggerLevelCommand": ":TRIGger:LEVel {0}",
   "WaveformDataCommand": ":WAVeform:DATA?",
   "WaveformSourceCommand": ":WAVeform:SOURce {0}",
+  "WaveformSourceOptions": [
+    "CHANnel1",
+    "CHANnel2",
+    "CHANnel3",
+    "CHANnel4"
+  ],
   "WaveformFormatCommand": ":WAVeform:FORMat {0}",
   "WaveformFormatOptions": [
     "ASCii",

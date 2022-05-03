@@ -102,7 +102,6 @@
     <Compile Include="Exceptions\SessionControlException.cs" />
     <Compile Include="Models\CryptoDeviceMessage.cs" />
     <Compile Include="Models\ISessionDevice.cs" />
-    <Compile Include="Models\Measurement.cs" />
     <Compile Include="Models\Oscilloscope.cs" />
     <Compile Include="Models\ChannelSettings.cs" />
     <Compile Include="Models\CommandList.cs" />
@@ -125,6 +124,7 @@
     <Compile Include="ViewModels\Commands\SaveConfigFileCommand.cs" />
     <Compile Include="ViewModels\Commands\SimpleCommand.cs" />
     <Compile Include="ViewModels\CorePropChangedVM.cs" />
+    <Compile Include="ViewModels\IErrorMessage.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OscilloscopeConfigViewModel.cs" />
     <Compile Include="ViewModels\OscilloscopeValueConversionVM.cs" />
@@ -188,7 +188,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="OscilloscopeCommandLists\active.json" />
-    <None Include="OscilloscopeCommandLists\BACKUP.json" />
     <None Include="OscilloscopeCommandLists\default.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -12,35 +12,29 @@ namespace P_SCAAT.ViewModels
     {
         protected decimal StringToDecimal(string stringToConvert)
         {
-            try
+            stringToConvert = Regex.Replace(stringToConvert, @"\s", string.Empty);
+            stringToConvert = Regex.Replace(stringToConvert, @",", ".");
+            Match regexMatch = new Regex(@"([-]*\d*[.]*\d+)([mu\u03BC\u00B5np]*)([sV]*)").Match(stringToConvert);
+            _ = decimal.TryParse(regexMatch.Groups[1].Value, NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimal numberResult);
+            string unit = regexMatch.Groups[2].Value;
+            if (unit.Equals("m", StringComparison.Ordinal))
             {
-                stringToConvert = Regex.Replace(stringToConvert, @"\s", string.Empty);
-                stringToConvert = Regex.Replace(stringToConvert, @",", ".");
-                Match regexMatch = new Regex(@"([-]*\d*[.]*\d+)([mu\u03BC\u00B5np]*)([sV]*)").Match(stringToConvert);
-                _ = decimal.TryParse(regexMatch.Groups[1].Value, NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimal numberResult);
-                string unit = regexMatch.Groups[2].Value;
-                if (unit.Equals("m", StringComparison.Ordinal))
-                {
-                    numberResult *= 1E-03M;
-                }
-                else if (unit.Equals("u", StringComparison.Ordinal) || unit.Equals("\u03BC", StringComparison.Ordinal) || unit.Equals("\u00B5", StringComparison.Ordinal))
-                {
-                    numberResult *= 1E-06M;
-                }
-                else if (unit.Equals("n", StringComparison.Ordinal))
-                {
-                    numberResult *= 1E-09M;
-                }
-                else if (unit.Equals("p", StringComparison.Ordinal))
-                {
-                    numberResult *= 1E-12M;
-                }
-                return numberResult;
+                numberResult *= 1E-03M;
             }
-            catch (Exception exp)
+            else if (unit.Equals("u", StringComparison.Ordinal) || unit.Equals("\u03BC", StringComparison.Ordinal) || unit.Equals("\u00B5", StringComparison.Ordinal))
             {
-                throw new Exception(exp.Message);
+                numberResult *= 1E-06M;
             }
+            else if (unit.Equals("n", StringComparison.Ordinal))
+            {
+                numberResult *= 1E-09M;
+            }
+            else if (unit.Equals("p", StringComparison.Ordinal))
+            {
+                numberResult *= 1E-12M;
+            }
+            return numberResult;
+
         }
         protected string DecimalToString(decimal decimalToConvert, string unit)
         {

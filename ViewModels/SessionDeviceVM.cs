@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace P_SCAAT.ViewModels
 {
-    internal abstract class SessionDeviceVM : CorePropChangedVM
+    internal abstract class SessionDeviceVM : CorePropChangedVM, IErrorMessage
     {
         public abstract ISessionDevice SessionDevice { get; }
         public bool IsSessionOpen => SessionDevice.IsSessionOpen;
@@ -25,7 +25,7 @@ namespace P_SCAAT.ViewModels
             ErrorMessages.CollectionChanged += ErrorMessage_Changed;
         }
 
-        private void ErrorMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        public virtual void ErrorMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
             //_ = Task.Run(() =>
             //  {

@@ -9,6 +9,6 @@ namespace P_SCAAT.Exceptions
     [Serializable]
     internal class SessionControlException : Exception
     {
-        public SessionControlException(string message) : base(message) { }
+        public SessionControlException(string message, Exception exception) : base(message, exception) { }
     }
 }
