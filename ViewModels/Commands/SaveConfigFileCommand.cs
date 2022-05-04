@@ -20,7 +20,6 @@ namespace P_SCAAT.ViewModels.Commands
         }
         public override async Task ExecuteAsync(object parameter)
         {
-            //Debug.WriteLine("SAVE 1 " + Thread.CurrentThread.ManagedThreadId);
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 InitialDirectory = Path.GetFullPath(@"..\..\OscilloscopeConfigFiles"),
@@ -31,8 +30,6 @@ namespace P_SCAAT.ViewModels.Commands
             {
                 await Task.Run(() =>
                 {
-                    //Debug.WriteLine("SAVE 2 " + Thread.CurrentThread.ManagedThreadId);
-                    //Thread.Sleep(5000);
                     File.WriteAllLines(saveFileDialog.FileName, _oscilloscopeConfigViewModel.TempOscilloscopeConfigString);
                 });
             }

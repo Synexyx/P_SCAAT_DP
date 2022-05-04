@@ -38,7 +38,7 @@
     "NEGative",
     "EITHer"
   ],
-  "TriggerLevelCommand": ":TRIGger:LEVel {0}{1}",
+  "TriggerLevelCommand": ":TRIGger:LEVel {0}",
   "WaveformDataCommand": ":WAVeform:DATA?",
   "WaveformSourceCommand": ":WAVeform:SOURce {0}",
   "WaveformSourceOptions": [

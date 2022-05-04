@@ -17,8 +17,11 @@ namespace P_SCAAT.ViewModels.Commands
         private readonly Oscilloscope _oscilloscope;
         private readonly CryptoDeviceMessage _cryptoDeviceMessage;
 
-        private string _measureButtonContent;
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
+
+        private int perFile;
+        private int fileNumber;
+        private string fileNameSessionID;
 
         public MeasureCommand(OscilloscopeViewModel oscilloscopeViewModel, Oscilloscope oscilloscope, CryptoDeviceMessage cryptoDeviceMessage)
         {
@@ -37,97 +40,100 @@ namespace P_SCAAT.ViewModels.Commands
         }
         public override async Task ExecuteAsync(object parameter)
         {
-            _measureButtonContent = _oscilloscopeViewModel.MeasureButtonContent;
-            if (_measureButtonContent.Equals(_oscilloscopeViewModel.MeasureButtonContentStart, StringComparison.OrdinalIgnoreCase))
+            if (!_oscilloscopeViewModel.MeasurementInProgress)
             {
-                tokenSource = new CancellationTokenSource();
+                _oscilloscopeViewModel.MeasurementInProgress = true;
                 _oscilloscopeViewModel.ProgressBarValue = 0;
-                _oscilloscopeViewModel.MeasureButtonContent = _oscilloscopeViewModel.MeasureButtonContentCancel;
+
+                tokenSource = new CancellationTokenSource();
 
                 string fileNameSessionID = DateTime.Now.ToString("HHmmss");
+                _cryptoDeviceMessage.InitializeRNGMessageGenerator(_oscilloscopeViewModel.MessageLenght);
 
                 await Task.Run(async () =>
                 {
                     try
                     {
-                        if (tokenSource.Token.IsCancellationRequested)
-                        {
-                            Debug.WriteLine("CANCELED");
-                            tokenSource.Token.ThrowIfCancellationRequested();
-                        }
-                        _cryptoDeviceMessage.InitializeRNGMessageGenerator(_oscilloscopeViewModel.MessageLenght);
+                        //if (tokenSource.Token.IsCancellationRequested)
+                        //{
+                        //    Debug.WriteLine("CANCELED");
+                        tokenSource.Token.ThrowIfCancellationRequested();
+                        //}
                         int perFile = 0;
                         int fileNumber = 0;
+                        List<WaveformSourceViewModel> sourcesToMeasure = _oscilloscopeViewModel.WaveformSource.Where(x => x.IsSelected).ToList();
+                        string response = string.Empty;
 
-
-                        for (int total = 0; total < _oscilloscopeViewModel.TracesTotal; total++)
+                        for (int totalTraces = 0; totalTraces < _oscilloscopeViewModel.TracesTotal; totalTraces++)
                         {
-                            //    //ToDo nastavit osciloskop do čekacího režimu
+
                             _oscilloscope.MeasurePrep();
-                            //    //ToDo await nový task co pošle data
                             await Task.Run(() => { _cryptoDeviceMessage.GenerateNewMessage(); });
-                            //    //ToDo maybe zeptat se osciloskopu na triggerEvent??
-                            //    //ToDo cykl pro čtení všech source z osciloskopu
-                            if (tokenSource.Token.IsCancellationRequested)
+                            //if (tokenSource.Token.IsCancellationRequested)
+                            //{
+                            //    Debug.WriteLine("CANCELED");
+                            tokenSource.Token.ThrowIfCancellationRequested();
+                            //}
+                            string selectedSource = string.Empty;
+                            if (!sourcesToMeasure.Any())
                             {
-                                Debug.WriteLine("CANCELED");
-                                tokenSource.Token.ThrowIfCancellationRequested();
+                                response = Convert.ToBase64String(_oscilloscope.GetMeasuredData());
                             }
-                            //ToDo save to buffer ??
-                            string response = Convert.ToBase64String(_oscilloscope.GetMeasuredData("src"));
-                            //string response = BitConverter.ToString(_oscilloscope.GetMeasuredData());
-
-
-                            //    //ToDo jakmile přečteno -- zjistím po skončení cyklu -- uložit hodnoty do souboru (new Task?)
-                            if (perFile == _oscilloscopeViewModel.TracesPerFile && _oscilloscopeViewModel.TracesPerFile != 0)
+                            else
+                            {
+                                foreach (WaveformSourceViewModel source in sourcesToMeasure)
+                                {
+                                    selectedSource = source.SourceName;
+                                    _oscilloscope.ChangeWaveformSource(selectedSource);
+                                    response = Convert.ToBase64String(_oscilloscope.GetMeasuredData());
+                                }
+                            }
+                            if (_oscilloscopeViewModel.TracesPerFile == perFile && _oscilloscopeViewModel.TracesPerFile != 0)
                             {
                                 fileNumber++;
                                 perFile = 0;
                             }
-                            StringBuilder stringBuilder = new StringBuilder();
-                            string messageBytesToBase64 = Convert.ToBase64String(_cryptoDeviceMessage.MessageBytes);
-                            _ = stringBuilder.Append($"{_cryptoDeviceMessage.TimeCreated:T},{messageBytesToBase64},{response}{Environment.NewLine}");
-                            Debug.WriteLine(total);
-                            string directoryToSave = Path.GetFullPath(@"..\..\Measurment");
-                            File.AppendAllText($"{directoryToSave}\\{DateTime.Now:yyyyMMdd}-{fileNameSessionID}-measurment-{fileNumber.ToString($"##0")}.txt", stringBuilder.ToString());
-                            _ = stringBuilder.Clear();
-
+                            await SaveToFile(fileNameSessionID, fileNumber, selectedSource, response);
                             perFile++;
-                            _oscilloscopeViewModel.ProgressBarValue = total + 1;
-                            if (tokenSource.Token.IsCancellationRequested)
-                            {
-                                Debug.WriteLine("CANCELED");
-                                tokenSource.Token.ThrowIfCancellationRequested();
-                            }
-                            //tokenSource.Token.ThrowIfCancellationRequested();
-                            //for (int perFile = 0; perFile < _oscilloscopeViewModel.TracesPerFile; perFile++)
+                            _oscilloscopeViewModel.ProgressBarValue = totalTraces + 1;
+                            //if (tokenSource.Token.IsCancellationRequested)
                             //{
-                            //    foreach(var source in _oscilloscopeViewModel.WaveformSource)
-                            //    {
-                            //        _cryptoDeviceMessage.GenerateNewMessage();
-                            //    }
+                            //    Debug.WriteLine("CANCELED");
+                            tokenSource.Token.ThrowIfCancellationRequested();
                             //}
                         }
                     }
-                    //try
-                    //{
-                    //    //ToDo cykl podle počtu záznamů celkem a na soubor
-
-
-
-                    //    //ToDo continue
-
-                    //}
-                    catch (OperationCanceledException e) when (e.CancellationToken == tokenSource.Token)
+                    catch (OperationCanceledException ex) when (ex.CancellationToken == tokenSource.Token)
                     {
                         Debug.WriteLine("TASK CANCELED");
                         _oscilloscopeViewModel.ProgressBarValue = 0;
                     }
+                    catch (Exception ex)
+                    {
+                        _oscilloscopeViewModel.ErrorMessages.Add(ex);
+                    }
                 }, tokenSource.Token);
             }
-            tokenSource.Cancel();
-            _oscilloscopeViewModel.MeasureButtonContent = _oscilloscopeViewModel.MeasureButtonContentStart;
+            else
+            {
+                tokenSource.Cancel();
+            }
+            _oscilloscopeViewModel.MeasurementInProgress = false;
         }
+
+        private async Task SaveToFile(string fileNameSessionID, int fileNumber, string sourceName, string response)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            string messageBytesToBase64 = Convert.ToBase64String(_cryptoDeviceMessage.MessageBytes);
+            _ = stringBuilder.Append($"{_cryptoDeviceMessage.TimeCreated:T},{sourceName},{messageBytesToBase64},{response}{Environment.NewLine}");
+            string directoryToSave = Path.GetFullPath(@"..\..\Measurment");
+            await Task.Run(() =>
+            {
+                File.AppendAllText($"{directoryToSave}\\{DateTime.Now:yyyyMMdd}-{fileNameSessionID}-measurment-{fileNumber.ToString($"00")}.txt", stringBuilder.ToString());
+            });
+            _ = stringBuilder.Clear();
+        }
+
         private void OnOscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(OscilloscopeViewModel.IsSessionOpen))

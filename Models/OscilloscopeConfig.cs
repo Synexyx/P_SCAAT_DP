@@ -41,8 +41,6 @@ namespace P_SCAAT.Models
             Channels = new List<ChannelSettings>();
             Trigger = new TriggerSettings();
 
-            //ToDo dynamic commandList loading
-
             Commands = LoadCommandList(oscilloscopeID);
             Trigger.TriggerEdgeSourceOptions = Commands.TriggerEdgeSourceOptions;
             Trigger.TriggerEdgeSlopeOptions = Commands.TriggerEdgeSlopeOptions;
@@ -80,7 +78,6 @@ namespace P_SCAAT.Models
             return commandList;
         }
 
-        //ToDo hledat z názvu souboru část v response stringu
         private static string FindCorrectCommandListFile(string oscilloscopeID)
         {
             string defaultFileDirectoryPath = "../../OscilloscopeCommandLists/";
@@ -120,17 +117,14 @@ namespace P_SCAAT.Models
         {
             Trigger = trigger;
         }
-        //ToDo update this
         public void InsertOtherSettings(decimal timebaseScale, decimal timebasePosition, int waveformFormatIndex, bool waveformStreaming)
         {
             TimebaseScale = timebaseScale;
             TimebasePosition = timebasePosition;
             WaveformFormatIndex = waveformFormatIndex;
-            //WaveformSource = waveformSource;
             WaveformStreaming = waveformStreaming;
         }
 
-        //ToDo don't forget
         public virtual void ClearAllData()
         {
             OscilloscopeConfigString = null;
@@ -142,6 +136,8 @@ namespace P_SCAAT.Models
             WaveformFormatOptions = null;
             WaveformSourceOptions = null;
             WaveformStreaming = false;
+            _waveformFormatOptions = null;
+            _waveformSourceOptions = null;
         }
 
     }

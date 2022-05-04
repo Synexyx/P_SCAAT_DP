@@ -36,29 +36,14 @@ namespace P_SCAAT.Models
             get;
             private set;
         }
-
-        //public OsciloscopeConfig OsciloscopeConfig
-        //{
-        //    get;
-        //    private set;
-        //}
         #endregion
 
-        //private OsciloscopeConfig osciloscopeConfig = new OsciloscopeConfig();    MĚLO BY BÝT AŽ PO NAVÁZÁNÍ SPOJENÍ S OSCILOSKOPEM
-        //public Osciloscope() : base()
-        //{
-        //}
-        //public Osciloscope(string sessionName) : base()
-        //{
-        //    SessionName = sessionName;
-        //    //OsciloscopeConfig = new OsciloscopeConfig();
-        //}
 
         #region StaticGetOscilloscopeList
         /// <summary>
-        /// Static method for getting list of resources (osciloscopes) available for session
+        /// Static method for getting <see cref="List{T}"/> of resources (osciloscopes) available for session.
         /// </summary>
-        /// <returns>List of available osciloscopes</returns>
+        /// <returns>List of available oscilloscopes</returns>
         public static List<string> GetOscilloscopeList()
         {
             List<string> rsList = new List<string>();
@@ -72,8 +57,6 @@ namespace P_SCAAT.Models
                 return rsList;
             }
         }
-
-
         #endregion
 
         public void OpenSession(string sessionName)
@@ -82,7 +65,6 @@ namespace P_SCAAT.Models
             Debug.WriteLine("Openning session: " + SessionName);
             using (ResourceManager rmSession = new ResourceManager())
             {
-
                 try
                 {
                     MessageBasedSession = (MessageBasedSession)rmSession.Open(SessionName);
@@ -93,18 +75,15 @@ namespace P_SCAAT.Models
                 catch (Exception ex)
                 {
                     throw new SessionControlException($"Oscilloscope session cannot be estabilished!{Environment.NewLine}REASON :{ex.GetType()}{Environment.NewLine}{ex.Message}", ex);
-
-                    //_ = MessageBox.Show($"Session failed to open!{Environment.NewLine}{exp.Message}", "Session ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    //Debug.WriteLine("Session: " + SessionName + " FAILED to open.");
                 }
             }
         }
 
         public void InitializeSessionSettings()
         {
-            //ToDo 
+            //ToDo prostě do commandListu dát celý ID
             //string oscilloscopeID = QueryData("*IDN?");
-            string oscilloscopeID = "WORD";
+            string oscilloscopeID = "Agilent,MSO9104A,...,...";
             InitializeSettings(oscilloscopeID);
         }
 
@@ -121,30 +100,34 @@ namespace P_SCAAT.Models
             Debug.WriteLine("Session succesfully closed.");
         }
 
-        //ToDo MEASURE LOOP - new TASK ve kterém pak cyklovat zvolené Waveform sources
-        //CancellationTokenSource tokenSource = new CancellationTokenSource();
-
-        //ToDo asi tady metoda StartMeassure
-        //Předat zprávu + seznam kanálů, na kterých se bude měřit
-        //internal async Task<string> Measure(CryptoDeviceMessage cryptoDeviceMessage, int messageLenght, CancellationToken token)
         internal void MeasurePrep()
         {
             Thread.Sleep(5);
-            //bool isReady = false;
-            //SendData(Commands.OscilloscopeSingleAcquisitionCommand);
-            //while (!isReady)
-            //{
-            //    Thread.Sleep(100);
-            //    isReady = QueryData(Commands.OscilloscopeOperationCompleteCommand).Contains("1");
-            //}
+            return;
+            bool isReady = false;
+            SendData(Commands.OscilloscopeSingleAcquisitionCommand);
+            while (!isReady)
+            {
+                Thread.Sleep(100);
+                isReady = QueryData(Commands.OscilloscopeOperationCompleteCommand).Contains("1");
+            }
+        }
+        internal void ChangeWaveformSource(string selectedSource)
+        {
+            string switchCorrectSource = CommandList.UniversalCommandString(Commands.WaveformSourceCommand, selectedSource).Item2;
+            SendData(switchCorrectSource);
         }
 
-        internal byte[] GetMeasuredData(string selectedSource)
+        internal byte[] GetMeasuredData()
         {
             Thread.Sleep(5);
             byte[] test = new byte[] { 1, 2, 3 };
+            //return test;
+
+            Thread.Sleep(10);
             return test;
             SendData(Commands.WaveformDataCommand);
+            Thread.Sleep(10);
             MemoryStream memoryStream = new MemoryStream();
             while (true)
             {
@@ -169,29 +152,6 @@ namespace P_SCAAT.Models
             return result;
         }
 
-        //internal string Measure(CryptoDeviceMessage cryptoDeviceMessage, uint messageLenght, CancellationToken token)
-        //{
-        //    while (true)
-        //    {
-        //        Debug.WriteLine("EXEC");
-        //        Debug.WriteLine(DateTime.Now);
-        //        Thread.Sleep(50);
-        //        //token.ThrowIfCancellationRequested();
-        //        if (token.IsCancellationRequested)
-        //        {
-        //            token.ThrowIfCancellationRequested();
-        //            return "H";
-        //        }
-        //    }
-        //    //await Task.Run(() =>
-        //    //{
-        //    //    Thread.Sleep(50000);
-        //    //    cryptoDeviceMessage.InitializeRNGMessageGenerator(messageLenght);
-        //    //    cryptoDeviceMessage.GenerateNewMessage();
-        //    //});
-        //    //return "G";
-        //}
-
         internal void ListCurrentCommands()
         {
             foreach (string item in OscilloscopeConfigString)
@@ -204,7 +164,7 @@ namespace P_SCAAT.Models
         {
             foreach (string setting in OscilloscopeConfigString)
             {
-                //ToDo to be safe Thread.Sleep();
+                Thread.Sleep(20);
                 SendData(setting);
             }
         }
@@ -235,12 +195,6 @@ namespace P_SCAAT.Models
             }
             return resultData;
         }
-
-        //public string ReadWaveformData()
-        //{
-        //    //MessageBasedSession.RawIO.AbortAsyncOperation();
-        //    return string.Empty;
-        //}
 
         public string ReadStringData()
         {
@@ -276,53 +230,39 @@ namespace P_SCAAT.Models
 
         public void SynchronizeConfig()
         {
-            //Thread.Sleep(5000);
-
-
             SynchronizeChannels();
             SynchronizeTrigger();
-
-            //ToDo synchronize rest of settings
-            //SynchronizeTimebase();
-
-
-
+            SynchronizeTimebase();
+            SynchronizeWaveform();
         }
         private void SynchronizeChannels()
         {
             foreach (ChannelSettings channel in Channels)
             {
-                //ToDo better exception handling
-
-                ////ChannelLabel
                 SynchronizeChannelLabel(channel);
-
-                ////ChannelDisplay
                 SynchronizeChannelDisplay(channel);
-
-                ////ChannelScale
                 SynchronizeChannelScale(channel);
-
-                ////ChannelOffset
                 SynchronizeChannelOffset(channel);
-
-                ////ChannelCoupling
                 SynchronizeChannelCoupling(channel);
             }
         }
         private void SynchronizeTrigger()
         {
-            //ToDo better exception handling
-            //ToDo use inner exception
-
-            ////TriggerEdgeSource
             SynchronizeTriggerEdgeSource(Trigger);
-
-            ////TriggerEdgeSlope
             SynchronizeTriggerEdgeSlope(Trigger);
-
-            ////TriggerLevel
             SynchronizeTriggerLevel(Trigger);
+        }
+
+        private void SynchronizeTimebase()
+        {
+            SynchronizeTimebaseScale();
+            SynchronizeTimebasePosition();
+        }
+
+        private void SynchronizeWaveform()
+        {
+            SynchronizeWaveformFormat();
+            SynchronizeWaveformStreaming();
         }
 
         #region Partial synchronization methods
@@ -374,73 +314,88 @@ namespace P_SCAAT.Models
         }
         private void SynchronizeTriggerEdgeSource(TriggerSettings trigger)
         {
-            try
-            {
-                string commandPart = Commands.TriggerEdgeSourceCommand;
-                string oscilloscopeResponse = AskCommand(commandPart);
-                trigger.TriggerEdgeSourceIndex = Commands.TriggerEdgeSourceOptions
-                    .Select(x => x = Regex.Replace(x, @"[a-z]+", string.Empty))
-                    .Select((item, index) => (item, index))
-                    .Where(x => x.item.Contains(oscilloscopeResponse))
-                    .Select(x => x.index)
-                    .FirstOrDefault();
-                AddResponseToConfig(commandPart, Commands.TriggerEdgeSourceOptions.ElementAt(trigger.TriggerEdgeSourceIndex));
-            }
-            catch (Exception exp)
-            {
-                Debug.WriteLine(exp.Message);
-            }
+
+            string commandPart = Commands.TriggerEdgeSourceCommand;
+            string oscilloscopeResponse = AskCommand(commandPart);
+            trigger.TriggerEdgeSourceIndex = Commands.TriggerEdgeSourceOptions
+                .Select(x => x = Regex.Replace(x, @"[a-z]+", string.Empty))
+                .Select((item, index) => (item, index))
+                .Where(x => x.item.Contains(oscilloscopeResponse))
+                .Select(x => x.index)
+                .FirstOrDefault();
+            AddResponseToConfig(commandPart, Commands.TriggerEdgeSourceOptions.ElementAt(trigger.TriggerEdgeSourceIndex));
         }
         private void SynchronizeTriggerEdgeSlope(TriggerSettings trigger)
         {
-            try
-            {
-                string commandPart = Commands.TriggerEdgeSlopeCommand;
-                string oscilloscopeResponse = AskCommand(commandPart);
-                trigger.TriggerEdgeSlopeIndex = Commands.TriggerEdgeSlopeOptions
-                    .Select(x => x = Regex.Replace(x, @"[a-z]+", string.Empty))
-                    .Select((item, index) => (item, index))
-                    .Where(x => x.item.Contains(oscilloscopeResponse))
-                    .Select(x => x.index)
-                    .FirstOrDefault();
-                AddResponseToConfig(commandPart, Commands.TriggerEdgeSlopeOptions.ElementAt(trigger.TriggerEdgeSlopeIndex));
-            }
-            catch (Exception exp)
-            {
-                Debug.WriteLine(exp.Message);
-            }
+            string commandPart = Commands.TriggerEdgeSlopeCommand;
+            string oscilloscopeResponse = AskCommand(commandPart);
+            trigger.TriggerEdgeSlopeIndex = Commands.TriggerEdgeSlopeOptions
+                .Select(x => x = Regex.Replace(x, @"[a-z]+", string.Empty))
+                .Select((item, index) => (item, index))
+                .Where(x => x.item.Contains(oscilloscopeResponse))
+                .Select(x => x.index)
+                .FirstOrDefault();
+            AddResponseToConfig(commandPart, Commands.TriggerEdgeSlopeOptions.ElementAt(trigger.TriggerEdgeSlopeIndex));
         }
         private void SynchronizeTriggerLevel(TriggerSettings trigger)
         {
-            try
+            string commandPart = Commands.TriggerLevelCommand;
+            //ToDo trigger:level? channel<x> !!!!!! FUCK ME!!
+            string oscilloscopeResponse = AskCommand(commandPart);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            trigger.TriggerLevel = numberResult;
+            AddResponseToConfig(commandPart, oscilloscopeResponse);
+        }
+
+        private void SynchronizeTimebaseScale()
+        {
+            string commandPart = Commands.TimebaseScaleCommand;
+            string oscilloscopeResponse = AskCommand(commandPart);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            TimebaseScale = numberResult;
+            AddResponseToConfig(commandPart, oscilloscopeResponse);
+        }
+        private void SynchronizeTimebasePosition()
+        {
+            string commandPart = Commands.TimebasePositionCommand;
+            string oscilloscopeResponse = AskCommand(commandPart);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            TimebasePosition = numberResult;
+            AddResponseToConfig(commandPart, oscilloscopeResponse);
+        }
+        private void SynchronizeWaveformFormat()
+        {
+            string commandPart = Commands.WaveformFormatCommand;
+            string oscilloscopeResponse = AskCommand(commandPart);
+            WaveformFormatIndex = Commands.WaveformFormatOptions
+                .Select(x => x = Regex.Replace(x, @"[a-z]+", string.Empty))
+                .Select((item, index) => (item, index))
+                .Where(x => x.item.Contains(oscilloscopeResponse))
+                .Select(x => x.index)
+                .FirstOrDefault();
+            AddResponseToConfig(commandPart, Commands.WaveformFormatOptions.ElementAt(WaveformFormatIndex));
+        }
+        private void SynchronizeWaveformStreaming()
+        {
+            string commandPart = Commands.WaveformStreamingCommand;
+            string oscilloscopeResponse = AskCommand(commandPart);
+            if (Commands.TrueFalseOptions.IndexOf(oscilloscopeResponse) % 2 == 0)
             {
-                string commandPart = Commands.TriggerLevelCommand;
-                //ToDo trigger:level? channel<x> !!!!!! FUCK ME!!
-                string oscilloscopeResponse = AskCommand(commandPart);
-                _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
-                trigger.TriggerLevel = numberResult;
-                AddResponseToConfig(commandPart, oscilloscopeResponse);
+                WaveformStreaming = true;
             }
-            catch (Exception exp)
-            {
-                Debug.WriteLine(exp.Message);
-            }
+            AddResponseToConfig(commandPart, oscilloscopeResponse);
         }
         #endregion
 
         private string AskCommand(string commandPart)
         {
             string askCommand = CommandList.UniversalAskCommandString(commandPart);
-            //ToDo just testing
             return QueryData(askCommand);
-            //return TESTQUERY6(askCommand);
         }
         private string AskCommand(string commandPart, string channelNumberString)
         {
             string askCommand = CommandList.UniversalAskCommandString(commandPart, channelNumberString);
-            //ToDo just testing
             return QueryData(askCommand);
-            //return TESTQUERY5(askCommand);
         }
         private void AddResponseToConfig(string commandPart, string oscilloscopeResponse)
         {
@@ -459,37 +414,6 @@ namespace P_SCAAT.Models
             tempConfigString.Add(configPart);
             OscilloscopeConfigString = tempConfigString.Distinct().ToList();
             OscilloscopeConfigString.Sort();
-        }
-
-        public string TESTQUERY(string dataToSent)
-        {
-            Debug.WriteLine("SENDING " + dataToSent);
-            return "1\\n".Replace("\\n", string.Empty);
-        }
-        public string TESTQUERY2(string dataToSent)
-        {
-            Debug.WriteLine("SENDING " + dataToSent);
-            return "250E-03\\n".Replace("\\n", string.Empty);
-        }
-        public string TESTQUERY3(string dataToSent)
-        {
-            Debug.WriteLine("SENDING " + dataToSent);
-            return "\"channelLabel1\"";
-        }
-        public string TESTQUERY4(string dataToSent)
-        {
-            Debug.WriteLine("SENDING " + dataToSent);
-            return "1";
-        }
-        public string TESTQUERY5(string dataToSent)
-        {
-            Debug.WriteLine("SENDING " + dataToSent);
-            return "DCC";
-        }
-        public string TESTQUERY6(string dataToSent)
-        {
-            Debug.WriteLine("SENDING " + dataToSent);
-            return "CHAN2";
         }
     }
 }

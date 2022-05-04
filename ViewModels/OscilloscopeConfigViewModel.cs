@@ -284,10 +284,11 @@ namespace P_SCAAT.ViewModels
                     }
                     ApplyCommandToConfigString(commandParts);
                 }
-                catch (Exception exp)
+                catch (Exception ex)
                 {
+                    ErrorMessages.Add(ex);
                     //_ = MessageBox.Show($"{exp.Message}", $"{exp.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Debug.WriteLine($"{exp.Message}", $"{exp.GetType()}");
+                    Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
                 }
             }
         }
@@ -306,10 +307,11 @@ namespace P_SCAAT.ViewModels
                 }
                 ApplyCommandToConfigString(commandParts);
             }
-            catch (Exception exp)
+            catch (Exception ex)
             {
+                ErrorMessages.Add(ex);
                 //_ = MessageBox.Show($"{exp.Message}", $"{exp.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine($"{exp.Message}", $"{exp.GetType()}");
+                Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
             }
         }
         private void CreateCommandString(string command, decimal numericValue, int channelNumber = 0)
@@ -328,10 +330,11 @@ namespace P_SCAAT.ViewModels
                 }
                 ApplyCommandToConfigString(commandParts);
             }
-            catch (Exception exp)
+            catch (Exception ex)
             {
+                ErrorMessages.Add(ex);
                 //_ = MessageBox.Show($"{exp.Message}", $"{exp.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine($"{exp.Message}", $"{exp.GetType()}");
+                Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
             }
         }
         private void CreateCommandString(string command, bool trueFalseValue, int channelNumber = 0)
@@ -360,10 +363,11 @@ namespace P_SCAAT.ViewModels
                     }
                     ApplyCommandToConfigString(commandParts);
                 }
-                catch (Exception exp)
+                catch (Exception ex)
                 {
+                    ErrorMessages.Add(ex);
                     //_ = MessageBox.Show($"{exp.Message}", $"{exp.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Debug.WriteLine($"{exp.Message}", $"{exp.GetType()}");
+                    Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
                 }
             }
         }

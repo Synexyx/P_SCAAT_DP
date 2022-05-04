@@ -26,7 +26,7 @@ namespace P_SCAAT.ViewModels
         private Oscilloscope _oscilloscope;
         private bool _changingSession;
 
-        private string _measureButtonContent;
+        private bool _measurementInProgress;
 
         //private string _errorMessage = string.Empty;
 
@@ -99,24 +99,22 @@ namespace P_SCAAT.ViewModels
         }
         //public bool IsSessionOpen => Oscilloscope.IsSessionOpen;
 
+        public bool MeasurementInProgress
+        {
+            get => _measurementInProgress;
+            set { _measurementInProgress = value; OnPropertyChanged(nameof(MeasurementInProgress)); OnPropertyChanged(nameof(MeasureButtonContent)); }
+        }
+
+        private string _measureButtonContentStart => "START";
+        private string _measureButtonContentCancel => "CANCEL";
         public string MeasureButtonContent
         {
-            get => _measureButtonContent;
-            set { _measureButtonContent = value; OnPropertyChanged(nameof(MeasureButtonContent)); }
+            get
+            {
+                if (MeasurementInProgress) { return _measureButtonContentCancel; }
+                else { return _measureButtonContentStart; }
+            }
         }
-        public string MeasureButtonContentStart => "START";
-        public string MeasureButtonContentCancel => "CANCEL";
-
-        //public string ErrorMessage
-        //{
-        //    get => _errorMessage;
-        //    set
-        //    {
-        //        _errorMessage = value;
-        //        OnPropertyChanged(nameof(ErrorMessage));
-        //        //_ = MessageBox.Show(ErrorMessage);
-        //    }
-        //}
 
         public string ManualMessageWrite
         {
@@ -196,7 +194,6 @@ namespace P_SCAAT.ViewModels
             Func<OscilloscopeConfigViewModel> oscilloscopeConfigVM) : base()
         {
             CryptoDeviceMessage = cryptoDeviceMessage;
-            MeasureButtonContent = MeasureButtonContentStart;
 
             Oscilloscope = oscilloscope;
             WaveformSource = new ObservableCollection<WaveformSourceViewModel>();

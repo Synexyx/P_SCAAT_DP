@@ -44,12 +44,12 @@ namespace P_SCAAT.ViewModels.Commands
             try
             {
                 await Task.Run(() => _osciloscope.SynchronizeConfig());
-                _oscilloscopeControlState.OscilloscopeSelectedVM = _oscilloscopeConfigVM();
             }
             catch (Exception ex)
             {
                 _oscilloscopeViewModel.ErrorMessages.Add(ex);
             }
+            _oscilloscopeControlState.OscilloscopeSelectedVM = _oscilloscopeConfigVM();
         }
         private void OnOscilloscopeViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
