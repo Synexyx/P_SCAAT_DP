@@ -28,14 +28,15 @@ namespace P_SCAAT.ViewModels
 
         private bool _measurementInProgress;
 
-        //private string _errorMessage = string.Empty;
-
         private string _manualMessageWrite = "*IDN?";
         private string _manualMessageRead = "Response";
 
         private uint _tracesTotal;
         private uint _tracesPerFile;
         private uint _messageLenght;
+
+        private readonly string _measureButtonContentStart = "START";
+        private readonly string _measureButtonContentCancel = "CANCEL";
 
         private float _progressBarValue;
 
@@ -97,16 +98,11 @@ namespace P_SCAAT.ViewModels
                 }
             }
         }
-        //public bool IsSessionOpen => Oscilloscope.IsSessionOpen;
-
         public bool MeasurementInProgress
         {
             get => _measurementInProgress;
             set { _measurementInProgress = value; OnPropertyChanged(nameof(MeasurementInProgress)); OnPropertyChanged(nameof(MeasureButtonContent)); }
         }
-
-        private string _measureButtonContentStart => "START";
-        private string _measureButtonContentCancel => "CANCEL";
         public string MeasureButtonContent
         {
             get
@@ -202,15 +198,11 @@ namespace P_SCAAT.ViewModels
             RefreshOscilloscopeList();
 
             CreateCommands(oscilloscope, cryptoDeviceMessage, oscilloscopeControlState, oscilloscopeConfigVM);
-
-
-
-            //foreach (string item in AvailableOsciloscopes)
-            //{
-            //    Debug.WriteLine(item);
-            //}
         }
 
+        /// <summary>
+        /// Fills list of available waveform sources for user to choose source for measurement.
+        /// </summary>
         public void FillWaveformSource()
         {
             if (Oscilloscope.WaveformSourceOptions != null && Oscilloscope.WaveformSourceOptions.Any())
@@ -232,7 +224,6 @@ namespace P_SCAAT.ViewModels
             }
             catch (Exception ex)
             {
-                //ErrorMessage += e.Message + Environment.NewLine;
                 AvailableOscilloscopes = new List<string> { "EMPTY" };
                 ErrorMessages.Add(ex);
             }
@@ -258,8 +249,6 @@ namespace P_SCAAT.ViewModels
         {
             ControlOscilloscopeSessionCommand = new ControlSessionCommand(this);
             RefreshOscilloscopeListCommand = new SimpleCommand(RefreshOscilloscopeList);
-            //OsciloscopeConfigViewSelectCommand = new OsciloscopeConfigViewSelectCommand(osciloscope, osciloscopeControlState);
-            //OsciloscopeConfigViewSelectCommand = new OsciloscopeConfigViewSelectCommand(osciloscope, osciloscopeControlState, osciloscopeConfigVM);
             ConfigViewSelectCommand = new ConfigViewSelectCommand(this, oscilloscope, oscilloscopeControlState, oscilloscopeConfigVM);
             ManualControlCommand = new ManualControlCommand(this, oscilloscope);
             MeasureCommand = new MeasureCommand(this, oscilloscope, cryptoDeviceMessage);
@@ -276,39 +265,5 @@ namespace P_SCAAT.ViewModels
         {
             Debug.WriteLine("KILLING OVM");
         }
-
-        //public void CreateOsciloscopeSession()
-        //{
-        //    ActiveOsciloscope.OpenSession(SelectedAvailableOsciloscopes);
-        //}
-
-        //public void CreateNewOsciloscopeSession()
-        //{
-        //    //if (ActiveOsciloscope != null)
-        //    //{
-        //    //    ActiveOsciloscope = null;
-        //    //}
-        //    //ActiveOsciloscope = new Osciloscope(SelectedAvailableOsciloscopes);
-        //    //ActiveOsciloscope = osciloscope;
-        //    ActiveOsciloscope.OpenSession(SelectedAvailableOsciloscopes);
-        //    OnPropertyChanged(nameof(ActiveOsciloscope));
-        //    //OnPropertyChanged(propertyName: nameof(ActiveOsciloscope));
-        //    //return ActiveOsciloscope.IsSessionOpen;
-        //}
-
-        //public void DiscardOsciloscopeSession()
-        //{
-        //    //if (ActiveOsciloscope != null)
-        //    //{
-        //    //    ActiveOsciloscope.CloseSession();
-        //    //    ActiveOsciloscope = null;
-        //    //}
-        //    ActiveOsciloscope.CloseSession();
-        //}
-
-        //public static List<string> GetOsciloscopeList()
-        //{
-        //    return Osciloscope.GetResources();
-        //}
     }
 }

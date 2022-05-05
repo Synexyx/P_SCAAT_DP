@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace P_SCAAT.Models
 {
+    /// <summary>
+    /// Oscilloscope channel model
+    /// </summary>
     internal class ChannelSettings
     {
         #region Properties
@@ -17,6 +16,9 @@ namespace P_SCAAT.Models
         public List<string> ChannelCouplingModes { get; set; }
         public int ChannelCouplingIndex { get; set; }
         #endregion
+        /// <summary>
+        /// Creates blank <see cref="ChannelSettings"/> with <paramref name="channelNumber"/> and default property values.
+        /// </summary>
         public ChannelSettings(int channelNumber)
         {
             ChannelNumber = channelNumber;
@@ -32,6 +34,9 @@ namespace P_SCAAT.Models
                 };
             ChannelCouplingIndex = 0;
         }
+        /// <summary>
+        /// Creates hard copy of <see cref="ChannelSettings"/> using all known property values.
+        /// </summary>
         public ChannelSettings(int channelNumber, string label, bool channelDisplay,
             decimal channelScale, decimal channelOffset, List<string> channelCouplingModes, int channelCouplingIndex)
         {

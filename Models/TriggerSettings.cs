@@ -5,12 +5,17 @@ namespace P_SCAAT.Models
 
     internal class TriggerSettings
     {
+        #region Properties
         public List<string> TriggerEdgeSourceOptions { get; set; }
         public int TriggerEdgeSourceIndex { get; set; }
         public List<string> TriggerEdgeSlopeOptions { get; set; }
         public int TriggerEdgeSlopeIndex { get; set; }
-        public decimal TriggerLevel { get; set; }
+        public Dictionary<string, decimal> TriggerLevel { get; set; }
+        #endregion
 
+        /// <summary>
+        /// Creates blank <see cref="TriggerSettings"/> with default property values.
+        /// </summary>
         public TriggerSettings()
         {
             TriggerEdgeSourceOptions = new List<string>();
@@ -22,9 +27,12 @@ namespace P_SCAAT.Models
                     "Either"
                 };
             TriggerEdgeSlopeIndex = 0;
-            TriggerLevel = 0;
+            TriggerLevel = new Dictionary<string, decimal>();
         }
-        public TriggerSettings(List<string> triggerEdgeSourceOptions, int triggerEdgeSourceIndex, List<string> triggerEdgeSlopeOptions, int triggerEdgeSlopeIndex, decimal triggerLevel)
+        /// <summary>
+        /// Creates hard copy of <see cref="TriggerSettings"/> using all known property values.
+        /// </summary>
+        public TriggerSettings(List<string> triggerEdgeSourceOptions, int triggerEdgeSourceIndex, List<string> triggerEdgeSlopeOptions, int triggerEdgeSlopeIndex, Dictionary<string, decimal> triggerLevel)
         {
             TriggerEdgeSourceOptions = new List<string>(triggerEdgeSourceOptions);
             TriggerEdgeSourceIndex = triggerEdgeSourceIndex;

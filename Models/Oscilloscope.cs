@@ -41,9 +41,9 @@ namespace P_SCAAT.Models
 
         #region StaticGetOscilloscopeList
         /// <summary>
-        /// Static method for getting <see cref="List{T}"/> of resources (osciloscopes) available for session.
+        /// Static method for getting name of resources (osciloscopes) available for session.
         /// </summary>
-        /// <returns>List of available oscilloscopes</returns>
+        /// <returns><see cref="List{T}"/> of available oscilloscopes</returns>
         public static List<string> GetOscilloscopeList()
         {
             List<string> rsList = new List<string>();
@@ -59,6 +59,10 @@ namespace P_SCAAT.Models
         }
         #endregion
 
+        /// <summary>
+        /// Open and initialize oscilloscope session with <paramref name="sessionName"/>
+        /// </summary>
+        /// <exception cref="SessionControlException"/>
         public void OpenSession(string sessionName)
         {
             SessionName = sessionName;
@@ -74,19 +78,27 @@ namespace P_SCAAT.Models
                 }
                 catch (Exception ex)
                 {
+                    CloseSession();
                     throw new SessionControlException($"Oscilloscope session cannot be estabilished!{Environment.NewLine}REASON :{ex.GetType()}{Environment.NewLine}{ex.Message}", ex);
                 }
             }
         }
-
-        public void InitializeSessionSettings()
+        /// <summary>
+        /// Gets <paramref name="oscilloscopeID"/> as ID string from the oscilloscope. Which will be used to identify correct <see cref="CommandList"/> file.<br/>
+        /// Initialization WILL NOT synchronize this settings with real device to prevent unnecessary communication with the device in case of not wanting to change configuration of the real device.<br/>
+        /// For synchronization see <see cref="SynchronizeConfig"/>
+        /// </summary>
+        private void InitializeSessionSettings()
         {
-            //ToDo prostě do commandListu dát celý ID
+            //ToDo do commandListu dát celý ID
             //string oscilloscopeID = QueryData("*IDN?");
-            string oscilloscopeID = "Agilent,MSO9104A,...,...";
+            string oscilloscopeID = "WORD";
             InitializeSettings(oscilloscopeID);
         }
 
+        /// <summary>
+        /// Close and clear data used in the oscilloscope session
+        /// </summary>
         public void CloseSession()
         {
             if (MessageBasedSession != null)
@@ -94,17 +106,18 @@ namespace P_SCAAT.Models
                 MessageBasedSession.Dispose();
             }
             ClearAllData();
-
-
-
             Debug.WriteLine("Session succesfully closed.");
         }
 
+        /// <summary>
+        /// Set oscilloscope to standby mode using <paramref name="OscilloscopeSingleAcquisitionCommand"/>
+        /// </summary>
         internal void MeasurePrep()
         {
             Thread.Sleep(5);
             return;
             bool isReady = false;
+            //ToDo don't forget
             SendData(Commands.OscilloscopeSingleAcquisitionCommand);
             while (!isReady)
             {
@@ -118,12 +131,15 @@ namespace P_SCAAT.Models
             SendData(switchCorrectSource);
         }
 
-        internal byte[] GetMeasuredData()
+        /// <summary>
+        /// Get all waveform data from the oscilloscope. (Also trims trailing zeros from byte)
+        /// </summary>
+        internal byte[] GetWaveformData()
         {
             Thread.Sleep(5);
             byte[] test = new byte[] { 1, 2, 3 };
             //return test;
-
+            //ToDo don't forget
             Thread.Sleep(10);
             return test;
             SendData(Commands.WaveformDataCommand);
@@ -160,6 +176,9 @@ namespace P_SCAAT.Models
             }
         }
 
+        /// <summary>
+        /// Send all commands in <see cref="OscilloscopeConfig"/> into the oscilloscope.
+        /// </summary>
         internal void ApplyAllSettingsToDevice()
         {
             foreach (string setting in OscilloscopeConfigString)
@@ -169,6 +188,11 @@ namespace P_SCAAT.Models
             }
         }
 
+        /// <summary>
+        /// Send data defined in <paramref name="dataString"/> to the oscilloscope.
+        /// </summary>
+        /// <param name="dataString"></param>
+        /// <exception cref="SessionCommunicationException"/>
         public void SendData(string dataString)
         {
             //*IDN ?\n
@@ -181,6 +205,11 @@ namespace P_SCAAT.Models
                 throw new SessionCommunicationException($"Sending data to the oscilloscope failed!{Environment.NewLine}REASON :{ex.GetType()}{Environment.NewLine}{ex.StackTrace}");
             }
         }
+        /// <summary>
+        /// Send data defined in <paramref name="dataString"/> to the oscilloscope and gets response.
+        /// </summary>
+        /// <param name="dataString"></param>
+        /// <exception cref="SessionCommunicationException"/>
         public string QueryData(string dataString)
         {
             string resultData;
@@ -195,7 +224,10 @@ namespace P_SCAAT.Models
             }
             return resultData;
         }
-
+        /// <summary>
+        /// Read all string data sent by oscilloscope.
+        /// </summary>
+        /// <exception cref="SessionCommunicationException"/>
         public string ReadStringData()
         {
             try
@@ -221,6 +253,10 @@ namespace P_SCAAT.Models
         //    return message.Replace("\n", string.Empty).Replace("\r", string.Empty);
         //}
 
+
+        /// <summary>
+        /// Clear all currently used data. Used when session is closed.
+        /// </summary>
         public override void ClearAllData()
         {
             SessionName = null;
@@ -228,6 +264,9 @@ namespace P_SCAAT.Models
             base.ClearAllData();
         }
 
+        /// <summary>
+        /// Synchronize all settings that can be changed via application with real device.
+        /// </summary>
         public void SynchronizeConfig()
         {
             SynchronizeChannels();
@@ -235,6 +274,10 @@ namespace P_SCAAT.Models
             SynchronizeTimebase();
             SynchronizeWaveform();
         }
+
+        //Methods below should be self-explanatory.
+
+
         private void SynchronizeChannels()
         {
             foreach (ChannelSettings channel in Channels)
@@ -265,7 +308,7 @@ namespace P_SCAAT.Models
             SynchronizeWaveformStreaming();
         }
 
-        #region Partial synchronization methods
+        #region Individual synchronization methods
         private void SynchronizeChannelLabel(ChannelSettings channel)
         {
             string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
@@ -314,7 +357,6 @@ namespace P_SCAAT.Models
         }
         private void SynchronizeTriggerEdgeSource(TriggerSettings trigger)
         {
-
             string commandPart = Commands.TriggerEdgeSourceCommand;
             string oscilloscopeResponse = AskCommand(commandPart);
             trigger.TriggerEdgeSourceIndex = Commands.TriggerEdgeSourceOptions
@@ -340,11 +382,21 @@ namespace P_SCAAT.Models
         private void SynchronizeTriggerLevel(TriggerSettings trigger)
         {
             string commandPart = Commands.TriggerLevelCommand;
-            //ToDo trigger:level? channel<x> !!!!!! FUCK ME!!
-            string oscilloscopeResponse = AskCommand(commandPart);
-            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
-            trigger.TriggerLevel = numberResult;
-            AddResponseToConfig(commandPart, oscilloscopeResponse);
+            foreach (string source in Commands.TriggerEdgeSourceOptions)
+            {
+                string oscilloscopeResponse = SourceDependantAskCommand(commandPart, source);
+                //ToDo zjistit co vlastně vrací
+                _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+                if (trigger.TriggerLevel.ContainsKey(source))
+                {
+                    trigger.TriggerLevel[source] = numberResult;
+                }
+                else
+                {
+                    trigger.TriggerLevel.Add(source, numberResult);
+                }
+                AddResponseToConfig(commandPart, oscilloscopeResponse);
+            }
         }
 
         private void SynchronizeTimebaseScale()
@@ -395,6 +447,11 @@ namespace P_SCAAT.Models
         private string AskCommand(string commandPart, string channelNumberString)
         {
             string askCommand = CommandList.UniversalAskCommandString(commandPart, channelNumberString);
+            return QueryData(askCommand);
+        }
+        private string SourceDependantAskCommand(string commandPart, string source)
+        {
+            string askCommand = CommandList.SourceDependantAskCommandString(commandPart, source);
             return QueryData(askCommand);
         }
         private void AddResponseToConfig(string commandPart, string oscilloscopeResponse)

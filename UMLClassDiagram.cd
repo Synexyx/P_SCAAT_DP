@@ -36,7 +36,7 @@
       <Field Name="_waveformSourceOptions" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>BECABIAKBEAEAUgAgkAAiAFECQEAQAIAQAAKQAAAmAA=</HashCode>
+      <HashCode>BECABIAKBEAEAUgAgkAAiAFECQEAQAIAQIAKQAAAmAA=</HashCode>
       <FileName>Models\CommandList.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -63,7 +63,7 @@
       <Method Name="SynchronizeTriggerLevel" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>ABRAAAQwAIEUASAgAFIMAgQBCAACIAgAAAADjAAAYCA=</HashCode>
+      <HashCode>ABRAAAQwAIMUACAgAFIMAgQBCAACIAgQAAADjAAAYCA=</HashCode>
       <FileName>Models\Oscilloscope.cs</FileName>
     </TypeIdentifier>
     <Lollipop Orientation="Right" Position="0.1" />
@@ -109,7 +109,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.ChannelSettingsViewModel">
-    <Position X="54" Y="16" Width="2.75" />
+    <Position X="53.25" Y="17" Width="2.75" />
     <Members>
       <Field Name="_channelCouplingIndex" Hidden="true" />
       <Field Name="_channelCouplingModes" Hidden="true" />
@@ -169,7 +169,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.OscilloscopeViewModel">
-    <Position X="33.75" Y="18.25" Width="4.75" />
+    <Position X="46" Y="23" Width="4.75" />
     <Members>
       <Field Name="_availableOscilloscopes" Hidden="true" />
       <Field Name="_changingSession" Hidden="true" />
@@ -215,7 +215,7 @@
     <Lollipop Orientation="Right" Position="0.1" />
   </Class>
   <Class Name="P_SCAAT.ViewModels.TriggerViewModel">
-    <Position X="56.25" Y="16" Width="3" />
+    <Position X="56.25" Y="19.75" Width="3" />
     <Members>
       <Field Name="_triggerEdgeSlopeIndex" Hidden="true" />
       <Field Name="_triggerEdgeSlopeOptions" Hidden="true" />
@@ -239,21 +239,21 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ApplyOscilloscopeConfigCommand">
-    <Position X="8.5" Y="3.25" Width="4.25" />
+    <Position X="6" Y="8.25" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAACAAAEAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\ApplyOscilloscopeConfigCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.AsyncCoreCommand">
-    <Position X="16" Y="3.25" Width="1.75" />
+    <Position X="9.25" Y="3" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAEAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\AsyncCoreCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.CoreCommand">
-    <Position X="14.25" Y="5.5" Width="2.25" />
+    <Position X="11" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAACAAQAAEQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\Commands\CoreCommand.cs</FileName>
@@ -262,56 +262,56 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.CancelOscilloscopeConfigCommand">
-    <Position X="5.25" Y="3.25" Width="4" />
+    <Position X="1.5" Y="8.25" Width="4" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAAAAQAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\Commands\CancelOscilloscopeConfigCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ConfigViewSelectCommand">
-    <Position X="12" Y="9.25" Width="4.25" />
+    <Position X="11.75" Y="14" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AQQAAAAAAAAAAAAAAEAAAIAgAAAAQAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\ConfigViewSelectCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ControlSessionCommand">
-    <Position X="18.5" Y="9.25" Width="3.75" />
+    <Position X="18.25" Y="14" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAQAEAAAAAAAAAAAAAAIAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\ControlSessionCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ManualControlCommand">
-    <Position X="10" Y="5.75" Width="3.5" />
+    <Position X="18.25" Y="3.25" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAEAAAAAgAEAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\Commands\ManualControlCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.OpenConfigFileCommand">
-    <Position X="9.25" Y="9.25" Width="4.25" />
+    <Position X="4.5" Y="15" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\OpenConfigFileCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.RadioButtonEdgeSlopeCommand">
-    <Position X="7" Y="5.75" Width="4.25" />
+    <Position X="13.75" Y="4" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAACAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\Commands\RadioButtonEdgeSlopeCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.SaveConfigFileCommand">
-    <Position X="15.75" Y="9.25" Width="4.25" />
+    <Position X="15.25" Y="10" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\SaveConfigFileCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.SimpleCommand">
-    <Position X="12" Y="3.25" Width="1.75" />
+    <Position X="10.5" Y="8.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
       <FileName>ViewModels\Commands\SimpleCommand.cs</FileName>
@@ -328,10 +328,17 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.MeasureCommand">
-    <Position X="17.25" Y="5.5" Width="3.5" />
+    <Position X="2" Y="3.25" Width="3.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAgAAAAAAAiAEgAAAAgAEAQQAAAAAAAAAAAAEA=</HashCode>
+      <HashCode>AAAAAAAgAAAAAAAAAEgAAAAgAEAQQAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\MeasureCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="P_SCAAT.ViewModels.Commands.AsyncIsExcecutingCoreCommand" Collapsed="true">
+    <Position X="7.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABgAQAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Commands\AsyncIsExcecutingCoreCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="P_SCAAT.Models.ISessionDevice">

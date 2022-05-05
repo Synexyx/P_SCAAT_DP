@@ -12,9 +12,9 @@ using System.Windows.Input;
 
 namespace P_SCAAT.ViewModels
 {
-    class SerialPortRS232ViewModel : SessionDeviceVM
+    internal class SerialPortRS232ViewModel : SessionDeviceVM
     {
-        //private CryptoDeviceMessage _cryptoDeviceMessage;
+        #region Properties
         private ObservableCollection<string> _availablePorts;
         private string _selectedAvailablePort;
         private SerialPortRS232 _serialPortRS232;
@@ -25,13 +25,7 @@ namespace P_SCAAT.ViewModels
         private int _dataBits;
         private string _selectedStopBits;
 
-        //private SerialPort _serialPort;
-
-        public CryptoDeviceMessage CryptoDeviceMessage
-        {
-            get;
-            set;
-        }
+        public CryptoDeviceMessage CryptoDeviceMessage { get; set; }
 
         public ObservableCollection<string> AvailablePorts
         {
@@ -121,22 +115,7 @@ namespace P_SCAAT.ViewModels
                 }
             }
         }
-
-
-
-
-        //public SerialPort SerialPort
-        //{
-        //    get => _serialPort;
-        //    set
-        //    {
-        //        _serialPort = value;
-        //        OnPropertyChanged(nameof(SerialPort));
-        //    }
-        //}
-
-        //public override bool IsSessionOpen => SerialPort.IsOpen;
-
+        #endregion
 
         public SerialPortRS232ViewModel(CryptoDeviceMessage cryptoDeviceMessage) : base()
         {
@@ -158,11 +137,13 @@ namespace P_SCAAT.ViewModels
             CreateCommands();
         }
 
+        /// <summary>
+        /// This method is called when new message in <see cref="CryptoDeviceMessage.GenerateNewMessage"/> is created. (Subscribtion to <see cref="CryptoDeviceMessage.MessageCreation"/> event)
+        /// </summary>
         private void OnCryptoMessageCreated()
         {
             Thread.Sleep(5);
             SerialPortRS232.Send(CryptoDeviceMessage.MessageBytes);
-            //throw new NotImplementedException();
         }
 
         internal void RefreshPortList()

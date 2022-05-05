@@ -12,6 +12,9 @@ using P_SCAAT.ViewModels;
 
 namespace P_SCAAT.ViewModels.Commands
 {
+    /// <summary>
+    /// Open file containing previously saved list of configuration commands for oscilloscope.
+    /// </summary>
     internal class OpenConfigFileCommand : AsyncIsExcecutingCoreCommand
     {
         private readonly OscilloscopeConfigViewModel _oscilloscopeConfigViewModel;

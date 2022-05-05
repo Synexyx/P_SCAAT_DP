@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -52,9 +50,19 @@ namespace P_SCAAT.Models
         #endregion
 
         /// <summary>
-        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device with <paramref name="command"/> body and <paramref name="parameter1"/>.
+        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device as command with parameter.
+        /// <br/>
+        /// If <paramref name="command"/> does not exist, throws <see cref="FormatException"/>.
+        /// <br/>
+        /// <example>Example:
+        /// <code>
+        ///     //<paramref name="command"/> =  ":TIMebase:SCALe {0}";
+        ///     //<paramref name="parameter1"/> = "20E-03";
+        ///     //=> <see cref="Tuple{T1, T2}.Item1"/> = ":TIMebase:SCALe"
+        ///     //=> <see cref="Tuple{T1, T2}.Item2"/> = ":TIMebase:SCALe 20E-03"
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <returns>(<typeparamref name="string"/>, <typeparamref name="string"/>) where <c>Item1</c> is commands body and <c>Item2</c> is whole command string with parameter</returns>
         /// <exception cref="FormatException"/>
         public static (string, string) UniversalCommandString(string command, string parameter1)
         {
@@ -65,9 +73,8 @@ namespace P_SCAAT.Models
             throw new FormatException($"The command could not be created because it was not found in the command list file.{Environment.NewLine}{command}");
         }
         /// <summary>
-        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device with <paramref name="command"/> body <paramref name="parameter1"/> and <paramref name="parameter2"/>.
+        /// Overloaded method for <see cref="UniversalCommandString(string, string)"/> with additional <paramref name="parameter2"/>
         /// </summary>
-        /// <returns>(<typeparamref name="string"/>, <typeparamref name="string"/>) where <c>Item1</c> is commands body and <c>Item2</c> is whole command string with parameters</returns>
         /// <exception cref="FormatException"/>
         public static (string, string) UniversalCommandString(string command, string parameter1, string parameter2)
         {
@@ -78,31 +85,36 @@ namespace P_SCAAT.Models
             throw new FormatException("The command could not be created because it was not found in the command list file.");
         }
         /// <summary>
-        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device as command query expecting value as response from the device.
+        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device as command query.
+        /// <br/>
+        /// <example>Example:
+        /// <code>
+        ///     //<paramref name="command"/> = ":TIMebase:SCALe {0}";
+        ///     //=> ":TIMebase:SCALe?"
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <returns><typeparamref name="string"/> as properly formated query command.</returns>
         /// <exception cref="FormatException"/>
-        public static string UniversalAskCommandString(string commad)
+        public static string UniversalAskCommandString(string command)
         {
-            if (!string.IsNullOrEmpty(commad))
+            if (!string.IsNullOrEmpty(command))
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                string askCommand = stringBuilder.AppendFormat(CultureInfo.InvariantCulture, commad, "?").ToString();
+                string askCommand = stringBuilder.AppendFormat(CultureInfo.InvariantCulture, command, "?").ToString();
                 return Regex.Replace(askCommand, @"\s+", string.Empty);
             }
             throw new FormatException("The command could not be created because it was not found in the command list file.");
         }
         /// <summary>
-        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device as command query with <paramref name="parameter1"/> expecting value as response from the device.
+        /// Overloaded method for <see cref="UniversalAskCommandString(string)"/> with additional <paramref name="parameter1"/>
         /// </summary>
-        /// <returns><typeparamref name="string"/> as properly formated query command.</returns>
         /// <exception cref="FormatException"/>
-        public static string UniversalAskCommandString(string commad, string parameter1)
+        public static string UniversalAskCommandString(string command, string parameter1)
         {
-            if (!string.IsNullOrEmpty(commad))
+            if (!string.IsNullOrEmpty(command))
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                string askCommand = stringBuilder.AppendFormat(CultureInfo.InvariantCulture, commad, parameter1, "?").ToString();
+                string askCommand = stringBuilder.AppendFormat(CultureInfo.InvariantCulture, command, parameter1, "?").ToString();
                 return Regex.Replace(askCommand, @"\s+", string.Empty);
 
             }
@@ -110,9 +122,41 @@ namespace P_SCAAT.Models
         }
 
         /// <summary>
-        /// Using <see cref="StringBuilder"/> creates <typeparamref name="Tuple"/>(<typeparamref name="string"/>, <typeparamref name="string"/>). <c>Item1</c> is pure <paramref name="selectedCommand"/>
-        /// without any dynamic parts such as <c>{0}, {1}</c> etc. used for string interpolation. 
-        /// <c>Item2</c> is same string with <paramref name="commandParameter1"/> inserted to proper place using string interpolation.
+        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device as command query with <paramref name="parameter1"/> in source dependant commands.
+        /// <br/>
+        /// <example>Example:
+        /// <code>
+        ///     //<paramref name="command"/> = ":TRIGger:LEVel {0} {1}";
+        ///     //<paramref name="parameter1"/> = "CHANnel1";
+        ///     //=> ":TRIGger:LEVel? CHANnel1"
+        /// </code>
+        /// </example>
+        /// </summary>
+        public static string SourceDependantAskCommandString(string command, string parameter1)
+        {
+            if (!string.IsNullOrEmpty(command))
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                string tempCommand = stringBuilder.AppendFormat(CultureInfo.InvariantCulture, command, "?", string.Empty).ToString();
+                tempCommand = Regex.Replace(tempCommand, @"\s+", string.Empty);
+                _ = stringBuilder.Clear();
+                string askCommand = stringBuilder.AppendFormat(CultureInfo.InvariantCulture, "{0} {1}", tempCommand, parameter1).ToString();
+                return askCommand;
+            }
+            throw new FormatException("The command could not be created because it was not found in the command list file.");
+        }
+
+        /// <summary>
+        /// Using <see cref="StringBuilder"/> creates <see cref="Tuple{T1, T2}"/>. <see cref="Tuple{T1, T2}.Item1"/> is pure <paramref name="selectedCommand"/> body. 
+        /// <see cref="Tuple{T1, T2}.Item2"/> is <paramref name="selectedCommand"/> body with <paramref name="commandParameter1"/> inserted to proper place using string interpolation.
+        /// <example>
+        /// <code>
+        ///     //<paramref name="selectedCommand"/> =  ":TIMebase:SCALe {0}";
+        ///     //<paramref name="commandParameter1"/> = "20E-03";
+        ///     //=> <see cref="Tuple{T1, T2}.Item1"/> = ":TIMebase:SCALe"
+        ///     //=> <see cref="Tuple{T1, T2}.Item2"/> = ":TIMebase:SCALe 20E-03"
+        /// </code>
+        /// </example>
         /// </summary>
         private static (string, string) ForgeCommandToString(string selectedCommand, string commandParameter1)
         {
@@ -125,9 +169,7 @@ namespace P_SCAAT.Models
             return (partCommand, resultCommand);
         }
         /// <summary>
-        /// Using <see cref="StringBuilder"/> creates <typeparamref name="Tuple"/>(<typeparamref name="string"/>, <typeparamref name="string"/>). <c>Item1</c> is <paramref name="selectedCommand"/>
-        /// with <paramref name="commandParameter1"/> inserted to first string interpolation place. 
-        /// <c>Item2</c> is same string with <paramref name="commandParameter2"/> inserted to proper place using string interpolation.
+        /// Overloaded method for <see cref="ForgeCommandToString(string, string)"/> with additional <paramref name="commandParameter2"/>
         /// </summary>
         private static (string, string) ForgeCommandToString(string selectedCommand, string commandParameter1, string commandParameter2)
         {

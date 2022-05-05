@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using P_SCAAT.Models;
-using static P_SCAAT.Models.ChannelSettings;
 
 namespace P_SCAAT.ViewModels
 {
+    /// <summary>
+    /// View model for <see cref="ChannelSettings"/>
+    /// </summary>
     internal class ChannelSettingsViewModel : OscilloscopeValueConversionVM
     {
         #region Properties

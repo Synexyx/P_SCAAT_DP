@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace P_SCAAT.ViewModels.Commands
 {
+    /// <summary>
+    /// Excecutes measure loop. Within it is creation of new message, getting waveform data from oscilloscope and saving results into file. Loop can be canceled with second button click, while previous loop is active.
+    /// </summary>
     internal class MeasureCommand : AsyncCoreCommand
     {
         private readonly OscilloscopeViewModel _oscilloscopeViewModel;
@@ -18,10 +21,6 @@ namespace P_SCAAT.ViewModels.Commands
         private readonly CryptoDeviceMessage _cryptoDeviceMessage;
 
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
-
-        private int perFile;
-        private int fileNumber;
-        private string fileNameSessionID;
 
         public MeasureCommand(OscilloscopeViewModel oscilloscopeViewModel, Oscilloscope oscilloscope, CryptoDeviceMessage cryptoDeviceMessage)
         {
@@ -77,7 +76,7 @@ namespace P_SCAAT.ViewModels.Commands
                             string selectedSource = string.Empty;
                             if (!sourcesToMeasure.Any())
                             {
-                                response = Convert.ToBase64String(_oscilloscope.GetMeasuredData());
+                                response = Convert.ToBase64String(_oscilloscope.GetWaveformData());
                             }
                             else
                             {
@@ -85,7 +84,7 @@ namespace P_SCAAT.ViewModels.Commands
                                 {
                                     selectedSource = source.SourceName;
                                     _oscilloscope.ChangeWaveformSource(selectedSource);
-                                    response = Convert.ToBase64String(_oscilloscope.GetMeasuredData());
+                                    response = Convert.ToBase64String(_oscilloscope.GetWaveformData());
                                 }
                             }
                             if (_oscilloscopeViewModel.TracesPerFile == perFile && _oscilloscopeViewModel.TracesPerFile != 0)
@@ -111,6 +110,7 @@ namespace P_SCAAT.ViewModels.Commands
                     catch (Exception ex)
                     {
                         _oscilloscopeViewModel.ErrorMessages.Add(ex);
+                        tokenSource.Cancel();
                     }
                 }, tokenSource.Token);
             }

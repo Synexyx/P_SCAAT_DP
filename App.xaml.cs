@@ -15,8 +15,10 @@ namespace P_SCAAT
 
         private readonly OscilloscopeViewControlState _oscilloscopeViewControlState;
 
-
-
+        /// <summary>
+        /// Creates permanent instances (singletons) of <see cref="Oscilloscope"/> and <see cref="CryptoDeviceMessage"/>. This instances are initialy empty, but can be changed during runtime of application.<br/>
+        /// This will allow for application to pass this instances between different classes as singletons.
+        /// </summary>
         public App()
         {
             _oscilloscope = new Oscilloscope();
@@ -26,7 +28,6 @@ namespace P_SCAAT
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //_osciloscopeControlState.OsciloscopeSelectedVM = new OsciloscopeViewModel(_osciloscope, _osciloscopeControlState);
             _oscilloscopeViewControlState.OscilloscopeSelectedVM = CreateOscilloscopeVM();
             MainWindow = new MainWindow
             {
@@ -36,11 +37,17 @@ namespace P_SCAAT
             base.OnStartup(e);
         }
 
+        /// <summary>
+        /// <see cref="System.Func{TResult}"/> called when changing views. Will create new <see cref="OscilloscopeViewModel"/> and fill it with permanent data.
+        /// </summary>
         private OscilloscopeViewModel CreateOscilloscopeVM()
         {
             return new OscilloscopeViewModel(_cryptoDeviceMessage, _oscilloscope, _oscilloscopeViewControlState, CreateOscilloscopeConfigVM);
         }
 
+        /// <summary>
+        /// <see cref="System.Func{TResult}"/> called when changing views. Will create new <see cref="OscilloscopeConfigViewModel"/> and fill it with permanent data.
+        /// </summary>
         private OscilloscopeConfigViewModel CreateOscilloscopeConfigVM()
         {
             return new OscilloscopeConfigViewModel(_oscilloscope, _oscilloscopeViewControlState, CreateOscilloscopeVM);

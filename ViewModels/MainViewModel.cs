@@ -9,6 +9,9 @@ using P_SCAAT.ViewModels.ViewControlState;
 
 namespace P_SCAAT.ViewModels
 {
+    /// <summary>
+    /// Main view model passed to application. Contains all view model binded to different views. Main purpose of this is binding of DataContex in XAML and views
+    /// </summary>
     internal class MainViewModel : CorePropChangedVM
     {
         #region Properties

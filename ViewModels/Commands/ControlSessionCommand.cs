@@ -12,6 +12,9 @@ using P_SCAAT.ViewModels;
 
 namespace P_SCAAT.ViewModels.Commands
 {
+    /// <summary>
+    /// Open/Close session with device 
+    /// </summary>
     internal class ControlSessionCommand : AsyncIsExcecutingCoreCommand
     {
         private readonly SessionDeviceVM _sessionDeviceVM;

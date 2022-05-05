@@ -26,15 +26,18 @@ namespace P_SCAAT.Models
         public List<string> WaveformSourceOptions { get => _waveformSourceOptions ?? new List<string>(); protected set => _waveformSourceOptions = value; }
         public bool WaveformStreaming { get; protected set; }
 
-
         public CommandList Commands { get; protected set; }
-
         #endregion
+
         public OscilloscopeConfig()
         {
             _ = CreateDefaultCommandList();
         }
-
+        /// <summary>
+        /// Initialize all oscilloscope settings. Initializes default settings for <see cref="Trigger"/> and <see cref="Channels"/>. Calls <see cref="LoadCommandList(string)"/> 
+        /// to get correct <see cref="CommandList"/> for oscilloscope using <paramref name="oscilloscopeID"/> as identifier.
+        /// </summary>
+        /// <param name="oscilloscopeID"></param>
         public void InitializeSettings(string oscilloscopeID)
         {
             OscilloscopeConfigString = new List<string>();
@@ -42,8 +45,13 @@ namespace P_SCAAT.Models
             Trigger = new TriggerSettings();
 
             Commands = LoadCommandList(oscilloscopeID);
+
             Trigger.TriggerEdgeSourceOptions = Commands.TriggerEdgeSourceOptions;
             Trigger.TriggerEdgeSlopeOptions = Commands.TriggerEdgeSlopeOptions;
+            foreach (string source in Trigger.TriggerEdgeSourceOptions)
+            {
+                Trigger.TriggerLevel.Add(source, 0);
+            }
             WaveformFormatOptions = Commands.WaveformFormatOptions;
             WaveformSourceOptions = Commands.WaveformSourceOptions;
 
@@ -55,9 +63,12 @@ namespace P_SCAAT.Models
                 };
                 Channels.Add(channel);
             }
-
         }
 
+        /// <summary>
+        /// Creates properly formated default empty <see cref="CommandList"/> file in <c>/OscilloscopeCommandLists/</c> folder for easy editation and customization.
+        /// </summary>
+        /// <returns></returns>
         private static async Task CreateDefaultCommandList()
         {
             CommandList commandList = new CommandList();
@@ -70,6 +81,9 @@ namespace P_SCAAT.Models
             }
         }
 
+        /// <summary>
+        /// Finds and loads <see cref="CommandList"/> file and creates new <see cref="CommandList"/> object.
+        /// </summary>
         private static CommandList LoadCommandList(string oscilloscopeID)
         {
             string filePathName = FindCorrectCommandListFile(oscilloscopeID);
@@ -78,6 +92,9 @@ namespace P_SCAAT.Models
             return commandList;
         }
 
+        /// <summary>
+        /// Get path of correct <see cref="CommandList"/> file which contain <paramref name="oscilloscopeID"/> inside it. If no such file is found, use the default file.
+        /// </summary>
         private static string FindCorrectCommandListFile(string oscilloscopeID)
         {
             string defaultFileDirectoryPath = "../../OscilloscopeCommandLists/";
@@ -102,21 +119,32 @@ namespace P_SCAAT.Models
             return commandListFilePathName;
         }
 
+        /// <summary>
+        /// Replace current <see cref="OscilloscopeConfigString"/> with <paramref name="oscilloscopeConfigString"/>.
+        /// </summary>
         public void InsertNewConfigString(List<string> oscilloscopeConfigString)
         {
             OscilloscopeConfigString.Clear();
             OscilloscopeConfigString.AddRange(oscilloscopeConfigString);
         }
-
+        /// <summary>
+        /// Replace current <see cref="Channels"/> with <paramref name="channels"/>.
+        /// </summary>
         public void InsertNewChannelSettings(List<ChannelSettings> channels)
         {
             Channels.Clear();
             Channels.AddRange(channels);
         }
+        /// <summary>
+        /// Replace current <see cref="Trigger"/> with <paramref name="trigger"/>.
+        /// </summary>
         public void InsertTriggerSettings(TriggerSettings trigger)
         {
             Trigger = trigger;
         }
+        /// <summary>
+        /// Replace all other settings not yet replaced by previous methods.
+        /// </summary>
         public void InsertOtherSettings(decimal timebaseScale, decimal timebasePosition, int waveformFormatIndex, bool waveformStreaming)
         {
             TimebaseScale = timebaseScale;
@@ -125,6 +153,9 @@ namespace P_SCAAT.Models
             WaveformStreaming = waveformStreaming;
         }
 
+        /// <summary>
+        /// Clear all currently used data. Used when session is closed.
+        /// </summary>
         public virtual void ClearAllData()
         {
             OscilloscopeConfigString = null;

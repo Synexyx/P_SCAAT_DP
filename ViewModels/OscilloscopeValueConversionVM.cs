@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace P_SCAAT.ViewModels
 {
+    /// <summary>
+    /// Value convertors for numeric values. Should deal with conversion between <see cref="decimal"/> and <see cref="string"/>. With usage of metric prefixes.
+    /// </summary>
     internal abstract class OscilloscopeValueConversionVM : CorePropChangedVM
     {
         protected decimal StringToDecimal(string stringToConvert)

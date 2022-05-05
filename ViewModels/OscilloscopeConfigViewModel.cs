@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -7,20 +6,19 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using P_SCAAT.Models;
 using P_SCAAT.ViewModels.Commands;
 using P_SCAAT.ViewModels.ViewControlState;
-using static P_SCAAT.Models.OscilloscopeConfig;
 
 namespace P_SCAAT.ViewModels
 {
+    /// <summary>
+    /// View model for <see cref="OscilloscopeConfig"/>
+    /// </summary>
     internal class OscilloscopeConfigViewModel : OscilloscopeValueConversionVM, IErrorMessage
     {
         #region Properties
@@ -61,8 +59,6 @@ namespace P_SCAAT.ViewModels
             set { _tempChannels = value; OnPropertyChanged(nameof(TempChannels)); }
         }
 
-        //====== TIMEBASE ======
-
         public decimal TimebaseScale
         {
             get => _timebaseScale;
@@ -99,7 +95,6 @@ namespace P_SCAAT.ViewModels
             get => _triggerVM;
             set { _triggerVM = value; OnPropertyChanged(nameof(TriggerVM)); }
         }
-
         public List<string> WaveformFormatOptions
         {
             get => _waveformFormatOptions;
@@ -139,17 +134,23 @@ namespace P_SCAAT.ViewModels
             CreateCommands(oscilloscopeControlState, oscilloscopeVM);
         }
 
+        /// <summary>
+        /// If new error occurs display <see cref="MessageBox"/> to inform user about it. 
+        /// </summary>
         public void ErrorMessage_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
             {
                 foreach (Exception item in e.NewItems)
                 {
-                    _ = MessageBox.Show($"{item.Message}{Environment.NewLine}{item.StackTrace}", $"{item.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _ = MessageBox.Show($"{item.Message} {item.StackTrace}", $"{item.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
+        /// <summary>
+        /// Used as conversion between <see cref="List{T}"/> and <see cref="string"/> for displaying in TextBox
+        /// </summary>
         private string ListToString(List<string> listToConvert)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -159,12 +160,18 @@ namespace P_SCAAT.ViewModels
             }
             return stringBuilder.ToString();
         }
+        /// <summary>
+        /// Used as reverse conversion between <see cref="List{T}"/> and <see cref="string"/> for displaying in TextBox spliting by lines.
+        /// </summary>
         private List<string> StringToList(string stringToConvert)
         {
             List<string> resultList = Regex.Split(stringToConvert, @"\r|\n|\r\n").Where(line => line != string.Empty).ToList();
             return resultList;
         }
 
+        /// <summary>
+        /// Initialize and synchronize data with their model equivalent.
+        /// </summary>
         private void GetOscilloscopeResourcesToVM()
         {
             TempOscilloscopeConfigString = new List<string>(Oscilloscope.OscilloscopeConfigString);
@@ -181,7 +188,7 @@ namespace P_SCAAT.ViewModels
             TriggerVM.PropertyChanged += TriggerViewModel_PropertyChanged;
 
             WaveformFormatOptions = new List<string>(Oscilloscope.WaveformFormatOptions);
-            _waveformFormatIndex = Oscilloscope.WaveformFormatIndex; //workaround kolem OnPropertyChange with synchronization
+            _waveformFormatIndex = Oscilloscope.WaveformFormatIndex;
         }
 
         public List<ChannelSettings> ChannelSettingsVMtoModel()
@@ -204,6 +211,9 @@ namespace P_SCAAT.ViewModels
                TriggerVM.TriggerEdgeSlopeOptions, TriggerVM.TriggerEdgeSlopeIndex, TriggerVM.TriggerLevel);
         }
 
+        /// <summary>
+        /// Subscribing to <see cref="TempChannels"/> collection changed event. Automatically subscribe to all new items property change event.
+        /// </summary>
         private void TempChannels_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
@@ -222,6 +232,9 @@ namespace P_SCAAT.ViewModels
             }
         }
 
+        /// <summary>
+        /// Subscribe to all elements in <see cref="ChannelSettingsViewModel"/>. If any element changes value, this will automatically create proper command containing changed value.
+        /// </summary>
         private void ChannelSettingsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ChannelSettingsViewModel channel = sender as ChannelSettingsViewModel;
@@ -231,7 +244,6 @@ namespace P_SCAAT.ViewModels
                     CreateCommandString(Oscilloscope.Commands.ChannelDisplayCommand, channel.ChannelDisplay, channel.ChannelNumber);
                     break;
                 case nameof(channel.ChannelLabel):
-                    //CreateCommandString(Oscilloscope.Commands.ChannelLabelCommand, channel.ChannelLabel, channel.ChannelNumber);
                     CreateCommandString(Oscilloscope.Commands.ChannelLabelCommand, $"\"{channel.ChannelLabel}\"", channel.ChannelNumber);
                     break;
                 case nameof(channel.ChannelScale):
@@ -247,6 +259,9 @@ namespace P_SCAAT.ViewModels
                     break;
             }
         }
+        /// <summary>
+        /// Subscribe to all elements in <see cref="TriggerViewModel"/>. If any element changes value, this will automatically create proper command containing changed value.
+        /// </summary>
         private void TriggerViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             TriggerViewModel trigger = sender as TriggerViewModel;
@@ -259,13 +274,23 @@ namespace P_SCAAT.ViewModels
                     CreateCommandString(Oscilloscope.Commands.TriggerEdgeSlopeCommand, trigger.TriggerEdgeSlopeOptions, trigger.TriggerEdgeSlopeIndex);
                     break;
                 case nameof(trigger.TriggerLevel):
-                    CreateCommandString(Oscilloscope.Commands.TriggerLevelCommand, trigger.TriggerLevel);
+                    string triggerSource = trigger.TriggerEdgeSourceOptions.ElementAtOrDefault(trigger.TriggerEdgeSourceIndex);
+                    if (trigger.TriggerLevel.ContainsKey(triggerSource))
+                    {
+                        decimal triggerLevel = trigger.TriggerLevel[triggerSource];
+                        CreateCommandString(Oscilloscope.Commands.TriggerLevelCommand, triggerSource, triggerLevel);
+                    }
                     break;
                 default:
                     break;
             }
         }
 
+        /// <summary>
+        /// All overloads to create proper command to config string. <br/>
+        /// Individual methods can deal with channel settings, updating value from collection, using command with single bool value and commands with value that are source dependant.
+        /// </summary>
+        #region CreateCommandString overloads
         private void CreateCommandString(string command, IEnumerable<string> collection, int index, int channelNumber = 0)
         {
             if (collection != null)
@@ -371,7 +396,26 @@ namespace P_SCAAT.ViewModels
                 }
             }
         }
+        private void CreateCommandString(string command, string stringValue, decimal numericValue)
+        {
+            string desiredValue = numericValue.ToString("0.###E00", CultureInfo.InvariantCulture);
+            (string, string) commandParts;
+            try
+            {
+                commandParts = CommandList.UniversalCommandString(command, stringValue, desiredValue);
+                ApplyCommandToConfigString(commandParts);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.Add(ex);
+                Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
+            }
+        }
+        #endregion
 
+        /// <summary>
+        /// Apply command to <see cref="TempOscilloscopeConfigString"/> and removes duplicates and previous instances of that command with different values.
+        /// </summary>
         private void ApplyCommandToConfigString((string, string) commandParts)
         {
             if (!string.IsNullOrEmpty(commandParts.Item1) && !string.IsNullOrEmpty(commandParts.Item2))

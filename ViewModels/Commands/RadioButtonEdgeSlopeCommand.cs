@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace P_SCAAT.ViewModels.Commands
 {
+    /// <summary>
+    /// Indexing trigger edge slope with radio buttons in view via command parameter
+    /// </summary>
     internal class RadioButtonEdgeSlopeCommand : CoreCommand
     {
         private readonly OscilloscopeConfigViewModel _oscilloscopeConfigViewModel;

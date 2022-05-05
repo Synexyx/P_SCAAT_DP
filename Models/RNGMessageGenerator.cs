@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
 
 namespace P_SCAAT.Models
 {
@@ -11,6 +6,7 @@ namespace P_SCAAT.Models
     {
         private readonly byte[] messageBytes;
         private readonly RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+        
         /// <summary>
         /// Creates new <see cref="messageBytes"/> with lenght defined by <paramref name="messageLenght"/>  
         /// </summary>

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO.Ports;
 using P_SCAAT.Exceptions;
 using System.Diagnostics;
@@ -11,6 +7,7 @@ namespace P_SCAAT.Models
 {
     internal class SerialPortRS232 : ISessionDevice
     {
+        #region Properties
         public string PortName { get; set; }
         public int BaudRate { get; set; }
         public Parity Parity { get; set; }
@@ -18,6 +15,7 @@ namespace P_SCAAT.Models
         public StopBits StopBits { get; set; }
         public SerialPort SerialPort { get; }
         public bool IsSessionOpen => SerialPort.IsOpen;
+        #endregion
 
         public SerialPortRS232()
         {
@@ -63,7 +61,7 @@ namespace P_SCAAT.Models
         internal void Send(byte[] messageBytes)
         {
             //ToDo don't forget
-            //SerialPort.Write(messageBytes, 0, messageBytes.Length);
+            SerialPort.Write(messageBytes, 0, messageBytes.Length);
             Debug.WriteLine($"{DateTime.Now} SENDING MESSAGE OF LENGHT {messageBytes.Length}");
         }
     }

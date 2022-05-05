@@ -10,7 +10,9 @@ using P_SCAAT.ViewModels.ViewControlState;
 
 namespace P_SCAAT.ViewModels.Commands
 {
-    //internal class OscilloscopeConfigViewSelectCommand : CoreCommand
+    /// <summary>
+    /// Synchronize all settings with real device and open oscilloscope config UI. 
+    /// </summary>
     internal class ConfigViewSelectCommand : AsyncIsExcecutingCoreCommand
     {
         private readonly OscilloscopeViewModel _oscilloscopeViewModel;
@@ -32,12 +34,6 @@ namespace P_SCAAT.ViewModels.Commands
         {
             return !IsExecuting && _oscilloscopeViewModel.IsSessionOpen;
         }
-        //public override void Execute(object parameter)
-        //{
-        //    //_osciloscope.UpdateAllResources();
-        //    //_osciloscopeControlState.OsciloscopeSelectedVM = new OsciloscopeConfigViewModel(_osciloscope, _osciloscopeControlState);
-        //    _oscilloscopeControlState.OscilloscopeSelectedVM = _oscilloscopeConfigVM();
-        //}
 
         public override async Task ExecuteAsync(object parameter)
         {

@@ -14,7 +14,7 @@ namespace P_SCAAT.ViewModels
         private int _triggerEdgeSourceIndex;
         private List<string> _triggerEdgeSlopeOptions;
         private int _triggerEdgeSlopeIndex;
-        private decimal _triggerLevel;
+        private Dictionary<string, decimal> _triggerLevel;
 
         public List<string> TriggerEdgeSourceOptions
         {
@@ -24,7 +24,7 @@ namespace P_SCAAT.ViewModels
         public int TriggerEdgeSourceIndex
         {
             get => _triggerEdgeSourceIndex;
-            set { _triggerEdgeSourceIndex = value; OnPropertyChanged(nameof(TriggerEdgeSourceIndex)); }
+            set { _triggerEdgeSourceIndex = value; OnPropertyChanged(nameof(TriggerEdgeSourceIndex)); OnPropertyChanged(nameof(TriggerLevelForTextBox)); }
         }
         public List<string> TriggerEdgeSlopeOptions
         {
@@ -37,15 +37,35 @@ namespace P_SCAAT.ViewModels
             set { _triggerEdgeSlopeIndex = value; OnPropertyChanged(nameof(TriggerEdgeSlopeIndex)); }
         }
 
-        public decimal TriggerLevel
+        public Dictionary<string, decimal> TriggerLevel
         {
             get => _triggerLevel;
             set { _triggerLevel = value; OnPropertyChanged(nameof(TriggerLevel)); }
         }
+
         public string TriggerLevelForTextBox
         {
-            get => DecimalToString(TriggerLevel, "V");
-            set { TriggerLevel = StringToDecimal(value); OnPropertyChanged(nameof(TriggerLevelForTextBox)); }
+            get
+            {
+                string selectedSource = TriggerEdgeSourceOptions.ElementAtOrDefault(TriggerEdgeSourceIndex);
+                _ = TriggerLevel.TryGetValue(selectedSource, out decimal triggerLevel);
+                return DecimalToString(triggerLevel, "V");
+            }
+            set
+            {
+                decimal numberValue = StringToDecimal(value);
+                string selectedSource = TriggerEdgeSourceOptions.ElementAtOrDefault(TriggerEdgeSourceIndex);
+                if (TriggerLevel.ContainsKey(selectedSource))
+                {
+                    TriggerLevel[selectedSource] = numberValue;
+                }
+                else
+                {
+                    TriggerLevel.Add(selectedSource, numberValue);
+                }
+                OnPropertyChanged(nameof(TriggerLevelForTextBox));
+                OnPropertyChanged(nameof(TriggerLevel));
+            }
         }
         #endregion
         public TriggerViewModel(TriggerSettings trigger)
@@ -54,7 +74,7 @@ namespace P_SCAAT.ViewModels
             TriggerEdgeSourceIndex = trigger.TriggerEdgeSourceIndex;
             TriggerEdgeSlopeOptions = new List<string>(trigger.TriggerEdgeSlopeOptions);
             TriggerEdgeSlopeIndex = trigger.TriggerEdgeSlopeIndex;
-            TriggerLevel = trigger.TriggerLevel;
+            TriggerLevel = new Dictionary<string, decimal>(trigger.TriggerLevel);
         }
     }
 }

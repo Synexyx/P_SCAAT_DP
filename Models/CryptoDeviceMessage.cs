@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace P_SCAAT.Models
 {
+    /// <summary>
+    /// Message for cryptographic device model
+    /// </summary>
     internal class CryptoDeviceMessage
     {
         /// <summary>
@@ -13,10 +12,12 @@ namespace P_SCAAT.Models
         /// </summary>
         public event Action MessageCreation;
 
+        #region Properties
         public byte[] MessageBytes { get; set; }
         public int MessageLenght => MessageBytes.Length;
         public DateTime TimeCreated { get; set; }
         public RNGMessageGenerator RNGMessageGenerator { get; private set; }
+        #endregion
 
         /// <summary>
         /// Initialize new <see cref="Models.RNGMessageGenerator"/> with <paramref name="messageLenght"/> as desired byte lenght.

@@ -8,6 +8,9 @@ using System.Windows.Input;
 
 namespace P_SCAAT.ViewModels.Commands
 {
+    /// <summary>
+    /// Allows to manually send and read data from oscilloscope.
+    /// </summary>
     internal class ManualControlCommand : CoreCommand
     {
         private readonly OscilloscopeViewModel _oscilloscopeViewModel;
