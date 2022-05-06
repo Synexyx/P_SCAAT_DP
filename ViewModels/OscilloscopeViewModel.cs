@@ -31,9 +31,9 @@ namespace P_SCAAT.ViewModels
         private string _manualMessageWrite = "*IDN?";
         private string _manualMessageRead = "Response";
 
-        private uint _tracesTotal;
+        private uint _tracesTotal = 10;
         private uint _tracesPerFile;
-        private uint _messageLenght;
+        private uint _messageLenght = 32;
 
         private readonly string _measureButtonContentStart = "START";
         private readonly string _measureButtonContentCancel = "CANCEL";

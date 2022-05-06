@@ -38,10 +38,10 @@ namespace P_SCAAT.Models
                 SerialPort.Parity = Parity;
                 SerialPort.DataBits = DataBits;
                 SerialPort.StopBits = StopBits;
-                SerialPort.DtrEnable = true;
-                SerialPort.RtsEnable = true;
-                SerialPort.WriteTimeout = 1000;
-                SerialPort.ReadTimeout = 1000;
+                //SerialPort.DtrEnable = true;
+                //SerialPort.RtsEnable = true;
+                //SerialPort.WriteTimeout = 1000;
+                //SerialPort.ReadTimeout = 1000;
                 SerialPort.Open();
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace P_SCAAT.Models
 
         internal void Send(byte[] messageBytes)
         {
-            //ToDo don't forget
+            //ToDo don't forget SerialPort sending
             SerialPort.Write(messageBytes, 0, messageBytes.Length);
             Debug.WriteLine($"{DateTime.Now} SENDING MESSAGE OF LENGHT {messageBytes.Length}");
         }

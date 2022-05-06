@@ -39,6 +39,10 @@ namespace P_SCAAT.ViewModels.Commands
         }
         public override async Task ExecuteAsync(object parameter)
         {
+            var watch = new Stopwatch();
+            watch.Start();
+            Debug.WriteLine($"Begin time measure");
+
             if (!_oscilloscopeViewModel.MeasurementInProgress)
             {
                 _oscilloscopeViewModel.MeasurementInProgress = true;
@@ -66,8 +70,25 @@ namespace P_SCAAT.ViewModels.Commands
                         for (int totalTraces = 0; totalTraces < _oscilloscopeViewModel.TracesTotal; totalTraces++)
                         {
 
+                            watch.Stop();
+                            Debug.WriteLine($"New Task created {watch.ElapsedMilliseconds}");
+                            watch.Reset();
+                            watch.Start();
+
                             _oscilloscope.MeasurePrep();
+
+                            watch.Stop();
+                            Debug.WriteLine($"Measure prep {watch.ElapsedMilliseconds}");
+                            watch.Reset();
+                            watch.Start();
+
                             await Task.Run(() => { _cryptoDeviceMessage.GenerateNewMessage(); });
+
+                            watch.Stop();
+                            Debug.WriteLine($"Message created and sent {watch.ElapsedMilliseconds}");
+                            watch.Reset();
+                            watch.Start();
+
                             //if (tokenSource.Token.IsCancellationRequested)
                             //{
                             //    Debug.WriteLine("CANCELED");
@@ -92,7 +113,17 @@ namespace P_SCAAT.ViewModels.Commands
                                 fileNumber++;
                                 perFile = 0;
                             }
+
+                            watch.Stop();
+                            Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
+                            watch.Reset();
+                            watch.Start();
+
                             await SaveToFile(fileNameSessionID, fileNumber, selectedSource, response);
+
+                            watch.Stop();
+                            Debug.WriteLine($"Saved to file {watch.ElapsedMilliseconds}");
+
                             perFile++;
                             _oscilloscopeViewModel.ProgressBarValue = totalTraces + 1;
                             //if (tokenSource.Token.IsCancellationRequested)

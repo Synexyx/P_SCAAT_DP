@@ -90,9 +90,7 @@ namespace P_SCAAT.Models
         /// </summary>
         private void InitializeSessionSettings()
         {
-            //ToDo do commandListu dát celý ID
-            //string oscilloscopeID = QueryData("*IDN?");
-            string oscilloscopeID = "WORD";
+            string oscilloscopeID = QueryData("*IDN?");
             InitializeSettings(oscilloscopeID);
         }
 
@@ -114,10 +112,10 @@ namespace P_SCAAT.Models
         /// </summary>
         internal void MeasurePrep()
         {
-            Thread.Sleep(5);
-            return;
-            bool isReady = false;
             //ToDo don't forget
+            //return;
+            Thread.Sleep(10);
+            bool isReady = false;
             SendData(Commands.OscilloscopeSingleAcquisitionCommand);
             while (!isReady)
             {
@@ -136,15 +134,32 @@ namespace P_SCAAT.Models
         /// </summary>
         internal byte[] GetWaveformData()
         {
-            Thread.Sleep(5);
-            byte[] test = new byte[] { 1, 2, 3 };
+
+            var watch = new Stopwatch();
+
+            watch.Start();
+
+            //byte[] test = new byte[] { 1, 2, 3 };
+            ////return test;
+            ////ToDo don't forget
             //return test;
-            //ToDo don't forget
             Thread.Sleep(10);
-            return test;
             SendData(Commands.WaveformDataCommand);
             Thread.Sleep(10);
+
+            watch.Stop();
+            Debug.WriteLine($"Request to get data {watch.ElapsedMilliseconds}");
+            watch.Reset();
+            watch.Start();
+
             MemoryStream memoryStream = new MemoryStream();
+
+
+            //var responsse = MessageBasedSession.FormattedIO.ReadLineBinaryBlockOfInt16();
+            //Convert.ToByte(response);
+            //response = MessageBasedSession.FormattedIO.ReadLineBinaryBlockOfInt16();
+            //memoryStream.Write(response, 0, response.Length);
+
             while (true)
             {
                 try
@@ -154,17 +169,24 @@ namespace P_SCAAT.Models
                 }
                 catch (Exception)
                 {
-                    Debug.WriteLine("Reading finished");
+                    Debug.WriteLine($"Reading finished");
                     break;
                 }
             }
+
+            watch.Stop();
+            Debug.WriteLine($"Data acq. complete {watch.ElapsedMilliseconds}");
+
             //var bitconv = BitConverter.ToString(memoryStream.GetBuffer());
             //var utfString = Encoding.UTF8.GetString(memoryStream.GetBuffer());
             //var asciiString = Encoding.ASCII.GetString(memoryStream.ToArray());
             //var base64String = Convert.ToBase64String(memoryStream.ToArray());
             byte[] result = memoryStream.GetBuffer();
-            //int lastIndex = Array.FindLastIndex(result, b => b != 0);
-            //Array.Resize(ref result, lastIndex + 1);
+
+            //string test = Convert.ToBase64String(result);
+
+            int lastIndex = Array.FindLastIndex(result, b => b != 0);
+            Array.Resize(ref result, lastIndex + 1);
             return result;
         }
 
@@ -234,7 +256,7 @@ namespace P_SCAAT.Models
             {
                 //MessageBasedSession.TimeoutMilliseconds = 5000;
                 string response = MessageBasedSession.FormattedIO.ReadUntilEnd();
-                return response;
+                return response.Replace("\n", string.Empty);
             }
             catch (Exception ex)
             {
@@ -334,7 +356,7 @@ namespace P_SCAAT.Models
             string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
             string commandPart = Commands.ChannelScaleCommand;
             string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
-            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimal numberResult);
             channel.ChannelScale = numberResult;
             AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
         }
@@ -343,7 +365,7 @@ namespace P_SCAAT.Models
             string channelNumberString = channel.ChannelNumber.ToString(CultureInfo.InvariantCulture);
             string commandPart = Commands.ChannelOffsetCommand;
             string oscilloscopeResponse = AskCommand(commandPart, channelNumberString);
-            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimal numberResult);
             channel.ChannelOffset = numberResult;
             AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
         }
@@ -385,8 +407,7 @@ namespace P_SCAAT.Models
             foreach (string source in Commands.TriggerEdgeSourceOptions)
             {
                 string oscilloscopeResponse = SourceDependantAskCommand(commandPart, source);
-                //ToDo zjistit co vlastně vrací
-                _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+                _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimal numberResult);
                 if (trigger.TriggerLevel.ContainsKey(source))
                 {
                     trigger.TriggerLevel[source] = numberResult;
@@ -395,7 +416,7 @@ namespace P_SCAAT.Models
                 {
                     trigger.TriggerLevel.Add(source, numberResult);
                 }
-                AddResponseToConfig(commandPart, oscilloscopeResponse);
+                AddResponseToConfig(commandPart, source, oscilloscopeResponse);
             }
         }
 
@@ -403,7 +424,7 @@ namespace P_SCAAT.Models
         {
             string commandPart = Commands.TimebaseScaleCommand;
             string oscilloscopeResponse = AskCommand(commandPart);
-            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimal numberResult);
             TimebaseScale = numberResult;
             AddResponseToConfig(commandPart, oscilloscopeResponse);
         }
@@ -411,7 +432,7 @@ namespace P_SCAAT.Models
         {
             string commandPart = Commands.TimebasePositionCommand;
             string oscilloscopeResponse = AskCommand(commandPart);
-            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal numberResult);
+            _ = decimal.TryParse(oscilloscopeResponse, NumberStyles.AllowExponent | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out decimal numberResult);
             TimebasePosition = numberResult;
             AddResponseToConfig(commandPart, oscilloscopeResponse);
         }
@@ -444,9 +465,9 @@ namespace P_SCAAT.Models
             string askCommand = CommandList.UniversalAskCommandString(commandPart);
             return QueryData(askCommand);
         }
-        private string AskCommand(string commandPart, string channelNumberString)
+        private string AskCommand(string commandPart, string commandParameter1)
         {
-            string askCommand = CommandList.UniversalAskCommandString(commandPart, channelNumberString);
+            string askCommand = CommandList.UniversalAskCommandString(commandPart, commandParameter1);
             return QueryData(askCommand);
         }
         private string SourceDependantAskCommand(string commandPart, string source)
@@ -463,9 +484,9 @@ namespace P_SCAAT.Models
             OscilloscopeConfigString = tempConfigString.Distinct().ToList();
             OscilloscopeConfigString.Sort();
         }
-        private void AddResponseToConfig(string commandPart, string channelNumberString, string oscilloscopeResponse)
+        private void AddResponseToConfig(string commandPart, string commandParameter1, string oscilloscopeResponse)
         {
-            string configPart = CommandList.UniversalCommandString(commandPart, channelNumberString, oscilloscopeResponse).Item2;
+            string configPart = CommandList.UniversalCommandString(commandPart, commandParameter1, oscilloscopeResponse).Item2;
             List<string> tempConfigString = new List<string>();
             tempConfigString.AddRange(OscilloscopeConfigString);
             tempConfigString.Add(configPart);

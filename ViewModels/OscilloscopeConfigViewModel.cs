@@ -184,11 +184,17 @@ namespace P_SCAAT.ViewModels
                 TempChannels.Add(tempChannel);
             }
 
+
             TriggerVM = new TriggerViewModel(Oscilloscope.Trigger);
             TriggerVM.PropertyChanged += TriggerViewModel_PropertyChanged;
 
+            TimebasePosition = Oscilloscope.TimebasePosition;
+            TimebaseScale = Oscilloscope.TimebaseScale;
+
             WaveformFormatOptions = new List<string>(Oscilloscope.WaveformFormatOptions);
             _waveformFormatIndex = Oscilloscope.WaveformFormatIndex;
+
+            WaveformStreaming = Oscilloscope.WaveformStreaming;
         }
 
         public List<ChannelSettings> ChannelSettingsVMtoModel()
