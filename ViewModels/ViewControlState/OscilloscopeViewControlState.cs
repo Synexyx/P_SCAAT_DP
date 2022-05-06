@@ -5,7 +5,6 @@ namespace P_SCAAT.ViewModels.ViewControlState
     /// <summary>
     /// Allows App to dynamically switch between <see cref="OscilloscopeViewModel"/> and <see cref="OscilloscopeConfigViewModel"/>.
     /// </summary>
-    //ToDo napsat správně dokumentaci
     internal class OscilloscopeViewControlState
     {
         private CorePropChangedVM _oscilloscopeSelectedVM;

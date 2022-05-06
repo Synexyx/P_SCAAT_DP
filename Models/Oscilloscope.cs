@@ -132,7 +132,7 @@ namespace P_SCAAT.Models
         }
 
         /// <summary>
-        /// Get all waveform data from the oscilloscope. (Also trims trailing zeros from byte)
+        /// Get all waveform data from the oscilloscope.
         /// </summary>
         internal byte[] GetWaveformData()
         {
@@ -163,8 +163,8 @@ namespace P_SCAAT.Models
             //var asciiString = Encoding.ASCII.GetString(memoryStream.ToArray());
             //var base64String = Convert.ToBase64String(memoryStream.ToArray());
             byte[] result = memoryStream.GetBuffer();
-            int lastIndex = Array.FindLastIndex(result, b => b != 0);
-            Array.Resize(ref result, lastIndex + 1);
+            //int lastIndex = Array.FindLastIndex(result, b => b != 0);
+            //Array.Resize(ref result, lastIndex + 1);
             return result;
         }
 
