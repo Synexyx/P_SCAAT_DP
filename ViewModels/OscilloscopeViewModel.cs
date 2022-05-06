@@ -76,7 +76,6 @@ namespace P_SCAAT.ViewModels
             {
                 _oscilloscope = value;
                 OnPropertyChanged(nameof(Oscilloscope));
-                OnPropertyChanged(nameof(IsSessionOpen));
             }
         }
         public override ISessionDevice SessionDevice => Oscilloscope;
@@ -88,6 +87,7 @@ namespace P_SCAAT.ViewModels
                 _changingSession = value;
                 OnPropertyChanged(nameof(ChangingSession));
                 OnPropertyChanged(nameof(IsSessionOpen));
+                OnPropertyChanged(nameof(IsSessionClosed));
                 if (IsSessionOpen)
                 {
                     FillWaveformSource();

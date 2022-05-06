@@ -64,7 +64,7 @@
                     Command="{Binding ControlSerialPortSessionCommand, Mode=OneTime}" Style="{DynamicResource RoundButton}"
                     CommandParameter="CLOSE" Width="75" Grid.Column="2" Grid.Row="2" Margin="5"/>
 
-        <Grid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3">
+        <Grid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" IsEnabled="{Binding IsSessionClosed}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -75,12 +75,12 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            
+
             <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <Label Content="Baud rate:" DockPanel.Dock="Left" FontWeight="Bold"/>
                 <TextBox Text="{Binding BaudRate, Mode=TwoWay}" DockPanel.Dock="Right" VerticalContentAlignment="Center" Width="50" Height="20"/>
             </DockPanel>
-            
+
             <CheckBox x:Name="serialAdvOpt" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"
                       Margin="5" Content="Advanced Options" FontWeight="Bold"/>
 
@@ -107,6 +107,5 @@
                           DockPanel.Dock="Right"/>
             </DockPanel>
         </Grid>
-
     </Grid>
 </UserControl>

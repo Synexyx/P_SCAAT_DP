@@ -18,6 +18,7 @@ namespace P_SCAAT.Models
         public string OscilloscopeStopCommand { get; set; }
         public string OsclloscopeRunCommand { get; set; }
         public string OscilloscopeOperationCompleteCommand { get; set; }
+        public string OscilloscopeTriggerEventCommand { get; set; }
 
         public string ChannelDisplayCommand { get; set; }
         public string ChannelLabelCommand { get; set; }

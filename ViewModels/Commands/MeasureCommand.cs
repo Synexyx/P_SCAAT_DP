@@ -22,6 +22,9 @@ namespace P_SCAAT.ViewModels.Commands
 
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
+        private int perFile = 0;
+        private int fileNumber = 0;
+
         public MeasureCommand(OscilloscopeViewModel oscilloscopeViewModel, Oscilloscope oscilloscope, CryptoDeviceMessage cryptoDeviceMessage)
         {
             _oscilloscopeViewModel = oscilloscopeViewModel;
@@ -43,12 +46,16 @@ namespace P_SCAAT.ViewModels.Commands
             watch.Start();
             Debug.WriteLine($"Begin time measure");
 
+
             if (!_oscilloscopeViewModel.MeasurementInProgress)
             {
                 _oscilloscopeViewModel.MeasurementInProgress = true;
                 _oscilloscopeViewModel.ProgressBarValue = 0;
 
                 tokenSource = new CancellationTokenSource();
+
+                perFile = 0;
+                fileNumber = 0;
 
                 string fileNameSessionID = DateTime.Now.ToString("HHmmss");
                 _cryptoDeviceMessage.InitializeRNGMessageGenerator(_oscilloscopeViewModel.MessageLenght);
@@ -62,67 +69,68 @@ namespace P_SCAAT.ViewModels.Commands
                         //    Debug.WriteLine("CANCELED");
                         tokenSource.Token.ThrowIfCancellationRequested();
                         //}
-                        int perFile = 0;
-                        int fileNumber = 0;
+
                         List<WaveformSourceViewModel> sourcesToMeasure = _oscilloscopeViewModel.WaveformSource.Where(x => x.IsSelected).ToList();
-                        string response = string.Empty;
+                        string selectedFormat = _oscilloscope.GetCurrentWaveformFormat();
 
                         for (int totalTraces = 0; totalTraces < _oscilloscopeViewModel.TracesTotal; totalTraces++)
                         {
 
                             watch.Stop();
                             Debug.WriteLine($"New Task created {watch.ElapsedMilliseconds}");
-                            watch.Reset();
-                            watch.Start();
+                            watch.Restart();
 
                             _oscilloscope.MeasurePrep();
 
                             watch.Stop();
                             Debug.WriteLine($"Measure prep {watch.ElapsedMilliseconds}");
-                            watch.Reset();
-                            watch.Start();
+                            watch.Restart();
 
                             await Task.Run(() => { _cryptoDeviceMessage.GenerateNewMessage(); });
 
                             watch.Stop();
                             Debug.WriteLine($"Message created and sent {watch.ElapsedMilliseconds}");
-                            watch.Reset();
-                            watch.Start();
+                            watch.Restart();
 
                             //if (tokenSource.Token.IsCancellationRequested)
                             //{
                             //    Debug.WriteLine("CANCELED");
                             tokenSource.Token.ThrowIfCancellationRequested();
                             //}
-                            string selectedSource = string.Empty;
+                            ///<summary>
+                            ///Measure even if no source is selected => measure with unknown source previsously set in device. (Don't change source)
+                            ///</summary>
                             if (!sourcesToMeasure.Any())
                             {
-                                response = Convert.ToBase64String(_oscilloscope.GetWaveformData());
+                                string response = Convert.ToBase64String(_oscilloscope.GetWaveformData(selectedFormat));
+                                watch.Stop();
+                                Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
+
+                                watch.Restart();
+                                await SaveToFile(fileNameSessionID, "N/A", response);
+                                watch.Stop();
+                                Debug.WriteLine($"Saved to file {watch.ElapsedMilliseconds}");
+
                             }
+                            ///<summary>
+                            ///Cycle through all sources. Change them and acquire data.
+                            ///</summary>
                             else
                             {
                                 foreach (WaveformSourceViewModel source in sourcesToMeasure)
                                 {
-                                    selectedSource = source.SourceName;
+                                    string selectedSource = source.SourceName;
                                     _oscilloscope.ChangeWaveformSource(selectedSource);
-                                    response = Convert.ToBase64String(_oscilloscope.GetWaveformData());
+                                    string response = Convert.ToBase64String(_oscilloscope.GetWaveformData(selectedFormat));
+                                    watch.Stop();
+                                    Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
+
+                                    watch.Restart();
+                                    await SaveToFile(fileNameSessionID, selectedSource, response);
+                                    watch.Stop();
+                                    Debug.WriteLine($"Saved to file {watch.ElapsedMilliseconds}");
                                 }
                             }
-                            if (_oscilloscopeViewModel.TracesPerFile == perFile && _oscilloscopeViewModel.TracesPerFile != 0)
-                            {
-                                fileNumber++;
-                                perFile = 0;
-                            }
-
-                            watch.Stop();
-                            Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
-                            watch.Reset();
-                            watch.Start();
-
-                            await SaveToFile(fileNameSessionID, fileNumber, selectedSource, response);
-
-                            watch.Stop();
-                            Debug.WriteLine($"Saved to file {watch.ElapsedMilliseconds}");
 
                             perFile++;
                             _oscilloscopeViewModel.ProgressBarValue = totalTraces + 1;
@@ -152,8 +160,13 @@ namespace P_SCAAT.ViewModels.Commands
             _oscilloscopeViewModel.MeasurementInProgress = false;
         }
 
-        private async Task SaveToFile(string fileNameSessionID, int fileNumber, string sourceName, string response)
+        private async Task SaveToFile(string fileNameSessionID, string sourceName, string response)
         {
+            if (_oscilloscopeViewModel.TracesPerFile == perFile && _oscilloscopeViewModel.TracesPerFile != 0)
+            {
+                fileNumber++;
+                perFile = 0;
+            }
             StringBuilder stringBuilder = new StringBuilder();
             string messageBytesToBase64 = Convert.ToBase64String(_cryptoDeviceMessage.MessageBytes);
             _ = stringBuilder.Append($"{_cryptoDeviceMessage.TimeCreated:T},{sourceName},{messageBytesToBase64},{response}{Environment.NewLine}");

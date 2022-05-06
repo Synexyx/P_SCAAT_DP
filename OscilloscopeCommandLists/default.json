@@ -6,6 +6,7 @@
   "OscilloscopeStopCommand": null,
   "OsclloscopeRunCommand": null,
   "OscilloscopeOperationCompleteCommand": null,
+  "OscilloscopeTriggerEventCommand": null,
   "ChannelDisplayCommand": null,
   "ChannelLabelCommand": null,
   "ChannelScaleCommand": null,

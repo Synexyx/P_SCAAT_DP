@@ -65,6 +65,7 @@ namespace P_SCAAT.ViewModels
                 _changingSession = value;
                 OnPropertyChanged(nameof(ChangingSession));
                 OnPropertyChanged(nameof(IsSessionOpen));
+                OnPropertyChanged(nameof(IsSessionClosed));
             }
         }
 
@@ -175,6 +176,7 @@ namespace P_SCAAT.ViewModels
             RefreshPortListCommand = new SimpleCommand(RefreshPortList);
             ControlSerialPortSessionCommand = new ControlSessionCommand(this);
         }
+
 
         public override void Dispose()
         {
