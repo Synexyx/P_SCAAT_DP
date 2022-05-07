@@ -11,14 +11,9 @@
              >
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <!--<converters:ListToTextConverter x:Key="listToTextConverter"/>-->
-        <!--<converters:EnumToListConverter x:Key="enumToListConverter"/>-->
-        <!--<converters:OscilloscopeValuesConverter x:Key="oscilloscopeValuesConverter"/>-->
-        <!--<converters:RadioBTNBoolToStringConverter x:Key="radioBTNBoolToStringConverter"/>-->
+
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 
-        <!--<converters:ExistsConverter x:Key="existsConverter"/>-->
-        <!--<converters:EdgeSlopeOptionsToStringConverter x:Key="edgeSlopeOptionsToStringConverter"/>-->
 
 
 
@@ -236,7 +231,7 @@
             </DockPanel>
 
             <DockPanel Grid.Column="1" Width="110" >
-                <CheckBox Content="Custom edit" Name="editTBConfigString" IsChecked="True" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5" 
+                <CheckBox Content="Custom edit" Name="editTBConfigString" IsChecked="False" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5" 
                       VerticalAlignment="Bottom" />
                 <TextBlock Text="EDITING STRING MANUALLY WILL NOT CHANGE INTERFACE ABOVE!" DockPanel.Dock="Bottom" HorizontalAlignment="Left" Margin="5"
                    Grid.Row="2" VerticalAlignment="Top" Grid.ColumnSpan="2" Foreground="Red" FontWeight="Bold" TextWrapping="WrapWithOverflow" 

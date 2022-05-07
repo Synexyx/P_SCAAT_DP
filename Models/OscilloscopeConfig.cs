@@ -122,7 +122,7 @@ namespace P_SCAAT.Models
         /// <summary>
         /// Replace current <see cref="OscilloscopeConfigString"/> with <paramref name="oscilloscopeConfigString"/>.
         /// </summary>
-        public void InsertNewConfigString(List<string> oscilloscopeConfigString)
+        public void InsertConfigString(List<string> oscilloscopeConfigString)
         {
             OscilloscopeConfigString.Clear();
             OscilloscopeConfigString.AddRange(oscilloscopeConfigString);
@@ -130,7 +130,7 @@ namespace P_SCAAT.Models
         /// <summary>
         /// Replace current <see cref="Channels"/> with <paramref name="channels"/>.
         /// </summary>
-        public void InsertNewChannelSettings(List<ChannelSettings> channels)
+        public void InsertChannelSettings(List<ChannelSettings> channels)
         {
             Channels.Clear();
             Channels.AddRange(channels);
@@ -156,7 +156,7 @@ namespace P_SCAAT.Models
         /// <summary>
         /// Clear all currently used data. Used when session is closed.
         /// </summary>
-        public virtual void ClearAllData()
+        protected virtual void ClearAllData()
         {
             OscilloscopeConfigString = null;
             Channels = null;

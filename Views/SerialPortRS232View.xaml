@@ -8,7 +8,6 @@
              d:DataContext="{d:DesignInstance Type=viewModels:SerialPortRS232ViewModel}"
              d:DesignWidth="400">
     <UserControl.Resources>
-        <!--<converters:InverseBooleanConverter x:Key="inverseBoolConverter"/>-->
 
         <Style TargetType="Button" x:Key="RoundButton">
             <Style.Resources>

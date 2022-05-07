@@ -42,11 +42,13 @@ namespace P_SCAAT.ViewModels.Commands
         }
         public override async Task ExecuteAsync(object parameter)
         {
-            var watch = new Stopwatch();
-            watch.Start();
-            Debug.WriteLine($"Begin time measure");
+            //var watch = new Stopwatch();
+            //watch.Start();
+            //Debug.WriteLine($"Begin time measure");
 
-
+            ///<summary>
+            ///Measure if currently not measuring. Else - cancel current measurement.
+            ///</summary>
             if (!_oscilloscopeViewModel.MeasurementInProgress)
             {
                 _oscilloscopeViewModel.MeasurementInProgress = true;
@@ -64,52 +66,44 @@ namespace P_SCAAT.ViewModels.Commands
                 {
                     try
                     {
-                        //if (tokenSource.Token.IsCancellationRequested)
-                        //{
-                        //    Debug.WriteLine("CANCELED");
-                        tokenSource.Token.ThrowIfCancellationRequested();
-                        //}
-
                         List<WaveformSourceViewModel> sourcesToMeasure = _oscilloscopeViewModel.WaveformSource.Where(x => x.IsSelected).ToList();
                         string selectedFormat = _oscilloscope.GetCurrentWaveformFormat();
 
                         for (int totalTraces = 0; totalTraces < _oscilloscopeViewModel.TracesTotal; totalTraces++)
                         {
+                            tokenSource.Token.ThrowIfCancellationRequested();
 
-                            watch.Stop();
-                            Debug.WriteLine($"New Task created {watch.ElapsedMilliseconds}");
-                            watch.Restart();
+                            //watch.Stop();
+                            //Debug.WriteLine($"New Task created {watch.ElapsedMilliseconds}");
+                            //watch.Restart();
 
                             _oscilloscope.MeasurePrep();
 
-                            watch.Stop();
-                            Debug.WriteLine($"Measure prep {watch.ElapsedMilliseconds}");
-                            watch.Restart();
+                            //watch.Stop();
+                            //Debug.WriteLine($"Measure prep {watch.ElapsedMilliseconds}");
+                            //watch.Restart();
 
                             await Task.Run(() => { _cryptoDeviceMessage.GenerateNewMessage(); });
 
-                            watch.Stop();
-                            Debug.WriteLine($"Message created and sent {watch.ElapsedMilliseconds}");
-                            watch.Restart();
+                            //watch.Stop();
+                            //Debug.WriteLine($"Message created and sent {watch.ElapsedMilliseconds}");
+                            //watch.Restart();
 
-                            //if (tokenSource.Token.IsCancellationRequested)
-                            //{
-                            //    Debug.WriteLine("CANCELED");
                             tokenSource.Token.ThrowIfCancellationRequested();
-                            //}
+
                             ///<summary>
                             ///Measure even if no source is selected => measure with unknown source previsously set in device. (Don't change source)
                             ///</summary>
                             if (!sourcesToMeasure.Any())
                             {
                                 string response = Convert.ToBase64String(_oscilloscope.GetWaveformData(selectedFormat));
-                                watch.Stop();
-                                Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
+                                //watch.Stop();
+                                //Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
 
-                                watch.Restart();
+                                //watch.Restart();
                                 await SaveToFile(fileNameSessionID, "N/A", response);
-                                watch.Stop();
-                                Debug.WriteLine($"Saved to file {watch.ElapsedMilliseconds}");
+                                //watch.Stop();
+                                //Debug.WriteLine($"Saved to file {watch.ElapsedMilliseconds}");
 
                             }
                             ///<summary>
@@ -122,23 +116,19 @@ namespace P_SCAAT.ViewModels.Commands
                                     string selectedSource = source.SourceName;
                                     _oscilloscope.ChangeWaveformSource(selectedSource);
                                     string response = Convert.ToBase64String(_oscilloscope.GetWaveformData(selectedFormat));
-                                    watch.Stop();
-                                    Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
+                                    //watch.Stop();
+                                    //Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
 
-                                    watch.Restart();
+                                    //watch.Restart();
                                     await SaveToFile(fileNameSessionID, selectedSource, response);
-                                    watch.Stop();
-                                    Debug.WriteLine($"Saved to file {watch.ElapsedMilliseconds}");
+                                    //    watch.Stop();
+                                    //    Debug.WriteLine($"Saved to file {watch.ElapsedMilliseconds}");
                                 }
                             }
 
                             perFile++;
                             _oscilloscopeViewModel.ProgressBarValue = totalTraces + 1;
-                            //if (tokenSource.Token.IsCancellationRequested)
-                            //{
-                            //    Debug.WriteLine("CANCELED");
                             tokenSource.Token.ThrowIfCancellationRequested();
-                            //}
                         }
                     }
                     catch (OperationCanceledException ex) when (ex.CancellationToken == tokenSource.Token)

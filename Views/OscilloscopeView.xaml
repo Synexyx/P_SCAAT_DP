@@ -38,7 +38,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!--<Button Content="TEST BUTTON" Command="{Binding OsciloscopeViewModel.CreateOsciloscopeSessionCommand}" CommandParameter="{Binding OsciloscopeViewModel.SelectedAvailableOsciloscopes, Mode=OneWay}" Margin="73,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>-->
         <Grid Grid.Row="0" IsEnabled="{Binding MeasurementInProgress, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -51,7 +50,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-
+            
             <Label Content="Oscilloscope" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                    HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" FontWeight="Bold"/>
 
@@ -75,8 +74,6 @@
                     Command="{Binding ControlOscilloscopeSessionCommand, Mode=OneTime}" Style="{DynamicResource RoundButton}"
                     CommandParameter="OPEN" Width="75" Grid.Column="1" Grid.Row="2" Margin="5"/>
 
-            <!--IsEnabled="{Binding Oscilloscope.IsSessionOpen, Converter={StaticResource inverseBoolConverter}, FallbackValue=True}"-->
-            <!--IsEnabled="{Binding Oscilloscope.IsSessionOpen, FallbackValue=False}"-->
 
             <Button x:Name="btnCloseSession" Content="Close session" HorizontalAlignment="Left" VerticalAlignment="Top" 
                     Command="{Binding ControlOscilloscopeSessionCommand, Mode=OneTime}" Style="{DynamicResource RoundButton}"

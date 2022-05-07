@@ -86,7 +86,7 @@ namespace P_SCAAT.Models
             throw new FormatException("The command could not be created because it was not found in the command list file.");
         }
         /// <summary>
-        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device as command query.
+        /// If <paramref name="command"/> exists, creates properly formated string to be send to the device as command query. Query commands need to have "?" appended to them without any whitespace between them.
         /// <br/>
         /// <example>Example:
         /// <code>

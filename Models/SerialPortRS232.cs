@@ -58,7 +58,7 @@ namespace P_SCAAT.Models
             }
         }
 
-        internal void Send(byte[] messageBytes)
+        public void Send(byte[] messageBytes)
         {
             //ToDo don't forget SerialPort sending
             //SerialPort.Write(messageBytes, 0, messageBytes.Length);

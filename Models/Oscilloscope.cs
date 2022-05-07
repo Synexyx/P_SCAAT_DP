@@ -20,28 +20,15 @@ namespace P_SCAAT.Models
     internal class Oscilloscope : OscilloscopeConfig, ISessionDevice
     {
         #region Properties
-        public string SessionName
-        {
-            get;
-            private set;
-        }
-        public MessageBasedSession MessageBasedSession
-        {
-            get;
-            private set;
-        }
-
-        public bool IsSessionOpen
-        {
-            get;
-            private set;
-        }
+        public string SessionName { get; private set; }
+        public MessageBasedSession MessageBasedSession { get; private set; }
+        public bool IsSessionOpen { get; private set; }
         #endregion
 
 
         #region StaticGetOscilloscopeList
         /// <summary>
-        /// Static method for getting name of resources (osciloscopes) available for session.
+        /// Static method for getting name of resources (oscilloscopes) available for session.
         /// </summary>
         /// <returns><see cref="List{T}"/> of available oscilloscopes</returns>
         public static List<string> GetOscilloscopeList()
@@ -72,6 +59,7 @@ namespace P_SCAAT.Models
                 try
                 {
                     MessageBasedSession = (MessageBasedSession)rmSession.Open(SessionName);
+                    MessageBasedSession.TimeoutMilliseconds = 5000;
                     IsSessionOpen = true;
                     InitializeSessionSettings();
                     Debug.WriteLine("Session: " + SessionName + " succesfully opened.");
@@ -111,11 +99,8 @@ namespace P_SCAAT.Models
         /// <summary>
         /// Set oscilloscope to standby mode using <paramref name="OscilloscopeSingleAcquisitionCommand"/>
         /// </summary>
-        internal void MeasurePrep()
+        public void MeasurePrep()
         {
-            //ToDo don't forget
-            return;
-            Thread.Sleep(10);
             bool isReady = false;
             SendData(Commands.OscilloscopeSingleAcquisitionCommand);
             while (!isReady)
@@ -124,7 +109,7 @@ namespace P_SCAAT.Models
                 isReady = QueryData(Commands.OscilloscopeOperationCompleteCommand).Contains("1");
             }
         }
-        internal string GetCurrentWaveformFormat()
+        public string GetCurrentWaveformFormat()
         {
             string currentWaveformFormat = AskCommand(Commands.WaveformFormatCommand);
             int waveformFormatIndex = Commands.WaveformFormatOptions
@@ -137,16 +122,19 @@ namespace P_SCAAT.Models
 
             return waveformFormatOption;
         }
-        internal void ChangeWaveformSource(string selectedSource)
+        public void ChangeWaveformSource(string selectedSource)
         {
             string switchCorrectSource = CommandList.UniversalCommandString(Commands.WaveformSourceCommand, selectedSource).Item2;
             SendData(switchCorrectSource);
         }
 
         /// <summary>
-        /// Get all waveform data from the oscilloscope.
+        /// Get all waveform data from the oscilloscope. Way of getting data is selected by selected waveform format. If acquisition via that format fails, retry with universal read byte 
+        /// (<see cref="GetWaveformDataUniversal"/>)<br/>
+        /// Order of formats in <see cref="CommandList.WaveformFormatOptions"/> as follows <c>ASCii</c>, <c>BINary</c>, <c>BYTE</c>, <c>WORD</c><br/>
+        /// Reference <see href="https://www.testworld.com/wp-content/uploads/keysight-agilent-infiniium-oscilloscopes-programmers-guide.pdf">Programmers guide</see> pg. 1167
         /// </summary>
-        internal byte[] GetWaveformData(string selectedFormat)
+        public byte[] GetWaveformData(string selectedFormat)
         {
             ///===================================== OPTIONAL TO WAIT FOR TRIGGER EVENT
             //bool triggerEvent = false;
@@ -156,33 +144,30 @@ namespace P_SCAAT.Models
             //    triggerEvent = QueryData(Commands.OscilloscopeTriggerEventCommand).Contains("1");
             //}
             ///=====================================
-            var watch = new Stopwatch();
+            //var watch = new Stopwatch();
+            //watch.Start();
 
-            watch.Start();
-
-            Thread.Sleep(10);
             SendData(Commands.WaveformDataCommand);
             Thread.Sleep(10);
 
-            watch.Stop();
-            Debug.WriteLine($"Request to get data {watch.ElapsedMilliseconds}");
-            watch.Reset();
-            watch.Start();
+            //watch.Stop();
+            //Debug.WriteLine($"Request to get data {watch.ElapsedMilliseconds}");
+            //watch.Restart();
 
             byte[] response = new byte[0];
 
 
             ///====== Wanted to do switch statement, but current version of C# is not supporting dynamic comparison. Only constants.
-            if (selectedFormat.Equals(Commands.WaveformFormatOptions.ElementAtOrDefault(0), StringComparison.OrdinalIgnoreCase))
+            if (selectedFormat.Equals(Commands.WaveformFormatOptions.ElementAtOrDefault(0), StringComparison.OrdinalIgnoreCase)) //ASCII
             {
                 try
                 {
                     string stringResponse = MessageBasedSession.FormattedIO.ReadUntilEnd();
                     response = Encoding.ASCII.GetBytes(stringResponse);
                 }
-                catch { response = UniversalGetWaveformData(); }
+                catch { response = GetWaveformDataUniversal(); }
             }
-            else if (selectedFormat.Equals(Commands.WaveformFormatOptions.ElementAtOrDefault(1), StringComparison.OrdinalIgnoreCase))
+            else if (selectedFormat.Equals(Commands.WaveformFormatOptions.ElementAtOrDefault(1), StringComparison.OrdinalIgnoreCase)) //BINARY
             {
                 try
                 {
@@ -190,17 +175,17 @@ namespace P_SCAAT.Models
                     response = new byte[binaryResponse.Length * 8];
                     Buffer.BlockCopy(binaryResponse, 0, response, 0, binaryResponse.Length * 8);
                 }
-                catch { response = UniversalGetWaveformData(); }
+                catch { response = GetWaveformDataUniversal(); }
             }
-            else if (selectedFormat.Equals(Commands.WaveformFormatOptions.ElementAtOrDefault(2), StringComparison.OrdinalIgnoreCase))
+            else if (selectedFormat.Equals(Commands.WaveformFormatOptions.ElementAtOrDefault(2), StringComparison.OrdinalIgnoreCase)) //BYTE
             {
                 try
                 {
                     response = MessageBasedSession.FormattedIO.ReadLineBinaryBlockOfByte();
                 }
-                catch { response = UniversalGetWaveformData(); }
+                catch { response = GetWaveformDataUniversal(); }
             }
-            else if (selectedFormat.Equals(Commands.WaveformFormatOptions.ElementAtOrDefault(3), StringComparison.OrdinalIgnoreCase))
+            else if (selectedFormat.Equals(Commands.WaveformFormatOptions.ElementAtOrDefault(3), StringComparison.OrdinalIgnoreCase)) //WORD
             {
                 try
                 {
@@ -208,11 +193,11 @@ namespace P_SCAAT.Models
                     response = new byte[wordResponse.Length * 2];
                     Buffer.BlockCopy(wordResponse, 0, response, 0, wordResponse.Length * 2);
                 }
-                catch { response = UniversalGetWaveformData(); }
+                catch { response = GetWaveformDataUniversal(); }
             }
             else
             {
-                response = UniversalGetWaveformData();
+                response = GetWaveformDataUniversal();
             }
 
 
@@ -221,23 +206,15 @@ namespace P_SCAAT.Models
                 throw new SessionCommunicationException($"NO DATA ACQUIRED FROM THE DEVICE{Environment.NewLine}");
             }
 
-            watch.Stop();
-            Debug.WriteLine($"Data acq. complete {watch.ElapsedMilliseconds}");
-
-            //var bitconv = BitConverter.ToString(memoryStream.GetBuffer());
-            //var utfString = Encoding.UTF8.GetString(memoryStream.GetBuffer());
-            //var asciiString = Encoding.ASCII.GetString(memoryStream.ToArray());
-            //var base64String = Convert.ToBase64String(memoryStream.ToArray());
-            //byte[] result = memoryStream.GetBuffer();
-
-            //string test = Convert.ToBase64String(result);
+            //watch.Stop();
+            //Debug.WriteLine($"Data acq. complete {watch.ElapsedMilliseconds}");
 
             int lastIndex = Array.FindLastIndex(response, byteValue => byteValue != 0);
             Array.Resize(ref response, lastIndex + 1);
             return response;
         }
 
-        internal byte[] UniversalGetWaveformData()
+        private byte[] GetWaveformDataUniversal()
         {
             byte[] response = new byte[0];
             MemoryStream memoryStream = new MemoryStream();
@@ -257,22 +234,13 @@ namespace P_SCAAT.Models
             return response;
         }
 
-        internal void ListCurrentCommands()
-        {
-            foreach (string item in OscilloscopeConfigString)
-            {
-                Debug.WriteLine("FINAL " + item);
-            }
-        }
-
         /// <summary>
         /// Send all commands in <see cref="OscilloscopeConfig"/> into the oscilloscope.
         /// </summary>
-        internal void ApplyAllSettingsToDevice()
+        public void ApplyAllSettingsToDevice()
         {
             foreach (string setting in OscilloscopeConfigString)
             {
-                Thread.Sleep(20);
                 SendData(setting);
             }
         }
@@ -284,7 +252,7 @@ namespace P_SCAAT.Models
         /// <exception cref="SessionCommunicationException"/>
         public void SendData(string dataString)
         {
-            //*IDN ?\n
+            Thread.Sleep(10);
             try
             {
                 MessageBasedSession.RawIO.Write(dataString);
@@ -321,7 +289,6 @@ namespace P_SCAAT.Models
         {
             try
             {
-                //MessageBasedSession.TimeoutMilliseconds = 5000;
                 string response = MessageBasedSession.FormattedIO.ReadUntilEnd();
                 return response.Replace("\n", string.Empty);
             }
@@ -346,7 +313,7 @@ namespace P_SCAAT.Models
         /// <summary>
         /// Clear all currently used data. Used when session is closed.
         /// </summary>
-        public override void ClearAllData()
+        protected override void ClearAllData()
         {
             SessionName = null;
             IsSessionOpen = false;
@@ -364,9 +331,8 @@ namespace P_SCAAT.Models
             SynchronizeWaveform();
         }
 
+
         //Methods below should be self-explanatory.
-
-
         private void SynchronizeChannels()
         {
             foreach (ChannelSettings channel in Channels)
@@ -530,7 +496,6 @@ namespace P_SCAAT.Models
         private string AskCommand(string commandPart)
         {
             string askCommand = CommandList.UniversalAskCommandString(commandPart);
-            return "ASC";
             return QueryData(askCommand);
         }
         private string AskCommand(string commandPart, string commandParameter1)
