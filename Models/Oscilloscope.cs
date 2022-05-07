@@ -78,8 +78,8 @@ namespace P_SCAAT.Models
         /// </summary>
         private void InitializeSessionSettings()
         {
-            //string oscilloscopeID = QueryData("*IDN?");
-            string oscilloscopeID = "MSO9104A";
+            string oscilloscopeID = QueryData("*IDN?");
+            //string oscilloscopeID = "MSO9104A";
             InitializeSettings(oscilloscopeID);
         }
 
