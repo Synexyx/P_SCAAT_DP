@@ -169,8 +169,8 @@
             </DataGrid>
 
             <DockPanel Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Stretch" IsEnabled="{Binding MeasurementInProgress, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}">
-                <Label Content="Message lenght [bytes]:" DockPanel.Dock="Left" FontWeight="Bold"/>
-                <TextBox Text="{Binding MessageLenght, Mode=TwoWay}" DockPanel.Dock="Right" 
+                <Label Content="Message length [bytes]:" DockPanel.Dock="Left" FontWeight="Bold"/>
+                <TextBox Text="{Binding MessageLength, Mode=TwoWay}" DockPanel.Dock="Right" 
                          HorizontalAlignment="Right" VerticalContentAlignment="Center" 
                          Width="50" Height="20"/>
             </DockPanel>

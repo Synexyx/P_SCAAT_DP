@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace P_SCAAT.Views
 {
     /// <summary>
-    /// Interaction logic for OsciloscopeConfigView.xaml
+    /// Interaction logic for OscilloscopeConfigView.xaml
     /// </summary>
     public partial class OscilloscopeConfigView : UserControl
     {

@@ -60,7 +60,7 @@ namespace P_SCAAT.ViewModels.Commands
                 fileNumber = 0;
 
                 string fileNameSessionID = DateTime.Now.ToString("HHmmss");
-                _cryptoDeviceMessage.InitializeRNGMessageGenerator(_oscilloscopeViewModel.MessageLenght);
+                _cryptoDeviceMessage.InitializeRNGMessageGenerator(_oscilloscopeViewModel.MessageLength);
 
                 await Task.Run(async () =>
                 {

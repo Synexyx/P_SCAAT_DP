@@ -33,7 +33,7 @@ namespace P_SCAAT.ViewModels
 
         private uint _tracesTotal = 10;
         private uint _tracesPerFile;
-        private uint _messageLenght = 32;
+        private uint _messageLength = 32;
 
         private readonly string _measureButtonContentStart = "START";
         private readonly string _measureButtonContentCancel = "CANCEL";
@@ -140,13 +140,13 @@ namespace P_SCAAT.ViewModels
                 OnPropertyChanged(nameof(WaveformSource));
             }
         }
-        public uint MessageLenght
+        public uint MessageLength
         {
-            get => _messageLenght;
+            get => _messageLength;
             set
             {
-                _messageLenght = value;
-                OnPropertyChanged(nameof(MessageLenght));
+                _messageLength = value;
+                OnPropertyChanged(nameof(MessageLength));
             }
         }
         public uint TracesTotal

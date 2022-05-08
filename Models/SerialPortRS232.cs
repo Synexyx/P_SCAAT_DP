@@ -62,7 +62,7 @@ namespace P_SCAAT.Models
         {
             //ToDo don't forget SerialPort sending
             //SerialPort.Write(messageBytes, 0, messageBytes.Length);
-            Debug.WriteLine($"{DateTime.Now} SENDING MESSAGE OF LENGHT {messageBytes.Length}");
+            Debug.WriteLine($"{DateTime.Now} SENDING MESSAGE OF LENGTH {messageBytes.Length}");
         }
     }
 }

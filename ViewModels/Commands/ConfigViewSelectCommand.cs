@@ -16,14 +16,14 @@ namespace P_SCAAT.ViewModels.Commands
     internal class ConfigViewSelectCommand : AsyncIsExcecutingCoreCommand
     {
         private readonly OscilloscopeViewModel _oscilloscopeViewModel;
-        private readonly Oscilloscope _osciloscope;
+        private readonly Oscilloscope _oscilloscope;
         private readonly OscilloscopeViewControlState _oscilloscopeControlState;
         private readonly Func<OscilloscopeConfigViewModel> _oscilloscopeConfigVM;
 
         public ConfigViewSelectCommand(OscilloscopeViewModel oscilloscopeViewModel, Oscilloscope oscilloscope, OscilloscopeViewControlState oscilloscopeControlState, Func<OscilloscopeConfigViewModel> oscilloscopeConfigVM)
         {
             _oscilloscopeViewModel = oscilloscopeViewModel;
-            _osciloscope = oscilloscope;
+            _oscilloscope = oscilloscope;
             _oscilloscopeControlState = oscilloscopeControlState;
             _oscilloscopeConfigVM = oscilloscopeConfigVM;
 
@@ -39,7 +39,7 @@ namespace P_SCAAT.ViewModels.Commands
         {
             try
             {
-                await Task.Run(() => _osciloscope.SynchronizeConfig());
+                await Task.Run(() => _oscilloscope.SynchronizeConfig());
             }
             catch (Exception ex)
             {

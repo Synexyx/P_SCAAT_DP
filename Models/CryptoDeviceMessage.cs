@@ -14,18 +14,18 @@ namespace P_SCAAT.Models
 
         #region Properties
         public byte[] MessageBytes { get; set; }
-        public int MessageLenght => MessageBytes.Length;
+        public int MessageLength => MessageBytes.Length;
         public DateTime TimeCreated { get; set; }
         public RNGMessageGenerator RNGMessageGenerator { get; private set; }
         #endregion
 
         /// <summary>
-        /// Initialize new <see cref="Models.RNGMessageGenerator"/> with <paramref name="messageLenght"/> as desired byte lenght.
+        /// Initialize new <see cref="Models.RNGMessageGenerator"/> with <paramref name="messageLength"/> as desired byte length.
         /// </summary>
-        /// <param name="messageLenght"></param>
-        public void InitializeRNGMessageGenerator(uint messageLenght)
+        /// <param name="messageLength"></param>
+        public void InitializeRNGMessageGenerator(uint messageLength)
         {
-            RNGMessageGenerator = new RNGMessageGenerator(messageLenght);
+            RNGMessageGenerator = new RNGMessageGenerator(messageLength);
         }
         /// <summary>
         /// Generate new message using <see cref="Models.RNGMessageGenerator"/>. Attaches timestamp to <see cref="TimeCreated"/> and invokes <see cref="MessageCreation"/> event.

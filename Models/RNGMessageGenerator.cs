@@ -8,12 +8,12 @@ namespace P_SCAAT.Models
         private readonly RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
         
         /// <summary>
-        /// Creates new <see cref="messageBytes"/> with lenght defined by <paramref name="messageLenght"/>  
+        /// Creates new <see cref="messageBytes"/> with length defined by <paramref name="messageLength"/>  
         /// </summary>
-        /// <param name="messageLenght"></param>
-        public RNGMessageGenerator(uint messageLenght)
+        /// <param name="messageLength"></param>
+        public RNGMessageGenerator(uint messageLength)
         {
-            messageBytes = new byte[messageLenght];
+            messageBytes = new byte[messageLength];
         }
         /// <summary>
         /// Using System.Security.Cryptography fills <see cref="messageBytes"/> with pseudo-random bytes.
