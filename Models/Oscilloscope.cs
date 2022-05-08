@@ -59,7 +59,7 @@ namespace P_SCAAT.Models
                 try
                 {
                     MessageBasedSession = (MessageBasedSession)rmSession.Open(SessionName);
-                    MessageBasedSession.TimeoutMilliseconds = 5000;
+                    //MessageBasedSession.TimeoutMilliseconds = 5000;
                     IsSessionOpen = true;
                     InitializeSessionSettings();
                     Debug.WriteLine("Session: " + SessionName + " succesfully opened.");
