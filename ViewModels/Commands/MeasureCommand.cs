@@ -96,7 +96,7 @@ namespace P_SCAAT.ViewModels.Commands
                             ///</summary>
                             if (!sourcesToMeasure.Any())
                             {
-                                string response = Convert.ToBase64String(_oscilloscope.GetWaveformData(selectedFormat));
+                                string response = _oscilloscope.GetWaveformData(selectedFormat);
                                 //watch.Stop();
                                 //Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
 
@@ -115,7 +115,7 @@ namespace P_SCAAT.ViewModels.Commands
                                 {
                                     string selectedSource = source.SourceName;
                                     _oscilloscope.ChangeWaveformSource(selectedSource);
-                                    string response = Convert.ToBase64String(_oscilloscope.GetWaveformData(selectedFormat));
+                                    string response = _oscilloscope.GetWaveformData(selectedFormat);
                                     //watch.Stop();
                                     //Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
 

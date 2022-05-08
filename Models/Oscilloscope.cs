@@ -134,7 +134,7 @@ namespace P_SCAAT.Models
         /// Order of formats in <see cref="CommandList.WaveformFormatOptions"/> as follows <c>ASCii</c>, <c>BINary</c>, <c>BYTE</c>, <c>WORD</c><br/>
         /// Reference <see href="https://www.testworld.com/wp-content/uploads/keysight-agilent-infiniium-oscilloscopes-programmers-guide.pdf">Programmers guide</see> pg. 1167
         /// </summary>
-        public byte[] GetWaveformData(string selectedFormat)
+        public string GetWaveformData(string selectedFormat)
         {
             ///===================================== OPTIONAL TO WAIT FOR TRIGGER EVENT
             //bool triggerEvent = false;
@@ -203,7 +203,8 @@ namespace P_SCAAT.Models
 
             if (response.Length == 0)
             {
-                throw new SessionCommunicationException($"NO DATA ACQUIRED FROM THE DEVICE{Environment.NewLine}");
+                return "NO DATA ACQUIRED";
+                //throw new SessionCommunicationException($"NO DATA ACQUIRED FROM THE DEVICE{Environment.NewLine}");
             }
 
             //watch.Stop();
@@ -211,7 +212,7 @@ namespace P_SCAAT.Models
 
             int lastIndex = Array.FindLastIndex(response, byteValue => byteValue != 0);
             Array.Resize(ref response, lastIndex + 1);
-            return response;
+            return Convert.ToBase64String(response);
         }
 
         private byte[] GetWaveformDataUniversal()
