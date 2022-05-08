@@ -163,7 +163,7 @@ namespace P_SCAAT.ViewModels.Commands
             string directoryToSave = Path.GetFullPath(@"..\..\Measurment");
             await Task.Run(() =>
             {
-                File.AppendAllText($"{directoryToSave}\\{DateTime.Now:yyyyMMdd}-{fileNameSessionID}-measurment-{fileNumber.ToString($"00")}.txt", stringBuilder.ToString());
+                File.AppendAllText($"{directoryToSave}\\{DateTime.Now:yyyyMMdd}-{fileNameSessionID}-measurment-{fileNumber.ToString($"00")}.csv", stringBuilder.ToString());
             });
             _ = stringBuilder.Clear();
         }
