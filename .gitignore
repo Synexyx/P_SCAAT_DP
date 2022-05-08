@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Measurment/20220508-180758-measurment-00.txt
+/Measurment/20220508-181006-measurment-00.txt

@@ -69,7 +69,6 @@ namespace P_SCAAT.Models
         /// <summary>
         /// Creates properly formated default empty <see cref="CommandList"/> file in <c>/OscilloscopeCommandLists/</c> folder for easy editation and customization.
         /// </summary>
-        /// <returns></returns>
         private static async Task CreateDefaultCommandList()
         {
             CommandList commandList = new CommandList();
