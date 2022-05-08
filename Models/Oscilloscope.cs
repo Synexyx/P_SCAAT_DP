@@ -411,6 +411,9 @@ namespace P_SCAAT.Models
             channel.ChannelCouplingIndex = Commands.ChannelCouplingModes.IndexOf(oscilloscopeResponse);
             AddResponseToConfig(commandPart, channelNumberString, oscilloscopeResponse);
         }
+
+        /// Oscilloscope returns only uppercase part of options. Basically all responses from the oscilloscopes are uppercase parts only. So how to match for example CHANnel1 with CHAN1?
+        /// Take all item in list, remove all lowercase chars. create pairs new item and index. Check item if contains response, return associated index.
         private void SynchronizeTriggerEdgeSource(TriggerSettings trigger)
         {
             string commandPart = Commands.TriggerEdgeSourceCommand;
