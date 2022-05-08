@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="P_SCAAT.App">
-    <Position X="11" Y="23.75" Width="4.25" />
+    <Position X="17.25" Y="16.5" Width="4.25" />
     <TypeIdentifier>
       <HashCode>IAAAAACAAAAAAAAAAAgAAAAAQEAAAAAAQAACAAAAAAA=</HashCode>
       <FileName>App.xaml.cs</FileName>
@@ -13,21 +13,29 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.Models.ChannelSettings">
-    <Position X="2.5" Y="15.25" Width="2.75" />
+    <Position X="2.75" Y="8.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AIAABEAAAAAAAAAAAIAAEAAAABAAAAAAAAAAAAABAAA=</HashCode>
       <FileName>Models\ChannelSettings.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="P_SCAAT.Models.CommandList" Collapsed="true">
-    <Position X="10" Y="20.5" Width="1.5" />
+  <Class Name="P_SCAAT.Models.CommandList">
+    <Position X="2.25" Y="0.5" Width="3.5" />
+    <Members>
+      <Field Name="_channelCouplingModes" Hidden="true" />
+      <Field Name="_triggerEdgeSlopeOptions" Hidden="true" />
+      <Field Name="_triggerEdgeSourceOptions" Hidden="true" />
+      <Field Name="_trueFalseOptions" Hidden="true" />
+      <Field Name="_waveformFormatOptions" Hidden="true" />
+      <Field Name="_waveformSourceOptions" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>BECABIAKBEAEAUgAgkAAiAFECQEAQAIEQIAKQAAAmAA=</HashCode>
+      <HashCode>BECABIAKBEAEAUgAgkAAiAFEAQEAQAIEYIAKQAAAmAA=</HashCode>
       <FileName>Models\CommandList.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.Models.CryptoDeviceMessage">
-    <Position X="18.25" Y="12.5" Width="2.75" />
+    <Position X="24.5" Y="14.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAQAAEAABEAAAAACAAAAQAAAAAAAE=</HashCode>
       <FileName>Models\CryptoDeviceMessage.cs</FileName>
@@ -37,7 +45,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.Models.Oscilloscope">
-    <Position X="6" Y="23.75" Width="3.5" />
+    <Position X="6.5" Y="13" Width="3.25" />
     <Members>
       <Method Name="SynchronizeChannelCoupling" Hidden="true" />
       <Method Name="SynchronizeChannelDisplay" Hidden="true" />
@@ -59,7 +67,7 @@
     <Lollipop Orientation="Right" Position="0.1" />
   </Class>
   <Class Name="P_SCAAT.Models.OscilloscopeConfig">
-    <Position X="6.25" Y="18.5" Width="3" />
+    <Position X="6.75" Y="7.75" Width="2.75" />
     <Members>
       <Field Name="_waveformFormatOptions" Hidden="true" />
       <Field Name="_waveformSourceOptions" Hidden="true" />
@@ -77,7 +85,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="P_SCAAT.Models.RNGMessageGenerator">
-    <Position X="17.75" Y="16" Width="3.75" />
+    <Position X="25" Y="12.25" Width="2" />
     <Members>
       <Field Name="messageBytes" Hidden="true" />
       <Field Name="randomNumberGenerator" Hidden="true" />
@@ -88,22 +96,22 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.Models.SerialPortRS232" BaseTypeListCollapsed="true">
-    <Position X="22.5" Y="9.5" Width="1.75" />
+    <Position X="6.25" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAkIAAAgAAAAAAAAAAAAEgAAUACA=</HashCode>
       <FileName>Models\SerialPortRS232.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Orientation="Right" Position="0.1" />
+    <Lollipop Orientation="Right" Position="0.1" Collapsed="true" />
   </Class>
   <Class Name="P_SCAAT.Models.TriggerSettings">
-    <Position X="2.25" Y="19.5" Width="3" />
+    <Position X="2.5" Y="13" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAEAAAAAAAAAABACgAAIAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\TriggerSettings.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.ChannelSettingsViewModel">
-    <Position X="24.75" Y="5.25" Width="2.75" />
+    <Position X="24.25" Y="7.5" Width="2.75" />
     <Members>
       <Field Name="_channelCouplingIndex" Hidden="true" />
       <Field Name="_channelCouplingModes" Hidden="true" />
@@ -118,7 +126,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.CorePropChangedVM">
-    <Position X="20.25" Y="0.5" Width="3.5" />
+    <Position X="19" Y="2" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\CorePropChangedVM.cs</FileName>
@@ -126,7 +134,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="P_SCAAT.ViewModels.MainViewModel">
-    <Position X="7.25" Y="3" Width="4.25" />
+    <Position X="7.75" Y="5.25" Width="3" />
     <Members>
       <Field Name="_oscilloscopeViewControlState" Hidden="true" />
       <Field Name="_serialPortRS232ViewModel" Hidden="true" />
@@ -141,7 +149,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.OscilloscopeConfigViewModel">
-    <Position X="32" Y="5.25" Width="4.5" />
+    <Position X="19.75" Y="7.5" Width="3.75" />
     <Members>
       <Field Name="_oscilloscope" Hidden="true" />
       <Field Name="_tempChannels" Hidden="true" />
@@ -158,8 +166,8 @@
       <FileName>ViewModels\OscilloscopeConfigViewModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Oscilloscope" />
       <Property Name="TriggerVM" />
+      <Property Name="Oscilloscope" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="TempChannels" />
@@ -167,14 +175,14 @@
     <Lollipop Orientation="Right" Position="0.1" />
   </Class>
   <Class Name="P_SCAAT.ViewModels.OscilloscopeValueConversionVM">
-    <Position X="29.5" Y="3" Width="2.25" />
+    <Position X="24" Y="5.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAgAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\OscilloscopeValueConversionVM.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.OscilloscopeViewModel">
-    <Position X="12.25" Y="6.75" Width="4.75" />
+    <Position X="15.5" Y="9" Width="3.5" />
     <Members>
       <Field Name="_availableOscilloscopes" Hidden="true" />
       <Field Name="_changingSession" Hidden="true" />
@@ -198,14 +206,13 @@
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="CryptoDeviceMessage" />
-      <Property Name="Oscilloscope" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="WaveformSource" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.SerialPortRS232ViewModel">
-    <Position X="17.75" Y="6.75" Width="3.25" />
+    <Position X="11.5" Y="9" Width="3.25" />
     <Members>
       <Field Name="_availablePorts" Hidden="true" />
       <Field Name="_baudRate" Hidden="true" />
@@ -216,6 +223,16 @@
       <Field Name="_selectedStopBits" Hidden="true" />
       <Field Name="_serialPortRS232" Hidden="true" />
     </Members>
+    <AssociationLine Name="SerialPortRS232" Type="P_SCAAT.Models.SerialPortRS232" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12.281" Y="9" />
+        <Point X="12.281" Y="7.368" />
+        <Point X="11.365" Y="7.368" Type="JumpStart" />
+        <Point X="11.198" Y="7.368" Type="JumpEnd" />
+        <Point X="6.938" Y="7.368" />
+        <Point X="6.938" Y="3.786" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>EhIABBAAQCECASACABBAAAhAAQACEAARAAAQAAAEAAg=</HashCode>
       <FileName>ViewModels\SerialPortRS232ViewModel.cs</FileName>
@@ -226,7 +243,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.SessionDeviceVM">
-    <Position X="15" Y="3" Width="3.5" />
+    <Position X="13.5" Y="5.25" Width="3.5" />
     <TypeIdentifier>
       <HashCode>EAAAAAAACCACAAAAAAAAAAAAAAEAEAAAAAAAAAIAACA=</HashCode>
       <FileName>ViewModels\SessionDeviceVM.cs</FileName>
@@ -234,7 +251,7 @@
     <Lollipop Orientation="Right" Position="0.1" />
   </Class>
   <Class Name="P_SCAAT.ViewModels.TriggerViewModel">
-    <Position X="28.25" Y="5.25" Width="3" />
+    <Position X="27.75" Y="7.5" Width="3" />
     <Members>
       <Field Name="_triggerEdgeSlopeIndex" Hidden="true" />
       <Field Name="_triggerEdgeSlopeOptions" Hidden="true" />
@@ -248,7 +265,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.WaveformSourceViewModel">
-    <Position X="21.75" Y="3" Width="2.25" />
+    <Position X="31.5" Y="5.25" Width="2.25" />
     <Members>
       <Field Name="_isSelected" Hidden="true" />
     </Members>
@@ -258,25 +275,38 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ApplyOscilloscopeConfigCommand">
-    <Position X="27.75" Y="20" Width="4.25" />
+    <Position X="27.5" Y="23.5" Width="4.25" />
     <Members>
       <Field Name="_oscilloscopeControlState" Hidden="true" />
       <Field Name="_oscilloscopeVM" Hidden="true" />
     </Members>
+    <AssociationLine Name="_oscilloscope" Type="P_SCAAT.Models.Oscilloscope" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="28.625" Y="23.5" />
+        <Point X="28.625" Y="22.929" />
+        <Point X="26.458" Y="22.929" Type="JumpStart" />
+        <Point X="26.292" Y="22.929" Type="JumpEnd" />
+        <Point X="8.969" Y="22.929" />
+        <Point X="8.969" Y="19.107" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAACAAAEAAAAAAAAEAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\ApplyOscilloscopeConfigCommand.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_oscilloscope" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.AsyncCoreCommand">
-    <Position X="26" Y="16.25" Width="1.75" />
+    <Position X="27.75" Y="18.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAEAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\AsyncCoreCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.CoreCommand">
-    <Position X="29.25" Y="13.5" Width="2.25" />
+    <Position X="30.5" Y="15.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAACAAQAAEQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\Commands\CoreCommand.cs</FileName>
@@ -285,7 +315,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.CancelOscilloscopeConfigCommand">
-    <Position X="8" Y="16.25" Width="4" />
+    <Position X="13.25" Y="18.5" Width="2.75" />
     <Members>
       <Field Name="_oscilloscopeControlState" Hidden="true" />
       <Field Name="_oscilloscopeVM" Hidden="true" />
@@ -296,7 +326,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ConfigViewSelectCommand">
-    <Position X="12.75" Y="20" Width="4.25" />
+    <Position X="16.75" Y="23.5" Width="4" />
     <Members>
       <Field Name="_oscilloscopeConfigVM" Hidden="true" />
       <Field Name="_oscilloscopeViewModel" Hidden="true" />
@@ -305,16 +335,22 @@
       <HashCode>AQQAAAAAAAAAAAAAAEAAAIAgAAAAQAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\ConfigViewSelectCommand.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_osciloscope" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ControlSessionCommand">
-    <Position X="32.75" Y="20" Width="3.75" />
+    <Position X="32.5" Y="23.5" Width="3.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAQAEAAAAAAAAAAAAAAIAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\ControlSessionCommand.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_sessionDeviceVM" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ManualControlCommand">
-    <Position X="49" Y="16.25" Width="3.5" />
+    <Position X="47" Y="18.5" Width="3.5" />
     <Members>
       <Field Name="_oscilloscopeViewModel" Hidden="true" />
     </Members>
@@ -322,9 +358,12 @@
       <HashCode>AAAAAAAAAAAAAAQAAEAAAAAgAEAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\Commands\ManualControlCommand.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_oscilloscope" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.OpenConfigFileCommand">
-    <Position X="22.75" Y="20" Width="4.25" />
+    <Position X="24.5" Y="23.5" Width="2.25" />
     <Members>
       <Field Name="_oscilloscopeConfigViewModel" Hidden="true" />
     </Members>
@@ -334,7 +373,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.RadioButtonEdgeSlopeCommand">
-    <Position X="44" Y="16.25" Width="4.25" />
+    <Position X="43.75" Y="18.5" Width="2.5" />
     <Members>
       <Field Name="_oscilloscopeConfigViewModel" Hidden="true" />
     </Members>
@@ -344,7 +383,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.SaveConfigFileCommand">
-    <Position X="17.75" Y="20" Width="4.25" />
+    <Position X="21.5" Y="23.5" Width="2.25" />
     <Members>
       <Field Name="_oscilloscopeConfigViewModel" Hidden="true" />
     </Members>
@@ -354,7 +393,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.SimpleCommand">
-    <Position X="41.5" Y="16.25" Width="1.75" />
+    <Position X="41.25" Y="18.5" Width="1.75" />
     <Members>
       <Field Name="_action" Hidden="true" />
     </Members>
@@ -364,7 +403,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="P_SCAAT.ViewModels.ViewControlState.OscilloscopeViewControlState">
-    <Position X="13.25" Y="13.75" Width="3.5" />
+    <Position X="11" Y="15.25" Width="3" />
     <Members>
       <Field Name="_oscilloscopeSelectedVM" Hidden="true" />
     </Members>
@@ -377,10 +416,8 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.MeasureCommand">
-    <Position X="37.25" Y="18.5" Width="3.5" />
+    <Position X="37" Y="20.75" Width="3.5" />
     <Members>
-      <Field Name="_cryptoDeviceMessage" Hidden="true" />
-      <Field Name="_oscilloscope" Hidden="true" />
       <Field Name="_oscilloscopeViewModel" Hidden="true" />
       <Field Name="fileNumber" Hidden="true" />
       <Field Name="perFile" Hidden="true" />
@@ -390,23 +427,30 @@
       <HashCode>AAAAAAAgAAAAAAAiAEgAAAAgAEAQQAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\MeasureCommand.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_cryptoDeviceMessage" />
+      <Field Name="_oscilloscope" />
+    </ShowAsAssociation>
   </Class>
-  <Class Name="P_SCAAT.ViewModels.Commands.AsyncIsExcecutingCoreCommand" Collapsed="true">
-    <Position X="23.75" Y="18.5" Width="1.75" />
+  <Class Name="P_SCAAT.ViewModels.Commands.AsyncIsExcecutingCoreCommand">
+    <Position X="25.25" Y="20.75" Width="2.25" />
+    <Members>
+      <Field Name="_isExecuting" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAABgAQAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\Commands\AsyncIsExcecutingCoreCommand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="P_SCAAT.Models.ISessionDevice" Collapsed="true">
-    <Position X="55.25" Y="0.5" Width="1.5" />
+    <Position X="53.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAgAAAACA=</HashCode>
       <FileName>Models\ISessionDevice.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="P_SCAAT.ViewModels.IErrorMessage" Collapsed="true">
-    <Position X="53.5" Y="0.5" Width="1.5" />
+    <Position X="51.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewModels\IErrorMessage.cs</FileName>

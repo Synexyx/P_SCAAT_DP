@@ -16,7 +16,7 @@ namespace P_SCAAT.Models
         public List<string> TrueFalseOptions { get => _trueFalseOptions ?? new List<string>(); set => _trueFalseOptions = value; }
         public string OscilloscopeSingleAcquisitionCommand { get; set; }
         public string OscilloscopeStopCommand { get; set; }
-        public string OsclloscopeRunCommand { get; set; }
+        public string OscilloscopeRunCommand { get; set; }
         public string OscilloscopeOperationCompleteCommand { get; set; }
         public string OscilloscopeTriggerEventCommand { get; set; }
 

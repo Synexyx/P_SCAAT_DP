@@ -31,7 +31,8 @@ namespace P_SCAAT.Models
 
         public OscilloscopeConfig()
         {
-            _ = CreateDefaultCommandList();
+            ///========== OPTION TO GENERATE NEW PROPERLY FORMATED COMMANDLIST TO default.json FILE
+            //_ = CreateDefaultCommandList();
         }
         /// <summary>
         /// Initialize all oscilloscope settings. Initializes default settings for <see cref="Trigger"/> and <see cref="Channels"/>. Calls <see cref="LoadCommandList(string)"/> 

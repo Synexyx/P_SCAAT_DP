@@ -1,10 +1,13 @@
 {
   "OscilloscopeSeriesID": null,
-  "NumberOfAnalogChannels": 0,
-  "TrueFalseOptions": [],
-  "OscilloscopeSingleAcquisitionCommand": null,
-  "OscilloscopeStopCommand": null,
-  "OsclloscopeRunCommand": null,
+  "NumberOfAnalogChannels": 4,
+  "TrueFalseOptions": [
+    "1",
+    "0"
+  ],
+  "OscilloscopeSingleAcquisitionCommand": ":SINGLe",
+  "OscilloscopeStopCommand": ":STOP",
+  "OscilloscopeRunCommand": ":RUN",
   "OscilloscopeOperationCompleteCommand": null,
   "OscilloscopeTriggerEventCommand": null,
   "ChannelDisplayCommand": null,
@@ -12,7 +15,10 @@
   "ChannelScaleCommand": null,
   "ChannelOffsetCommand": null,
   "ChannelCouplingCommand": null,
-  "ChannelCouplingModes": [],
+  "ChannelCouplingModes": [
+    "AC",
+    "DC"
+  ],
   "TimebasePositionCommand": null,
   "TimebaseScaleCommand": null,
   "TriggerEdgeSourceCommand": null,
