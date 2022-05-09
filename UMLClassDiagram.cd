@@ -37,7 +37,7 @@
   <Class Name="P_SCAAT.Models.CryptoDeviceMessage">
     <Position X="24.5" Y="14.75" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAQAAEAABEAAAAACAAAAQAAAAAAAE=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAQABEAABAAAAAACAAAAQAAAAAAAE=</HashCode>
       <FileName>Models\CryptoDeviceMessage.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -101,7 +101,7 @@
       <HashCode>AIAAAAAAAAAAAAAAAkIAAAgAAAAAAAAAAAAEgAAUACA=</HashCode>
       <FileName>Models\SerialPortRS232.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Orientation="Right" Position="0.1" Collapsed="true" />
+    <Lollipop Orientation="Right" Position="0.1" />
   </Class>
   <Class Name="P_SCAAT.Models.TriggerSettings">
     <Position X="2.5" Y="13" Width="3" />
@@ -166,8 +166,8 @@
       <FileName>ViewModels\OscilloscopeConfigViewModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="TriggerVM" />
       <Property Name="Oscilloscope" />
+      <Property Name="TriggerVM" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="TempChannels" />
@@ -192,7 +192,6 @@
       <Field Name="_measureButtonContentCancel" Hidden="true" />
       <Field Name="_measureButtonContentStart" Hidden="true" />
       <Field Name="_measurementInProgress" Hidden="true" />
-      <Field Name="_messageLenght" Hidden="true" />
       <Field Name="_oscilloscope" Hidden="true" />
       <Field Name="_progressBarValue" Hidden="true" />
       <Field Name="_selectedAvailableOscilloscopes" Hidden="true" />
@@ -201,7 +200,7 @@
       <Field Name="_waveformSource" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>UQEAEQAAAiAiAAgIAAoABgBEEEQUEJAAEhACCIICgBk=</HashCode>
+      <HashCode>UQEAEQAAAiAiAAgIAApABgBAEEQUEJAAEhACCIICgBk=</HashCode>
       <FileName>ViewModels\OscilloscopeViewModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -284,8 +283,6 @@
       <Path>
         <Point X="28.625" Y="23.5" />
         <Point X="28.625" Y="22.929" />
-        <Point X="26.458" Y="22.929" Type="JumpStart" />
-        <Point X="26.292" Y="22.929" Type="JumpEnd" />
         <Point X="8.969" Y="22.929" />
         <Point X="8.969" Y="19.107" />
       </Path>
@@ -332,12 +329,9 @@
       <Field Name="_oscilloscopeViewModel" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AQQAAAAAAAAAAAAAAEAAAIAgAAAAQAAAAAAAAAAAAEA=</HashCode>
+      <HashCode>AQQAAAAAAAAAAAAAAEAAAAAgAEAAQAAAAAAAAAAAAEA=</HashCode>
       <FileName>ViewModels\Commands\ConfigViewSelectCommand.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_osciloscope" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.ControlSessionCommand">
     <Position X="32.5" Y="23.5" Width="3.75" />
@@ -428,8 +422,8 @@
       <FileName>ViewModels\Commands\MeasureCommand.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="_cryptoDeviceMessage" />
       <Field Name="_oscilloscope" />
+      <Field Name="_cryptoDeviceMessage" />
     </ShowAsAssociation>
   </Class>
   <Class Name="P_SCAAT.ViewModels.Commands.AsyncIsExcecutingCoreCommand">
