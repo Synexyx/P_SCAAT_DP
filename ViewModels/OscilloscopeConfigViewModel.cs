@@ -284,7 +284,7 @@ namespace P_SCAAT.ViewModels
                     if (trigger.TriggerLevel.ContainsKey(triggerSource))
                     {
                         decimal triggerLevel = trigger.TriggerLevel[triggerSource];
-                        CreateCommandString(Oscilloscope.Commands.TriggerLevelCommand, triggerSource, triggerLevel);
+                        CreateSourceCommandString(Oscilloscope.Commands.TriggerLevelCommand, triggerSource, triggerLevel);
                     }
                     break;
                 default:
@@ -294,81 +294,98 @@ namespace P_SCAAT.ViewModels
 
         /// <summary>
         /// All overloads to create proper command to config string. <br/>
-        /// Individual methods can deal with channel settings, updating value from collection, using command with single bool value and commands with value that are source dependant.
+        /// Individual methods can deal with channel settings, updating value from collection, using command with single bool value and commands with value that is source dependant.
         /// </summary>
         #region CreateCommandString overloads
-        private void CreateCommandString(string command, IEnumerable<string> collection, int index, int channelNumber = 0)
+        private void CreateCommandString(string command, IEnumerable<string> collection, int index)
         {
             if (collection != null)
             {
-                (string, string) commandParts;
-                string desiredValue = collection.ElementAtOrDefault(index);
                 try
                 {
-                    if (channelNumber == 0)
-                    {
-                        commandParts = CommandList.UniversalCommandString(command, desiredValue);
-                    }
-                    else
-                    {
-                        commandParts = CommandList.UniversalCommandString(command, channelNumber.ToString(CultureInfo.InvariantCulture), desiredValue);
-                    }
+                    string desiredValue = collection.ElementAtOrDefault(index);
+                    (string, string) commandParts = CommandList.UniversalCommandString(command, desiredValue);
                     ApplyCommandToConfigString(commandParts);
                 }
                 catch (Exception ex)
                 {
                     ErrorMessages.Add(ex);
-                    //_ = MessageBox.Show($"{exp.Message}", $"{exp.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
                     Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
                 }
             }
         }
-        private void CreateCommandString(string command, string stringValue, int channelNumber = 0)
+        private void CreateCommandString(string command, IEnumerable<string> collection, int index, int channelNumber)
         {
-            (string, string) commandParts;
+            if (collection != null)
+            {
+                try
+                {
+                    string desiredValue = collection.ElementAtOrDefault(index);
+                    (string, string) commandParts = CommandList.UniversalCommandString(command, channelNumber.ToString(CultureInfo.InvariantCulture), desiredValue);
+                    ApplyCommandToConfigString(commandParts);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessages.Add(ex);
+                    Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
+                }
+            }
+        }
+        private void CreatCommandString(string command, string stringValue)
+        {
             try
             {
-                if (channelNumber == 0)
-                {
-                    commandParts = CommandList.UniversalCommandString(command, stringValue);
-                }
-                else
-                {
-                    commandParts = CommandList.UniversalCommandString(command, channelNumber.ToString(CultureInfo.InvariantCulture), stringValue);
-                }
+                (string, string) commandParts = CommandList.UniversalCommandString(command, stringValue);
                 ApplyCommandToConfigString(commandParts);
             }
             catch (Exception ex)
             {
                 ErrorMessages.Add(ex);
-                //_ = MessageBox.Show($"{exp.Message}", $"{exp.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
                 Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
             }
         }
-        private void CreateCommandString(string command, decimal numericValue, int channelNumber = 0)
+        private void CreateCommandString(string command, string stringValue, int channelNumber)
         {
-            string desiredValue = numericValue.ToString("0.###E00", CultureInfo.InvariantCulture);
-            (string, string) commandParts;
             try
             {
-                if (channelNumber == 0)
-                {
-                    commandParts = CommandList.UniversalCommandString(command, desiredValue);
-                }
-                else
-                {
-                    commandParts = CommandList.UniversalCommandString(command, channelNumber.ToString(CultureInfo.InvariantCulture), desiredValue);
-                }
+                (string, string) commandParts = CommandList.UniversalCommandString(command, channelNumber.ToString(CultureInfo.InvariantCulture), stringValue);
                 ApplyCommandToConfigString(commandParts);
             }
             catch (Exception ex)
             {
                 ErrorMessages.Add(ex);
-                //_ = MessageBox.Show($"{exp.Message}", $"{exp.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
                 Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
             }
         }
-        private void CreateCommandString(string command, bool trueFalseValue, int channelNumber = 0)
+        private void CreateCommandString(string command, decimal numericValue)
+        {
+            try
+            {
+                string desiredValue = numericValue.ToString("0.###E00", CultureInfo.InvariantCulture);
+                (string, string) commandParts = CommandList.UniversalCommandString(command, desiredValue);
+                ApplyCommandToConfigString(commandParts);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.Add(ex);
+                Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
+            }
+        }
+        private void CreateCommandString(string command, decimal numericValue, int channelNumber)
+        {
+            try
+            {
+                string desiredValue = numericValue.ToString("0.###E00", CultureInfo.InvariantCulture);
+                (string, string) commandParts = CommandList.UniversalCommandString(command, channelNumber.ToString(CultureInfo.InvariantCulture), desiredValue);
+                ApplyCommandToConfigString(commandParts);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessages.Add(ex);
+                Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
+            }
+        }
+        private void CreateCommandString(string command, bool trueFalseValue)
         {
             if (Oscilloscope.Commands.TrueFalseOptions != null)
             {
@@ -381,28 +398,44 @@ namespace P_SCAAT.ViewModels
                 {
                     desiredValue = Oscilloscope.Commands.TrueFalseOptions.ElementAtOrDefault(1);
                 }
-                (string, string) commandParts;
                 try
                 {
-                    if (channelNumber == 0)
-                    {
-                        commandParts = CommandList.UniversalCommandString(command, desiredValue);
-                    }
-                    else
-                    {
-                        commandParts = CommandList.UniversalCommandString(command, channelNumber.ToString(CultureInfo.InvariantCulture), desiredValue);
-                    }
+                    (string, string) commandParts = CommandList.UniversalCommandString(command, desiredValue);
                     ApplyCommandToConfigString(commandParts);
                 }
                 catch (Exception ex)
                 {
                     ErrorMessages.Add(ex);
-                    //_ = MessageBox.Show($"{exp.Message}", $"{exp.GetType()}", MessageBoxButton.OK, MessageBoxImage.Error);
                     Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
                 }
             }
         }
-        private void CreateCommandString(string command, string stringValue, decimal numericValue)
+        private void CreateCommandString(string command, bool trueFalseValue, int channelNumber)
+        {
+            if (Oscilloscope.Commands.TrueFalseOptions != null)
+            {
+                string desiredValue;
+                if (trueFalseValue)
+                {
+                    desiredValue = Oscilloscope.Commands.TrueFalseOptions.ElementAtOrDefault(0);
+                }
+                else
+                {
+                    desiredValue = Oscilloscope.Commands.TrueFalseOptions.ElementAtOrDefault(1);
+                }
+                try
+                {
+                    (string, string) commandParts = CommandList.UniversalCommandString(command, channelNumber.ToString(CultureInfo.InvariantCulture), desiredValue);
+                    ApplyCommandToConfigString(commandParts);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessages.Add(ex);
+                    Debug.WriteLine($"{ex.Message}", $"{ex.GetType()}");
+                }
+            }
+        }
+        private void CreateSourceCommandString(string command, string stringValue, decimal numericValue)
         {
             string desiredValue = numericValue.ToString("0.###E00", CultureInfo.InvariantCulture);
             (string, string) commandParts;
