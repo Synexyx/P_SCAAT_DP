@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace P_SCAAT.ViewModels
 {
-    internal class SerialPortRS232ViewModel : SessionDeviceVM
+    internal class SerialPortRS232ViewModel : SessionDeviceVM, IErrorMessage
     {
         #region Properties
         private ObservableCollection<string> _availablePorts;

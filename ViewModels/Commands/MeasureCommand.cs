@@ -99,6 +99,7 @@ namespace P_SCAAT.ViewModels.Commands
                                 string response = _oscilloscope.GetWaveformData(selectedFormat);
                                 //watch.Stop();
                                 //Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
+                                tokenSource.Token.ThrowIfCancellationRequested();
 
                                 //watch.Restart();
                                 await SaveToFile(fileNameSessionID, "N/A", response);
@@ -113,11 +114,14 @@ namespace P_SCAAT.ViewModels.Commands
                             {
                                 foreach (WaveformSourceViewModel source in sourcesToMeasure)
                                 {
+                                    tokenSource.Token.ThrowIfCancellationRequested();
+
                                     string selectedSource = source.SourceName;
                                     _oscilloscope.ChangeWaveformSource(selectedSource);
                                     string response = _oscilloscope.GetWaveformData(selectedFormat);
                                     //watch.Stop();
                                     //Debug.WriteLine($"Waveform data acquired {watch.ElapsedMilliseconds}");
+                                    tokenSource.Token.ThrowIfCancellationRequested();
 
                                     //watch.Restart();
                                     await SaveToFile(fileNameSessionID, selectedSource, response);

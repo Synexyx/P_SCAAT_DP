@@ -202,7 +202,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="UMLClassDiagram.cd" />
+    <None Include="ClassDiagram.cd" />
     <None Include="OscilloscopeCommandLists\active.json" />
     <None Include="OscilloscopeCommandLists\default.json" />
     <None Include="packages.config" />

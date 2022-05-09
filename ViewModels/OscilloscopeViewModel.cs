@@ -17,7 +17,7 @@ using P_SCAAT.ViewModels.ViewControlState;
 
 namespace P_SCAAT.ViewModels
 {
-    internal class OscilloscopeViewModel : SessionDeviceVM
+    internal class OscilloscopeViewModel : SessionDeviceVM, IErrorMessage
     {
         #region Properties
         private CryptoDeviceMessage _cryptoDeviceMessage;
